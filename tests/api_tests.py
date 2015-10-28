@@ -1,7 +1,8 @@
 import unittest
 import os
 import json
-from urlparse import urlparse
+try: from urllib.parse import urlparse
+except ImportError: from urlparse import urlparse # Python 2 compatibility
 
 # Configure our app to use the testing databse
 os.environ["CONFIG_PATH"] = "posts.config.TestingConfig"
