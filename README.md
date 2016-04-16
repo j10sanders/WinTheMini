@@ -6,5 +6,5 @@ Since no social elements are built in, this application allows groups of people 
 The data might help you determine what time of the day you perform best, which types of puzzles you are best at (long or short average times), and find other trends that could be helpful.
 
  
-## Play it
+## Join!
 You can find the heroku-deployed version here: {Not Deployed Yet}
