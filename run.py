@@ -1,5 +1,5 @@
 import os
-from posts import app
+from crossword import app
 
 def run():
     port = int(os.environ.get('PORT', 8080))

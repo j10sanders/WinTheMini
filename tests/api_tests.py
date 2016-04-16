@@ -5,14 +5,14 @@ try: from urllib.parse import urlparse
 except ImportError: from urlparse import urlparse # Python 2 compatibility
 
 # Configure our app to use the testing databse
-os.environ["CONFIG_PATH"] = "posts.config.TestingConfig"
+os.environ["CONFIG_PATH"] = "crossword.config.TestingConfig"
 
-from posts import app
-from posts import models
-from posts.database import Base, engine, session
+from crossword import app
+from crossword import models
+from crossword.database import Base, engine, session
 
 class TestAPI(unittest.TestCase):
-    """ Tests for the posts API """
+    """ Tests for the crossword API """
 
     def setUp(self):
         """ Test setup """
