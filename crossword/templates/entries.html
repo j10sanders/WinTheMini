@@ -6,4 +6,17 @@
 {{ macros.render_entry(entry) }}
 {% endfor %}
 
+<ul class="pager">
+    {% if has_next %}
+    <li class="previous" >
+    <a href="{{ url_for('entries', page=page + 1) }}">&larr; Older</a>
+    </li>
+    {% endif %}
+    {% if has_prev %}
+    <li class="next">
+    <a href="{{ url_for('entries', page=page - 1) }}">&rarr; Newer</a>
+    </li>
+    {% endif %}
+</ul>
+
 {% endblock %}
