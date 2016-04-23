@@ -1,0 +1,23 @@
+{% import "macros.html" as macros %}
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>
+    Entry {{entry.id}}
+</h1>
+
+{{ macros.render_entry(entry) }}
+
+<p>
+Author: {{ entry.author.name|default('unknown') }}   
+</p>
+
+ <p>
+      <!-- This is a comment  <li><a href="/entry/{{ entry.id }}/edit">Edit This Entry</a></li> --> 
+       {% if current_user.is_authenticated %}
+       <a href="{{ url_for( 'edit_entry_post', id = entry.id)}}">   Edit This Entry    </a>
+       {% endif %}
+</p>
+
+{% endblock %}
