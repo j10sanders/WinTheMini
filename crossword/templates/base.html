@@ -70,10 +70,10 @@ margin-left: 1px;
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#about">ABOUT</a></li>
             <li><a href="#services">GROUPS</a></li>
             <li><a href="#portfolio">STATS</a></li>
             <li><a href="#pricing">FEEDBACK</a></li>
+            <li><a href="{{ url_for('login_get') }}">LOGIN</a> <span class="sr-only">(current)</span></a></li>
             <li><a href="{{ url_for('add_entry_get') }}">ADD ENTRY</a> <span class="sr-only">(current)</span></a></li>
           </ul>
         </div>

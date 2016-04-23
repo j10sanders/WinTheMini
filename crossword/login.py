@@ -2,6 +2,7 @@ from flask.ext.login import LoginManager
 
 from . import app
 from .database import session, User
+from flask import request, redirect, url_for
 
 login_manager = LoginManager()
 login_manager.init_app(app)
