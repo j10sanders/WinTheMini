@@ -19,7 +19,7 @@
         <!-- Bootstrap -->
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
         <style>
-         .navbar {
+    .navbar {
       margin-bottom: 0;
       background-color: #3185EA;
       z-index: 9999;
@@ -55,6 +55,12 @@ margin-left: 1px;
 .content-footer{
   color: #3D3D3D;
 }
+table{
+    margin-bottom:60px;
+}
+
+body { padding-top: 50px; }
+
     </style>
     </head>
     <body>
@@ -89,7 +95,7 @@ margin-left: 1px;
         {% endfor %}
         {% endif %}
         {% endwith %}
-        </br></br></br>
+        
         <div class="container">
             {% block content %}{% endblock %}
         </div>
