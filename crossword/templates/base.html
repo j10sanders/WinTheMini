@@ -41,6 +41,20 @@
       border-color: transparent;
       color: #fff !important;
   }
+  
+ /*.content-footer,*/
+
+footer { padding: 0em 0;
+width: 90%;
+background: #A7D8FF;
+position: fixed;
+bottom: 0px;
+margin-left: 1px;
+}
+
+.content-footer{
+  color: #F4FAEB;
+}
     </style>
     </head>
 
@@ -81,5 +95,9 @@
         <div class="container">
             {% block content %}{% endblock %}
         </div>
+    <footer class="content-footer">
+        <p> Check this out on <a href="https://github.com/j10sanders/crossword">Github</a></p>
+    </footer>
     </body>
+    
 </html>
