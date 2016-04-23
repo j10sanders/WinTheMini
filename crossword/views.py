@@ -1,10 +1,13 @@
-from flask import render_template, request, redirect, url_for
-from flask.ext.login import login_required
-from flask.ext.login import current_user
-
+from flask import render_template
 
 from . import app
 from .database import session, Entry
+from flask import flash
+from flask.ext.login import login_user, logout_user
+from werkzeug.security import check_password_hash
+from .database import User
+from flask import request, redirect, url_for
+from flask.ext.login import login_required, current_user
 
     
 PAGINATE_BY = 10
@@ -72,9 +75,9 @@ def login_get():
 
 @app.route("/login", methods=["POST"])
 def login_post():
-    username = request.form["username"]
+    email = request.form["email"]
     password = request.form["password"]
-    user = session.query(User).filter_by(username=username).first()
+    user = session.query(User).filter_by(email=email).first()
     if not user or not check_password_hash(user.password, password):
         flash("Incorrect username or password", "danger")
         return redirect(url_for("login_get"))
