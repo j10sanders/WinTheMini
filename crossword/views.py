@@ -1,5 +1,5 @@
 from flask import render_template
-
+from itertools import groupby
 from . import app
 from .database import session, Entry
 from flask import flash
@@ -8,16 +8,18 @@ from werkzeug.security import check_password_hash
 from .database import User
 from flask import request, redirect, url_for
 from flask.ext.login import login_required, current_user
+import datetime
 
     
+#PAGINATE_BY = len(session.query(Entry).count())
 PAGINATE_BY = 10
+
 
 @app.route("/")
 @app.route("/page/<int:page>")
 def entries(page=1):
     try:
         limit = int(request.args.get("limit", PAGINATE_BY))
-    
         #try and if get value error, set limit to paginate_by
         
         # Zero-indexed page
@@ -31,9 +33,18 @@ def entries(page=1):
         total_pages = (count - 1) / limit + 1
         has_next = page_index < total_pages - 1
         has_prev = page_index > 0
-    
+        
+        end_date = (datetime.datetime.now)
+        start_date = end_date - datetime.timedelta(days=4)
+        
+        
         entries = session.query(Entry)
         entries = entries.order_by(Entry.datetime.desc())
+        
+        for entry in entries:
+            if entry.datetime > start_date:
+                print(entry)
+        
         entries = entries[start:end]
         
         return render_template("entries.html",
