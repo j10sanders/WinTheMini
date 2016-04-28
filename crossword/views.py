@@ -41,8 +41,6 @@ def entries(page=1):
         has_next = page_index < total_pages - 1
         has_prev = page_index > 0
         
-        #end_date = (datetime.datetime.now)
-        #start_date = end_date - datetime.timedelta(days=4)
         
         entries = session.query(Entry)
         entries = entries.order_by(Entry.datetime.desc())
