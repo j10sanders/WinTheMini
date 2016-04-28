@@ -10,8 +10,7 @@ from flask import request, redirect, url_for
 from flask.ext.login import login_required, current_user
 import datetime
 
-    
-#PAGINATE_BY = len(session.query(Entry).count())
+
 PAGINATE_BY = 10
 
 
@@ -19,9 +18,17 @@ PAGINATE_BY = 10
 @app.route("/page/<int:page>")
 def entries(page=1):
     try:
-        limit = int(request.args.get("limit", PAGINATE_BY))
-        #try and if get value error, set limit to paginate_by
         
+        #limit = int(request.args.get("limit", PAGINATE_BY))
+        #try and if get value error, set limit to paginate_by
+        entries = session.query(Entry)
+        entries = entries.order_by(Entry.datetime.desc())
+        entrylist = []
+        for entry in entries:
+            if entry.datetime.strftime("%Y-%m-%d") == (datetime.datetime.now().strftime("%Y-%m-%d")):
+                entrylist.append(entry)
+        print(len(entrylist))
+        limit= len(entrylist)
         # Zero-indexed page
         page_index = page - 1
     
@@ -34,16 +41,14 @@ def entries(page=1):
         has_next = page_index < total_pages - 1
         has_prev = page_index > 0
         
-        end_date = (datetime.datetime.now)
-        start_date = end_date - datetime.timedelta(days=4)
-        
+        #end_date = (datetime.datetime.now)
+        #start_date = end_date - datetime.timedelta(days=4)
         
         entries = session.query(Entry)
         entries = entries.order_by(Entry.datetime.desc())
         
-        for entry in entries:
-            if entry.datetime > start_date:
-                print(entry)
+        print(datetime.datetime.now().strftime("%Y-%m-%d"))
+        
         
         entries = entries[start:end]
         
