@@ -1,17 +1,21 @@
 {% macro render_entry(entry) %}
 <div class="row">
-    <div class="col-md-2 text-right metadata">
+    <div class="col-sm-2 text-right metadata">
         <ul class="list-unstyled">
+            <h2>
             <li>
                 {{ entry.datetime | dateformat("%m/%d/%y") }}
             </li>
+            </h2>
         </ul>
     </div>
     <div class="col-md-10">
         <h1>
             {{ entry.title }}
         </h1>
+        <p>
         {{ entry.content | markdown }}
+        </p>
     </div>
 </div>
 {% endmacro %}

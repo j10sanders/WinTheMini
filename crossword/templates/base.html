@@ -44,15 +44,27 @@
       color: #fff !important;
   }
   
+  
+
  /*.content-footer,*/
 
 body{
   font-family: Georgia;
 }
 
+p {
+    font-size: 1.3em;
+}
+
 h1{
   font-family: 'Arvo', serif;
 }
+
+h2{
+  font-family: 'Arvo', serif;
+  font-size: 1em;
+}
+
 
 footer { padding: 0em 0;
 width: 90%;
@@ -86,11 +98,14 @@ body { padding-top: 50px; }
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
           <ul class="nav navbar-nav navbar-right">
+            <li><a href="http://www.nytimes.com/crosswords/game/mini">PLAY NOW</a></li>
             <li><a href="#services">GROUPS</a></li>
             <li><a href="#portfolio">STATS</a></li>
             <li><a href="#pricing">FEEDBACK</a></li>
             <li><a href="{{ url_for('login_get') }}">LOGIN</a> <span class="sr-only">(current)</span></a></li>
             <li><a href="{{ url_for('add_entry_get') }}">ADD ENTRY</a> <span class="sr-only">(current)</span></a></li>
+            
+            
           </ul>
         </div>
       </div>
