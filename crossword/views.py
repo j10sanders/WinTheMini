@@ -27,7 +27,6 @@ def entries(page=1):
         for entry in entries:
             if entry.datetime.strftime("%Y-%m-%d") == (datetime.datetime.now().strftime("%Y-%m-%d")):
                 entrylist.append(entry)
-        print(len(entrylist))
         limit= len(entrylist)
         # Zero-indexed page
         page_index = page - 1
@@ -57,6 +56,7 @@ def entries(page=1):
             page=page,
             total_pages=total_pages
         )
+        
     except ValueError:
         flash(u'Try a whole number between 1 - 50!', 'danger')
         limit = PAGINATE_BY
