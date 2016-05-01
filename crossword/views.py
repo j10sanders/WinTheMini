@@ -22,40 +22,47 @@ def entries(page=1):
     # Zero-indexed page
     page_index = page - 1
 
-    count = session.query(Entry).count()
+    #count = session.query(Entry).count()
     
     entries = session.query(Entry)
     entries = entries.order_by(Entry.datetime.desc())
+    daybefore = date.today() - timedelta(page_index)
+    print(daybefore)
     entrylist = []
     for entry in entries:
-        if entry.datetime.strftime("%Y-%m-%d") == (datetime.datetime.now().strftime("%Y-%m-%d")):
-            entrylist.append(entry)
-    limit= len(entrylist)
-    
-    start = page_index * limit
-    end = start + limit
+        #if entry.datetime.strftime("%Y-%m-%d") == (datetime.datetime.now().strftime("%Y-%m-%d")):
+        #print(entry.datetime.strftime("%Y-%m-%d"))
+        if entry.datetime.strftime("%Y-%m-%d") == daybefore.strftime("%Y-%m-%d"):
+            entrylist.append(entries)
 
-    total_pages = (count - 1) / limit + 1
-    has_next = page_index < total_pages - 1
-    has_prev = page_index > 0
+    for line in entrylist:
+        entries = line
+    print(entrylist)  
     
+            
+            
+    #limit= len(entrylist)
     
-    entries = session.query(Entry)
-    entries = entries.order_by(Entry.datetime.desc())
+    #start = page_index * limit
+    #end = start + limit
+
+    #total_pages = (count - 1) / limit + 1
+    #has_next = page_index < total_pages - 1
+    #has_prev = page_index > 0
     
+
+    print(daybefore.strftime("%Y-%m-%d"))
     print(datetime.datetime.now().strftime("%Y-%m-%d"))
     
+    #entries = entries[start:end]
     
-    entries = entries[start:end]
-    daybefore = date.today() - timedelta(page_index)
-    print(daybefore.strftime('%m%d%y'))
     
     return render_template("entries.html",
-        entries=entries,
-        has_next=has_next,
-        has_prev=has_prev,
+        entries=entrylist,
+        #has_next=has_next,
+        #has_prev=has_prev,
         page=page,
-        total_pages=total_pages
+        #total_pages=total_pages
     )
     
         
