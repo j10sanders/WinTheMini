@@ -6,17 +6,22 @@
 </h1>
 
 <form role="form" method="POST">
+    
     <div class="form-group">
-        <label for="title">Title</label>
-        <input type="text" class="form-control" id="title" name="title" placeholder="Entry title" required>
-    </div>
+        <label for="title">Time</label>
+    <input type="text" id="time" data-format="HH:mm" data-template="HH : mm" name="datetime">
+<script>
+$(function(){
+    $('#time').combodate({
+        firstItem: 'name', //show 'hour' and 'minute' string at first item of dropdown
+        minuteStep: 1
+    });  
+});
+</script>
+</div>
     <div class="form-group">
-        <label for="content">Time</label>
-        <textarea class="form-control" id="content" name="content" placeholder="Entry content" rows="20" required></textarea>
-    </div>
-    <div class="form-group">
-        <label for="content">Content</label>
-        <textarea class="form-control" id="content" name="content" placeholder="Entry content" rows="20" required></textarea>
+        <label for="content">Comments</label>
+        <textarea class="form-control" id="content" name="content" placeholder="Entry content" rows="5" required></textarea>
     </div>
     <button type="submit" class="btn btn-default">Submit</button>
 </form>

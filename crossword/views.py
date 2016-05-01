@@ -17,72 +17,50 @@ PAGINATE_BY = 10
 @app.route("/")
 @app.route("/page/<int:page>")
 def entries(page=1):
-    try:
-        
-        #limit = int(request.args.get("limit", PAGINATE_BY))
-        #try and if get value error, set limit to paginate_by
-        entries = session.query(Entry)
-        entries = entries.order_by(Entry.datetime.desc())
-        entrylist = []
-        for entry in entries:
-            if entry.datetime.strftime("%Y-%m-%d") == (datetime.datetime.now().strftime("%Y-%m-%d")):
-                entrylist.append(entry)
-        limit= len(entrylist)
-        # Zero-indexed page
-        page_index = page - 1
+
+    #limit = int(request.args.get("limit", PAGINATE_BY))
+    #try and if get value error, set limit to paginate_by
+    entries = session.query(Entry)
+    entries = entries.order_by(Entry.datetime.desc())
+    entrylist = []
+    for entry in entries:
+        if entry.datetime.strftime("%Y-%m-%d") == (datetime.datetime.now().strftime("%Y-%m-%d")):
+            entrylist.append(entry)
+    limit= len(entrylist)
     
-        count = session.query(Entry).count()
+
+
+    # Zero-indexed page
+    page_index = page - 1
+
+    count = session.query(Entry).count()
+
+    start = page_index * limit
+    end = start + limit
+
+    total_pages = (count - 1) / limit + 1
+    has_next = page_index < total_pages - 1
+    has_prev = page_index > 0
     
-        start = page_index * limit
-        end = start + limit
     
-        total_pages = (count - 1) / limit + 1
-        has_next = page_index < total_pages - 1
-        has_prev = page_index > 0
-        
-        
-        entries = session.query(Entry)
-        entries = entries.order_by(Entry.datetime.desc())
-        
-        print(datetime.datetime.now().strftime("%Y-%m-%d"))
-        
-        
-        entries = entries[start:end]
-        
-        return render_template("entries.html",
-            entries=entries,
-            has_next=has_next,
-            has_prev=has_prev,
-            page=page,
-            total_pages=total_pages
-        )
-        
-    except ValueError:
-        flash(u'Try a whole number between 1 - 50!', 'danger')
-        limit = PAGINATE_BY
-        page_index = page - 1
+    entries = session.query(Entry)
+    entries = entries.order_by(Entry.datetime.desc())
     
-        count = session.query(Entry).count()
+    print(datetime.datetime.now().strftime("%Y-%m-%d"))
     
-        start = page_index * limit
-        end = start + limit
     
-        total_pages = (count - 1) / limit + 1
-        has_next = page_index < total_pages - 1
-        has_prev = page_index > 0
+    entries = entries[start:end]
     
-        entries = session.query(Entry)
-        entries = entries.order_by(Entry.datetime.desc())
-        entries = entries[start:end]
+    return render_template("entries.html",
+        entries=entries,
+        has_next=has_next,
+        has_prev=has_prev,
+        page=page,
+        total_pages=total_pages
+    )
         
-        return render_template("entries.html",
-            entries=entries,
-            has_next=has_next,
-            has_prev=has_prev,
-            page=page,
-            total_pages=total_pages
-        )
-    
+
+        
 @app.route("/login", methods=["GET"])
 def login_get():
     return render_template("login.html")
