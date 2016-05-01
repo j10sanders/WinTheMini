@@ -9,9 +9,8 @@ from .database import User
 from flask import request, redirect, url_for
 from flask.ext.login import login_required, current_user
 import datetime
+from datetime import date, timedelta
 
-
-PAGINATE_BY = 10
 
 
 @app.route("/")
@@ -19,7 +18,12 @@ PAGINATE_BY = 10
 def entries(page=1):
 
     #limit = int(request.args.get("limit", PAGINATE_BY))
-    #try and if get value error, set limit to paginate_by
+
+    # Zero-indexed page
+    page_index = page - 1
+
+    count = session.query(Entry).count()
+    
     entries = session.query(Entry)
     entries = entries.order_by(Entry.datetime.desc())
     entrylist = []
@@ -28,13 +32,6 @@ def entries(page=1):
             entrylist.append(entry)
     limit= len(entrylist)
     
-
-
-    # Zero-indexed page
-    page_index = page - 1
-
-    count = session.query(Entry).count()
-
     start = page_index * limit
     end = start + limit
 
@@ -50,6 +47,8 @@ def entries(page=1):
     
     
     entries = entries[start:end]
+    daybefore = date.today() - timedelta(page_index)
+    print(daybefore.strftime('%m%d%y'))
     
     return render_template("entries.html",
         entries=entries,
@@ -58,8 +57,7 @@ def entries(page=1):
         page=page,
         total_pages=total_pages
     )
-        
-
+    
         
 @app.route("/login", methods=["GET"])
 def login_get():
