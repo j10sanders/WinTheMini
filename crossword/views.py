@@ -16,54 +16,56 @@ from datetime import date, timedelta
 @app.route("/")
 @app.route("/page/<int:page>")
 def entries(page=1):
-
-    #limit = int(request.args.get("limit", PAGINATE_BY))
-
-    # Zero-indexed page
-    page_index = page - 1
-
-    #count = session.query(Entry).count()
+    try:
+        #limit = int(request.args.get("limit", PAGINATE_BY))
     
-    entries = session.query(Entry)
-    entries = entries.order_by(Entry.datetime.desc())
-    daybefore = date.today() - timedelta(page_index)
-    print(daybefore)
-    entrylist = []
-    for entry in entries:
-        #if entry.datetime.strftime("%Y-%m-%d") == (datetime.datetime.now().strftime("%Y-%m-%d")):
-        #print(entry.datetime.strftime("%Y-%m-%d"))
-        if entry.datetime.strftime("%Y-%m-%d") == daybefore.strftime("%Y-%m-%d"):
-            entrylist.append(entries)
-
-    for line in entrylist:
-        entries = line
-    print(entrylist)  
+        # Zero-indexed page
+        page_index = page - 1
     
-            
-            
-    #limit= len(entrylist)
+        count = session.query(Entry).count()
+        
+        entries = session.query(Entry)
+        entries = entries.order_by(Entry.datetime.desc())
+        daybefore = date.today() - timedelta(page_index)
+        print(daybefore)
+        entrylist = []
+        for entry in entries:
+            #if entry.datetime.strftime("%Y-%m-%d") == (datetime.datetime.now().strftime("%Y-%m-%d")):
+            #print(entry.datetime.strftime("%Y-%m-%d"))
+            if entry.datetime.strftime("%Y-%m-%d") == daybefore.strftime("%Y-%m-%d"):
+                entrylist.append(entry)
     
-    #start = page_index * limit
-    #end = start + limit
-
-    #total_pages = (count - 1) / limit + 1
-    #has_next = page_index < total_pages - 1
-    #has_prev = page_index > 0
+        for line in entrylist:
+            entries = line
+        print(entrylist)  
+        
+                
+                
+        limit= len(entrylist)
+        
+        #start = page_index * 10
+        #end = start + 10
     
-
-    print(daybefore.strftime("%Y-%m-%d"))
-    print(datetime.datetime.now().strftime("%Y-%m-%d"))
+        total_pages = (count - 1) / limit + 1
+        has_next = page_index < total_pages - 1
+        has_prev = page_index > 0
+        
     
-    #entries = entries[start:end]
-    
-    
-    return render_template("entries.html",
-        entries=entrylist,
-        #has_next=has_next,
-        #has_prev=has_prev,
-        page=page,
-        #total_pages=total_pages
-    )
+        print(daybefore.strftime("%Y-%m-%d"))
+        print(datetime.datetime.now().strftime("%Y-%m-%d"))
+        
+        #entries = entries[start:end]
+        #print(entries)
+        
+        return render_template("entries.html",
+            entries=entrylist,
+            has_next=has_next,
+            has_prev=has_prev,
+            page=page,
+            #total_pages=total_pages
+        )
+    except ZeroDivisionError:
+        z = 0
     
         
 @app.route("/login", methods=["GET"])
