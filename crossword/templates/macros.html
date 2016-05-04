@@ -4,7 +4,8 @@
         <ul class="list-unstyled">
             <h2>
             <li>
-                {{ entry.datetime | dateformat("%m/%d/%y") }}
+                <!--{{ entry.datetime | dateformat("%m/%d/%y") }} -->
+                {{ entry.author.name|default('unknown') }}   
             </li>
             </h2>
         </ul>

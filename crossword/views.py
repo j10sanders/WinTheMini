@@ -17,8 +17,7 @@ from datetime import date, timedelta
 @app.route("/page/<int:page>")
 def entries(page=1):
     try:
-        #limit = int(request.args.get("limit", PAGINATE_BY))
-    
+   
         # Zero-indexed page
         page_index = page - 1
     
@@ -38,13 +37,8 @@ def entries(page=1):
         for line in entrylist:
             entries = line
         print(entrylist)  
-        
-                
                 
         limit= len(entrylist)
-        
-        #start = page_index * 10
-        #end = start + 10
     
         total_pages = (count - 1) / limit + 1
         has_next = page_index < total_pages - 1
@@ -54,15 +48,12 @@ def entries(page=1):
         print(daybefore.strftime("%Y-%m-%d"))
         print(datetime.datetime.now().strftime("%Y-%m-%d"))
         
-        #entries = entries[start:end]
-        #print(entries)
-        
         return render_template("entries.html",
             entries=entrylist,
             has_next=has_next,
             has_prev=has_prev,
             page=page,
-            #total_pages=total_pages
+            total_pages=total_pages
         )
     except ZeroDivisionError:
         count = session.query(Entry).count()
@@ -92,7 +83,7 @@ def entries(page=1):
             has_next=has_next,
             has_prev=has_prev,
             page=page,
-            #total_pages=total_pages
+            total_pages=total_pages
         )
         
 @app.route("/login", methods=["GET"])
