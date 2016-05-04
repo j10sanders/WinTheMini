@@ -2,6 +2,12 @@
 {% extends "base.html" %}
 {% block content %}
 
+<h1>
+    {% for entry in entries[-1:] %}
+    {{ entry.datetime | dateformat("%m/%d/%y") }}
+    {% endfor %}
+</h1>
+</br>
 
 {% for entry in entries %}
 {{ macros.render_entry(entry) }}
