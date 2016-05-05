@@ -16,71 +16,66 @@ from datetime import date, timedelta
 @app.route("/")
 @app.route("/page/<int:page>")
 def entries(page=1):
-    
-    try:
-        # Zero-indexed page
-        page_index = page - 1
-    
-        count = session.query(Entry).count()
-        
+    # Zero-indexed page
+    page_index = page - 1
+    count = session.query(Entry).count()
+    entrylist = []
+    i = 0 
+    while entrylist == []:
         entries = session.query(Entry)
         entries = entries.order_by(Entry.datetime.desc())
-        daybefore = date.today() - timedelta(page_index)
-        print(daybefore)
-        entrylist = []
         for entry in entries:
-            #if entry.datetime.strftime("%Y-%m-%d") == (datetime.datetime.now().strftime("%Y-%m-%d")):
-            #print(entry.datetime.strftime("%Y-%m-%d"))
+            daybefore = date.today() - timedelta(page + i)
             if entry.datetime.strftime("%Y-%m-%d") == daybefore.strftime("%Y-%m-%d"):
                 entrylist.append(entry)
-                
-        limit= len(entrylist)
+            print(entrylist)
+            print(daybefore)
+        i += 1
+        
+    limit= len(entrylist)
+    #page += 1
+    total_pages = (count - 1) / limit + 1
+    has_next = page_index < total_pages - 1
+    has_prev = page_index > 0
     
-        total_pages = (count - 1) / limit + 1
-        has_next = page_index < total_pages - 1
-        has_prev = page_index > 0
-        
+    return render_template("entries.html",
+        entries=entrylist,
+        has_next=has_next,
+        has_prev=has_prev,
+        page=page,
+        total_pages=total_pages
+    )
     
-        print(daybefore.strftime("%Y-%m-%d"))
-        print(datetime.datetime.now().strftime("%Y-%m-%d"))
+'''except ZeroDivisionError:
+    
+    count = session.query(Entry).count()
+    entrylist = []
+    i = 0
+    while len(entrylist) == 0:
+        entries = session.query(Entry)
+        entries = entries.order_by(Entry.datetime.desc())
+        daybefore = date.today() - timedelta(page_index+i)
+        for entry in entries:
+            if entry.datetime.strftime("%Y-%m-%d") == daybefore.strftime("%Y-%m-%d"):
+                entrylist.append(entry)
+            print(entrylist)
+            print(daybefore)
+            limit= len(entrylist)
+        i += 1
+    
         
-        return render_template("entries.html",
-            entries=entrylist,
-            has_next=has_next,
-            has_prev=has_prev,
-            page=page,
-            total_pages=total_pages
-        )
-    except ZeroDivisionError:
-        
-        count = session.query(Entry).count()
-        entrylist = []
-        i = 0
-        while len(entrylist) == 0:
-            entries = session.query(Entry)
-            entries = entries.order_by(Entry.datetime.desc())
-            daybefore = date.today() - timedelta(page_index+i)
-            for entry in entries:
-                if entry.datetime.strftime("%Y-%m-%d") == daybefore.strftime("%Y-%m-%d"):
-                    entrylist.append(entry)
-                print(entrylist)
-                print(daybefore)
-                limit= len(entrylist)
-            i += 1
-        
-            
 
-        total_pages = (count - 1) / limit + 1
-        has_next = page_index < total_pages - 1
-        has_prev = page_index > 0
-        
-        return render_template("entries.html",
-            entries=entrylist,
-            has_next=has_next,
-            has_prev=has_prev,
-            page=page,
-            total_pages=total_pages
-        )
+    total_pages = (count - 1) / limit + 1
+    has_next = page_index < total_pages - 1
+    has_prev = page_index > 0
+    
+    return render_template("entries.html",
+        entries=entrylist,
+        has_next=has_next,
+        has_prev=has_prev,
+        page=page+i,
+        total_pages=total_pages
+    )'''
         
 @app.route("/login", methods=["GET"])
 def login_get():
