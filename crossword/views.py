@@ -17,20 +17,23 @@ from datetime import date, timedelta
 @app.route("/page/<int:page>")
 def entries(page=1):
     # Zero-indexed page
+    entrylist = []
     page_index = page - 1
     count = session.query(Entry).count()
-    entrylist = []
-    i = 0 
+    #i = 0 
     while entrylist == []:
         entries = session.query(Entry)
         entries = entries.order_by(Entry.datetime.desc())
         for entry in entries:
-            daybefore = date.today() - timedelta(page + i)
+            daybefore = date.today() - timedelta(page)
             if entry.datetime.strftime("%Y-%m-%d") == daybefore.strftime("%Y-%m-%d"):
                 entrylist.append(entry)
+        if entrylist == []:
+            page += 1
             print(entrylist)
             print(daybefore)
-        i += 1
+        else:
+            break
         
     limit= len(entrylist)
     #page += 1
