@@ -3,9 +3,11 @@
 {% block content %}
 
 <h1>
+    <b>
     {% for entry in entries[-1:] %}
     {{ entry.datetime | dateformat("%b %-d, %Y") }}
     {% endfor %}
+    </b>
 </h1>
 </br>
 
