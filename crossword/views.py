@@ -20,27 +20,36 @@ def entries(page=1):
     entrylist = []
     page_index = page - 1
     count = session.query(Entry).count()
+    
     #i = 0 
+    
     while entrylist == []:
         entries = session.query(Entry)
         entries = entries.order_by(Entry.datetime.desc())
+        oldestentry = entries[-1]
+        print("oldest", oldestentry)
         for entry in entries:
             daybefore = date.today() - timedelta(page)
             if entry.datetime.strftime("%Y-%m-%d") == daybefore.strftime("%Y-%m-%d"):
                 entrylist.append(entry)
+                print(entrylist)
         if entrylist == []:
             page += 1
             print(entrylist)
             print(daybefore)
-        else:
-            break
         
-    limit= len(entrylist)
-    #page += 1
-    total_pages = (count - 1) / limit + 1
-    has_next = page_index < total_pages - 1
-    has_prev = page_index > 0
-    
+    if oldestentry not in entrylist:    
+        limit= len(entrylist)
+        total_pages = (count - 1) / limit + 1
+        has_next = page_index < total_pages - 1
+        has_prev = page_index > 0
+    else:
+        limit= len(entrylist)
+        total_pages = (count - 1) / limit + 1
+        has_prev = page_index > total_pages - 1
+        has_next = False
+        
+        
     return render_template("entries.html",
         entries=entrylist,
         has_next=has_next,
