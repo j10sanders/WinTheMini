@@ -17,11 +17,9 @@ from datetime import date, timedelta
 @app.route("/page/<int:page>")
 def entries(page=1):
     # Zero-indexed page
-    entrylist = []
     page_index = page - 1
+    entrylist = []
     count = session.query(Entry).count()
-    
-    #i = 0 
     
     while entrylist == []:
         entries = session.query(Entry)
@@ -49,7 +47,6 @@ def entries(page=1):
         has_prev = page_index > total_pages - 1
         has_next = False
         
-        
     return render_template("entries.html",
         entries=entrylist,
         has_next=has_next,
@@ -57,37 +54,6 @@ def entries(page=1):
         page=page,
         total_pages=total_pages
     )
-    
-'''except ZeroDivisionError:
-    
-    count = session.query(Entry).count()
-    entrylist = []
-    i = 0
-    while len(entrylist) == 0:
-        entries = session.query(Entry)
-        entries = entries.order_by(Entry.datetime.desc())
-        daybefore = date.today() - timedelta(page_index+i)
-        for entry in entries:
-            if entry.datetime.strftime("%Y-%m-%d") == daybefore.strftime("%Y-%m-%d"):
-                entrylist.append(entry)
-            print(entrylist)
-            print(daybefore)
-            limit= len(entrylist)
-        i += 1
-    
-        
-
-    total_pages = (count - 1) / limit + 1
-    has_next = page_index < total_pages - 1
-    has_prev = page_index > 0
-    
-    return render_template("entries.html",
-        entries=entrylist,
-        has_next=has_next,
-        has_prev=has_prev,
-        page=page+i,
-        total_pages=total_pages
-    )'''
         
 @app.route("/login", methods=["GET"])
 def login_get():
