@@ -2,26 +2,18 @@
 
 {% block content %}
 <h1>
-    Add Entry
+    Add Your Time
 </h1>
 
 <form role="form" method="POST">
-    
     <div class="form-group">
         <label for="title">Time</label>
-    <input type="text" id="time" data-format="HH:mm" data-template="HH : mm" name="datetime">
-<script>
-$(function(){
-    $('#time').combodate({
-        firstItem: 'name', //show 'hour' and 'minute' string at first item of dropdown
-        minuteStep: 1
-    });  
-});
-</script>
-</div>
+        <input type="text" class="form-control" id="title" name="title" placeholder=":69" required>
+    </div>
+    
     <div class="form-group">
         <label for="content">Comments</label>
-        <textarea class="form-control" id="content" name="content" placeholder="Entry content" rows="5" required></textarea>
+        <textarea class="form-control" id="content" name="content" placeholder="Comments" rows="5"></textarea>
     </div>
     <button type="submit" class="btn btn-default">Submit</button>
 </form>
