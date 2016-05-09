@@ -13,7 +13,7 @@ from datetime import date, timedelta
 
 @app.route("/")
 @app.route("/<selected_date>")
-def entries(selected_date):
+def entries(selected_date = str(datetime.date.today())):
     selected_date = datetime.datetime.strptime(selected_date, "%Y-%m-%d").date()
     print(selected_date)
     # Zero-indexed page
@@ -21,7 +21,6 @@ def entries(selected_date):
     older = selected_date - timedelta(1)
     print(older)
     older = older.strftime("%Y-%m-%d")
-    
     newer = selected_date + timedelta(1)
     newer = newer.strftime("%Y-%m-%d")
     print(newer)
@@ -42,7 +41,7 @@ def entries(selected_date):
             i += 1
             print(entrylist)
             print(daybefore)
-    selected_date = daybefore
+    #selected_date = daybefore
         
     limit= len(entrylist)
     total_pages = (count - 1) / limit + 1
