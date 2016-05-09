@@ -18,27 +18,28 @@ def entries(selected_date = str(datetime.date.today())):
     print(selected_date)
     # Zero-indexed page
     #page_index = page - 1
-    older = selected_date - timedelta(1)
-    print(older)
-    older = older.strftime("%Y-%m-%d")
-    newer = selected_date + timedelta(1)
-    newer = newer.strftime("%Y-%m-%d")
-    print(newer)
+    i = 0
+    
     entrylist = []
     count = session.query(Entry).count()
-    i = 0
     while entrylist == []:
         entries = session.query(Entry)
         entries = entries.order_by(Entry.datetime.desc())
         oldestentry = entries[-1]
         newestentry = entries[0]
+        older = selected_date - timedelta(1)
+        #print(older)
+        #older = older.strftime("%Y-%m-%d")
+        newer = selected_date + timedelta(1)
+        newer = newer.strftime("%Y-%m-%d")
+        print(newer)
         for entry in entries:
             daybefore = selected_date - timedelta(i)
             if entry.datetime.strftime("%Y-%m-%d") == daybefore.strftime("%Y-%m-%d"):
                 entrylist.append(entry)
                 print(entrylist)
         if entrylist == []:
-            i += 1
+            selected_date = selected_date - timedelta(1)
             print(entrylist)
             print(daybefore)
     #selected_date = daybefore
