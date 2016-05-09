@@ -19,7 +19,10 @@ def entries(selected_date = str(datetime.date.today())):
     # Zero-indexed page
     #page_index = page - 1
     i = 0
-    
+    entries = session.query(Entry)
+    entries = entries.order_by(Entry.datetime.desc())
+    oldestentry = entries[-1]
+    newestentry = entries[0]
     entrylist = []
     count = session.query(Entry).count()
     while entrylist == []:
