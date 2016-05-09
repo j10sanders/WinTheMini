@@ -12,7 +12,7 @@ import datetime
 from datetime import date, timedelta
 
 @app.route("/")
-@app.route("/<selected_date>")
+@app.route("/date/<selected_date>")
 def entries(selected_date = str(datetime.date.today())):
     selected_date = datetime.datetime.strptime(selected_date, "%Y-%m-%d").date()
     print(selected_date)
@@ -33,7 +33,7 @@ def entries(selected_date = str(datetime.date.today())):
         oldestentry = entries[-1]
         newestentry = entries[0]
         for entry in entries:
-            daybefore = date.today() - timedelta(i)
+            daybefore = selected_date - timedelta(i)
             if entry.datetime.strftime("%Y-%m-%d") == daybefore.strftime("%Y-%m-%d"):
                 entrylist.append(entry)
                 print(entrylist)
