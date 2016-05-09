@@ -26,10 +26,6 @@ def entries(selected_date = str(datetime.date.today())):
     entrylist = []
     count = session.query(Entry).count()
     while entrylist == []:
-        entries = session.query(Entry)
-        entries = entries.order_by(Entry.datetime.desc())
-        oldestentry = entries[-1]
-        newestentry = entries[0]
         older = selected_date - timedelta(1)
         #print(older)
         #older = older.strftime("%Y-%m-%d")
