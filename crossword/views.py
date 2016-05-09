@@ -30,7 +30,7 @@ def entries(selected_date = str(datetime.date.today())):
         #print(older)
         #older = older.strftime("%Y-%m-%d")
         newer = selected_date + timedelta(1)
-        newer = newer.strftime("%Y-%m-%d")
+        #newer = newer.strftime("%Y-%m-%d")
         print(newer)
         for entry in entries:
             daybefore = selected_date - timedelta(i)
@@ -42,6 +42,7 @@ def entries(selected_date = str(datetime.date.today())):
             print(entrylist)
             print(daybefore)
     #selected_date = daybefore
+    #NEED A NEW/SEPERATE METHOD FOR NEWER.**************
         
     limit= len(entrylist)
     total_pages = (count - 1) / limit + 1
