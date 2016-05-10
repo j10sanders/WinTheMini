@@ -94,11 +94,11 @@ def register_get():
 @app.route("/register", methods=["POST"])
 def register_post():
     try: 
-        user = User(username=request.form["username"], password=generate_password_hash(request.form["password"]), email=request.form["email"])
-        session.add(user)
+        name = User(name=request.form["username"], password=generate_password_hash(request.form["password"]), email=request.form["email"])
+        session.add(name)
         session.commit()
         flash("User successfully registered")
-        login_user(user)
+        login_user(name)
         return redirect(request.args.get("next") or url_for("entries"))
     except IntegrityError:
         flash("The username or email was already taken.  This app isn't sophisticated enough to let you reset a password, so just register a new user", "danger")
