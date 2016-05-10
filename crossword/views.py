@@ -4,12 +4,14 @@ from . import app
 from .database import session, Entry
 from flask import flash
 from flask.ext.login import login_user, logout_user
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 from .database import User
 from flask import request, redirect, url_for
 from flask.ext.login import login_required, current_user
 import datetime
 from datetime import date, timedelta
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm.exc import NoResultFound
 
 @app.route("/")
 @app.route("/date/<selected_date>")
@@ -82,6 +84,26 @@ def login_post():
     login_user(user, remember=True, force=True)
     flash('Logged in successfully')
     return redirect(request.args.get('next') or url_for("add_entry_get"))
+    
+
+@app.route("/register", methods=["GET"])
+def register_get():
+    print(request.query_string[11:])
+    return render_template('register.html')
+
+@app.route("/register", methods=["POST"])
+def register_post():
+    try: 
+        user = User(username=request.form["username"], password=generate_password_hash(request.form["password"]), email=request.form["email"])
+        session.add(user)
+        session.commit()
+        flash("User successfully registered")
+        login_user(user)
+        return redirect(request.args.get("next") or url_for("entries"))
+    except IntegrityError:
+        flash("The username or email was already taken.  This app isn't sophisticated enough to let you reset a password, so just register a new user", "danger")
+        return redirect(url_for("register_get"))
+    
     
 @app.route("/entry/<id>", methods=["GET"])
 def get_entry(id):
