@@ -30,7 +30,7 @@ def seed():
     
 @manager.command
 def adduser():
-    name = input("Name: ")
+    name = input("Username: ")
     email = input("Email: ")
     if session.query(User).filter_by(email=email).first():
         print("User with that email address already exists")
