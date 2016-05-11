@@ -65,6 +65,7 @@ def entries(selected_date = str(datetime.date.today())):
     '''quickest = min(int(entry.title) for entry in entrylist)
     print(quickest)'''
     for entry in entrylist:
+        print(datetime.timedelta(seconds=int(entry.title)))
         print(entry.title)
         
     return render_template("entries.html",
