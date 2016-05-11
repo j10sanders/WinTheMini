@@ -45,6 +45,9 @@ def entries(selected_date = str(datetime.date.today())):
             print(daybefore)
     #selected_date = daybefore
     #NEED A NEW/SEPERATE METHOD FOR NEWER.**************
+    
+    #Trying to classify a winner here
+    
         
     limit= len(entrylist)
     total_pages = (count - 1) / limit + 1
@@ -58,6 +61,11 @@ def entries(selected_date = str(datetime.date.today())):
     else:
         has_prev = True
         has_next = False
+        
+    '''quickest = min(int(entry.title) for entry in entrylist)
+    print(quickest)'''
+    '''for entry in entrylist:
+        print(entry.title)'''
         
     return render_template("entries.html",
         entries=entrylist,
@@ -120,8 +128,10 @@ def add_entry_get():
 @app.route("/entry/add", methods=["POST"])
 @login_required
 def add_entry_post():
+    time = request.form["title"]
+    print(sum(int(x) * 60 ** i for i,x in enumerate(reversed(time.split(":")))))
     entry = Entry(
-        title=request.form["title"],
+        title=int(time),
         content=request.form["content"],
         author=current_user
     )
