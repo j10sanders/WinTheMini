@@ -64,8 +64,8 @@ def entries(selected_date = str(datetime.date.today())):
         
     '''quickest = min(int(entry.title) for entry in entrylist)
     print(quickest)'''
-    '''for entry in entrylist:
-        print(entry.title)'''
+    for entry in entrylist:
+        print(entry.title)
         
     return render_template("entries.html",
         entries=entrylist,
@@ -96,7 +96,6 @@ def login_post():
 
 @app.route("/register", methods=["GET"])
 def register_get():
-    print(request.query_string[11:])
     return render_template('register.html')
 
 @app.route("/register", methods=["POST"])
@@ -131,7 +130,7 @@ def add_entry_post():
     time = request.form["title"]
     print(sum(int(x) * 60 ** i for i,x in enumerate(reversed(time.split(":")))))
     entry = Entry(
-        title=int(time),
+        title=sum(int(x) * 60 ** i for i,x in enumerate(reversed(time.split(":")))),
         content=request.form["content"],
         author=current_user
     )
