@@ -189,3 +189,4 @@ def delete_entry_post(id):
     session.commit()
     return redirect(url_for("entries"))
     
+    
