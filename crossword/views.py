@@ -64,10 +64,11 @@ def entries(selected_date = str(datetime.date.today())):
         
     '''quickest = min(int(entry.title) for entry in entrylist)
     print(quickest)'''
-    for entry in entrylist:
-        #print(datetime.timedelta(seconds=int(entry.title)))
+    #for entry in entrylist:
+    test = entrylist[0]
+    print(datetime.timedelta(seconds=int(test.title)))
         #try this when only one entry for the day :)
-        print(entry.title)
+    #print(test.title, "test")
         
     return render_template("entries.html",
         entries=entrylist,
@@ -130,9 +131,15 @@ def add_entry_get():
 @login_required
 def add_entry_post():
     time = request.form["title"]
-    print(sum(int(x) * 60 ** i for i,x in enumerate(reversed(time.split(":")))))
+    if time[0] == ":":
+        title = time
+    elif ":" not in time:
+        title = time
+    else:
+        title=sum(int(x) * 60 ** i for i,x in enumerate(reversed(time.split(":"))))
+    #print(sum(int(x) * 60 ** i for i,x in enumerate(reversed(time.split(":")))))
     entry = Entry(
-        title=sum(int(x) * 60 ** i for i,x in enumerate(reversed(time.split(":")))),
+        title = title,
         content=request.form["content"],
         author=current_user
     )
