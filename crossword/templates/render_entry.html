@@ -3,21 +3,22 @@
 
 {% block content %}
 
-<h1>
-    Entry {{entry.id}}
-</h1>
 
 {{ macros.render_entry(entry) }}
 
-<p>
-Author: {{ entry.author.name|default('unknown') }}   
-</p>
 
- <p>
+ <h2>
       <!-- This is a comment  <li><a href="/entry/{{ entry.id }}/edit">Edit This Entry</a></li> --> 
        {% if current_user.is_authenticated %}
        <a href="{{ url_for( 'edit_entry_post', id = entry.id)}}">   Edit This Entry    </a>
        {% endif %}
-</p>
+</h2>
+
+ <h2>
+      <!-- This is a comment  <li><a href="/entry/{{ entry.id }}/edit">Edit This Entry</a></li> --> 
+       {% if current_user.is_authenticated %}
+       <a href="{{ url_for( 'delete_entry_get', id = entry.id)}}">   Delete This Entry    </a>
+       {% endif %}
+</h2>
 
 {% endblock %}

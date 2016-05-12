@@ -66,9 +66,20 @@ def entries(selected_date = str(datetime.date.today())):
     print(quickest)'''
     #for entry in entrylist:
     test = entrylist[0]
-    print(datetime.timedelta(seconds=int(test.title)))
+    #formatted = datetime.timedelta(seconds=int(test.title))
+    #print(formatted)
+    #formatted.datetime.strftime("%m-%s")
+    s = int(test.title)
+    hours, remainder = divmod(s, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    print('%s:%s' % (minutes, seconds))
         #try this when only one entry for the day :)
     #print(test.title, "test")
+    
+    '''for entry.title in entrylist:
+        entry.title = int(entry.title)
+        hours, remainder = divmod(entry.title, 3600)
+        minutes, seconds = divmod(remainder, 60)'''
         
     return render_template("entries.html",
         entries=entrylist,
@@ -149,6 +160,7 @@ def add_entry_post():
     
     
 @app.route("/entry/<id>/edit", methods=["GET"])
+@login_required
 def edit_entry_get(id):
     entry = session.query(Entry)
     return render_template("edit_entry.html", entry = entry.get(id))
