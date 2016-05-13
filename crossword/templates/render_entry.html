@@ -9,14 +9,14 @@
 
  <h2>
       <!-- This is a comment  <li><a href="/entry/{{ entry.id }}/edit">Edit This Entry</a></li> --> 
-       {% if current_user.is_authenticated %}
+       {% if current_user == entry.author %}
        <a href="{{ url_for( 'edit_entry_post', id = entry.id)}}">   Edit This Entry    </a>
        {% endif %}
 </h2>
 
  <h2>
       <!-- This is a comment  <li><a href="/entry/{{ entry.id }}/edit">Edit This Entry</a></li> --> 
-       {% if current_user.is_authenticated %}
+       {% if current_user == entry.author %}
        <a href="{{ url_for( 'delete_entry_get', id = entry.id)}}">   Delete This Entry    </a>
        {% endif %}
 </h2>
