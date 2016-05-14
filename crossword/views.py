@@ -9,15 +9,36 @@ from .database import User
 from flask import request, redirect, url_for
 from flask.ext.login import login_required, current_user
 import datetime
-from datetime import date, timedelta
+from datetime import date, timedelta, tzinfo
+from pytz import timezone
+import pytz
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
 
+
 @app.route("/")
 @app.route("/date/<selected_date>")
-def entries(selected_date = str(datetime.date.today())):
-    selected_date = datetime.datetime.strptime(selected_date, "%Y-%m-%d").date()
+def entries(selected_date = str(datetime.datetime.now(pytz.timezone('US/Eastern')))):
     print(selected_date)
+    try:
+        selected_date = datetime.datetime.strptime(selected_date, "%Y-%m-%d").date()
+    except ValueError:
+        selected_date = selected_date[:selected_date.rindex(" ")]
+        selected_date = datetime.datetime.strptime(selected_date, "%Y-%m-%d").date()
+    '''now_utc = datetime.datetime.utcnow()
+    now_utc = pytz.utc.localize(now_utc)
+    local_tz = pytz.timezone('America/New_York')
+    selected_date = (now_utc.astimezone(local_tz).date())'''
+    
+
+    print(selected_date)
+    '''now_utc = datetime.datetime.utcnow()
+    now_utc = pytz.utc.localize(now_utc)
+    local_tz = pytz.timezone('America/New_York')'''
+    #selected_date = (now_utc.astimezone(local_tz).date())
+    #local_time = datetime.datetime.strptime(local_time, "%Y-%m-%d").date()
+    #selected_date = str(datetime.date.today())
+    #selected_date = datetime.datetime.strptime(str(selected_date), "%Y-%m-%d").date()
     # Zero-indexed page
     #page_index = page - 1
     i = 0
@@ -29,11 +50,9 @@ def entries(selected_date = str(datetime.date.today())):
     count = session.query(Entry).count()
     while entrylist == []:
         older = selected_date - timedelta(1)
-        #print(older)
-        #older = older.strftime("%Y-%m-%d")
         newer = selected_date + timedelta(1)
-        #newer = newer.strftime("%Y-%m-%d")
         print(newer)
+        #create a list (entrylist) that has just the entries from a certain day.
         for entry in entries:
             daybefore = selected_date - timedelta(i)
             if entry.datetime.strftime("%Y-%m-%d") == daybefore.strftime("%Y-%m-%d"):
@@ -43,7 +62,7 @@ def entries(selected_date = str(datetime.date.today())):
             selected_date = selected_date - timedelta(1)
             print(entrylist)
             print(daybefore)
-    #selected_date = daybefore
+            
     #NEED A NEW/SEPERATE METHOD FOR NEWER.**************
     
     #Trying to classify a winner here
@@ -52,6 +71,7 @@ def entries(selected_date = str(datetime.date.today())):
     limit= len(entrylist)
     total_pages = (count - 1) / limit + 1
     
+    #determine "newer" and/or "older" links should be shown
     if newestentry in entrylist:
         has_next = True
         has_prev = False
@@ -64,22 +84,23 @@ def entries(selected_date = str(datetime.date.today())):
         
     '''quickest = min(int(entry.title) for entry in entrylist)
     print(quickest)'''
-    #for entry in entrylist:
-    test = entrylist[0]
+    #test = entrylist[0]
     #formatted = datetime.timedelta(seconds=int(test.title))
     #print(formatted)
     #formatted.datetime.strftime("%m-%s")
-    s = int(test.title)
+    '''s = int(test.title)
     hours, remainder = divmod(s, 3600)
     minutes, seconds = divmod(remainder, 60)
-    print('%s:%s' % (minutes, seconds))
-        #try this when only one entry for the day :)
+    print('%s:%s' % (minutes, seconds))'''
+    #try this when only one entry for the day :)
     #print(test.title, "test")
     
     '''for entry.title in entrylist:
         entry.title = int(entry.title)
         hours, remainder = divmod(entry.title, 3600)
         minutes, seconds = divmod(remainder, 60)'''
+    
+    
         
     return render_template("entries.html",
         entries=entrylist,
@@ -173,6 +194,7 @@ def edit_entry_post(id):
         entry = session.query(Entry).get(id)
         entry.title = request.form["title"]
         entry.content = request.form["content"]
+        entry.datetime = request.form
         session.commit()
         return redirect(url_for("entries"))
         

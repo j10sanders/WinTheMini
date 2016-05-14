@@ -6,7 +6,7 @@ from sqlalchemy.orm import relationship
 
 from . import app
 
-engine = create_engine(app.config["SQLALCHEMY_DATABASE_URI"])
+engine = create_engine(app.config["SQLALCHEMY_DATABASE_URI"], connect_args={"options": "-c timezone=est"})
 Base = declarative_base()
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -32,7 +32,7 @@ class Entry(Base):
     id = Column(Integer, primary_key=True)
     title = Column(Integer)
     content = Column(Text)
-    datetime = Column(DateTime, default=datetime.datetime.now)
+    datetime = Column(DateTime(timezone=True), default=datetime.datetime.now)
     author_id = Column(Integer, ForeignKey('users.id'))
     
 '''class Day_Stats(Base):
