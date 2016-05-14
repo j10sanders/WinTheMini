@@ -25,16 +25,15 @@ def entries(selected_date = str(datetime.datetime.now(pytz.timezone('US/Eastern'
     except ValueError:
         selected_date = selected_date[:selected_date.rindex(" ")]
         selected_date = datetime.datetime.strptime(selected_date, "%Y-%m-%d").date()
-    '''now_utc = datetime.datetime.utcnow()
-    now_utc = pytz.utc.localize(now_utc)
-    local_tz = pytz.timezone('America/New_York')
-    selected_date = (now_utc.astimezone(local_tz).date())'''
+    
+    now_utc = datetime.datetime.now(timezone('UTC'))
+    print(now_utc)
+    now_eastern = now_utc.astimezone(timezone('US/Eastern'))
+    print(now_eastern, "should be 16")
+    #selected_date = (now_utc.astimezone(local_tz).date())
     
 
     print(selected_date)
-    '''now_utc = datetime.datetime.utcnow()
-    now_utc = pytz.utc.localize(now_utc)
-    local_tz = pytz.timezone('America/New_York')'''
     #selected_date = (now_utc.astimezone(local_tz).date())
     #local_time = datetime.datetime.strptime(local_time, "%Y-%m-%d").date()
     #selected_date = str(datetime.date.today())
@@ -54,14 +53,18 @@ def entries(selected_date = str(datetime.datetime.now(pytz.timezone('US/Eastern'
         print(newer)
         #create a list (entrylist) that has just the entries from a certain day.
         for entry in entries:
+            #print(entry.datetime)
+            #entry.datetime = datetime(timezone('UTC'))
+            #entry.datetime.astimezone(timezone('US/Eastern'))
+            #print(entry.datetime, "want this to be 15:43:21.262308")
             daybefore = selected_date - timedelta(i)
             if entry.datetime.strftime("%Y-%m-%d") == daybefore.strftime("%Y-%m-%d"):
                 entrylist.append(entry)
                 print(entrylist)
         if entrylist == []:
             selected_date = selected_date - timedelta(1)
-            print(entrylist)
-            print(daybefore)
+            return redirect(url_for("entries", selected_date = selected_date))
+            
             
     #NEED A NEW/SEPERATE METHOD FOR NEWER.**************
     
