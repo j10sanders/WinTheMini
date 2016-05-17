@@ -17,20 +17,21 @@ from sqlalchemy.orm.exc import NoResultFound
 
 @app.route("/")
 @app.route("/date/<selected_date>")
-def entries(selected_date = str(datetime.now())):
+def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
+    print(selected_date, "selecteddate")
     EST = timezone('America/New_York')
     now = datetime.now(EST)
-    
+    print(now, "now est?")
     print(selected_date)
     try:
-        selected_date = datetime.strptime(selected_date, "%Y-%m-%d")
-        selected_date = selected_date.replace(tzinfo=pytz.utc).astimezone(EST).date()
+        selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
+        #selected_date = selected_date.replace(tzinfo=pytz.utc).astimezone(EST).date()
         
         #selected_date = selected_date.replace(tzinfo=pytz.utc).astimezone(EST)
     except ValueError:
         selected_date = selected_date[:selected_date.rindex(" ")]
-        selected_date = datetime.strptime(selected_date, "%Y-%m-%d")
-        selected_date = selected_date.replace(tzinfo=pytz.utc).astimezone(EST).date()
+        selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
+        #selected_date = selected_date.replace(tzinfo=pytz.utc).astimezone(EST).date()
     print(selected_date)
 
     # Zero-indexed page
@@ -61,7 +62,7 @@ def entries(selected_date = str(datetime.now())):
             entrylist.append(entry)
             print(entrylist)
     if entrylist == []:
-        selected_date = selected_date - timedelta(1)
+        selected_date = older
         return redirect(url_for("entries", selected_date = selected_date))
                 
             
@@ -89,10 +90,11 @@ def entries(selected_date = str(datetime.now())):
         entries=entrylist,
         has_next=has_next,
         has_prev=has_prev,
-        selected_date=selected_date,
+        selected_date = selected_date,
         older=older,
         newer=newer,
-        total_pages=total_pages
+        total_pages=total_pages,
+        entrytime = entrytime
     )
         
 @app.route("/login", methods=["GET"])
