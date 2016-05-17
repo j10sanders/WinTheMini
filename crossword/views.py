@@ -17,31 +17,28 @@ from sqlalchemy.orm.exc import NoResultFound
 
 @app.route("/")
 @app.route("/date/<selected_date>")
-def entries(selected_date = str(datetime.now(pytz.timezone('US/Eastern')))):
+def entries(selected_date = str(datetime.now())):
+    EST = timezone('America/New_York')
+    now = datetime.now(EST)
+    
     print(selected_date)
     try:
-        selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
+        selected_date = datetime.strptime(selected_date, "%Y-%m-%d")
+        selected_date = selected_date.replace(tzinfo=pytz.utc).astimezone(EST).date()
+        
+        #selected_date = selected_date.replace(tzinfo=pytz.utc).astimezone(EST)
     except ValueError:
         selected_date = selected_date[:selected_date.rindex(" ")]
-        selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
-    
-    #selected_date = (now_utc.astimezone(local_tz).date())
-    
-
+        selected_date = datetime.strptime(selected_date, "%Y-%m-%d")
+        selected_date = selected_date.replace(tzinfo=pytz.utc).astimezone(EST).date()
     print(selected_date)
-    #selected_date = (now_utc.astimezone(local_tz).date())
-    #local_time = datetime.datetime.strptime(local_time, "%Y-%m-%d").date()
-    #selected_date = str(datetime.date.today())
-    #selected_date = datetime.datetime.strptime(str(selected_date), "%Y-%m-%d").date()
+
     # Zero-indexed page
     #page_index = page - 1
     i = 0
     entries = session.query(Entry)
     entries = entries.order_by(Entry.datetime.desc())
-    
-    EST = timezone('America/New_York')
-    now = datetime.now(EST)
-   
+
     oldestentry = entries[-1]
     newestentry = entries[0]
     entrylist = []
@@ -54,15 +51,9 @@ def entries(selected_date = str(datetime.now(pytz.timezone('US/Eastern')))):
     for entry in entries:
         entrytime = entry.datetime
         entrytime = entrytime.replace(tzinfo=pytz.utc).astimezone(EST)
-        entrytime = entrytime.strftime("%Y-%m-%d")
         print(entrytime)
-        #entry.datetime = datetime(timezone('UTC'))
-        #entry.datetime.astimezone(timezone('US/Eastern'))
-        #print(entry.datetime, "want this to be 15:43:21.262308")
-        ##entrytime = entry.datetime.strftime("%Y-%m-%d")
-        #print(entrytime)
-        #entrytime = entry.datetime(timezone('UTC'))
-        
+        entrytime = entrytime.strftime("%Y-%m-%d")
+
         daybefore = selected_date - timedelta(i)
         daybefore = daybefore.strftime("%Y-%m-%d")
         print(daybefore, "daybefore")
@@ -92,34 +83,15 @@ def entries(selected_date = str(datetime.now(pytz.timezone('US/Eastern')))):
     else:
         has_prev = True
         has_next = False
-        
-    '''quickest = min(int(entry.title) for entry in entrylist)
-    print(quickest)'''
-    #test = entrylist[0]
-    #formatted = datetime.timedelta(seconds=int(test.title))
-    #print(formatted)
-    #formatted.datetime.strftime("%m-%s")
-    '''s = int(test.title)
-    hours, remainder = divmod(s, 3600)
-    minutes, seconds = divmod(remainder, 60)
-    print('%s:%s' % (minutes, seconds))'''
-    #try this when only one entry for the day :)
-    #print(test.title, "test")
-    
-    '''for entry.title in entrylist:
-        entry.title = int(entry.title)
-        hours, remainder = divmod(entry.title, 3600)
-        minutes, seconds = divmod(remainder, 60)'''
-    
-    
+
         
     return render_template("entries.html",
         entries=entrylist,
         has_next=has_next,
         has_prev=has_prev,
         selected_date=selected_date,
-        older = older,
-        newer = newer,
+        older=older,
+        newer=newer,
         total_pages=total_pages
     )
         
