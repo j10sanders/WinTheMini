@@ -8,8 +8,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from .database import User
 from flask import request, redirect, url_for
 from flask.ext.login import login_required, current_user
-import datetime
-from datetime import date, timedelta, tzinfo
+from datetime import datetime, timedelta
 from pytz import timezone
 import pytz
 from sqlalchemy.exc import IntegrityError
@@ -18,18 +17,14 @@ from sqlalchemy.orm.exc import NoResultFound
 
 @app.route("/")
 @app.route("/date/<selected_date>")
-def entries(selected_date = str(datetime.datetime.now(pytz.timezone('US/Eastern')))):
+def entries(selected_date = str(datetime.now(pytz.timezone('US/Eastern')))):
     print(selected_date)
     try:
-        selected_date = datetime.datetime.strptime(selected_date, "%Y-%m-%d").date()
+        selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
     except ValueError:
         selected_date = selected_date[:selected_date.rindex(" ")]
-        selected_date = datetime.datetime.strptime(selected_date, "%Y-%m-%d").date()
+        selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
     
-    now_utc = datetime.datetime.now(timezone('UTC'))
-    print(now_utc)
-    now_eastern = now_utc.astimezone(timezone('US/Eastern'))
-    print(now_eastern, "should be 16")
     #selected_date = (now_utc.astimezone(local_tz).date())
     
 
@@ -43,28 +38,41 @@ def entries(selected_date = str(datetime.datetime.now(pytz.timezone('US/Eastern'
     i = 0
     entries = session.query(Entry)
     entries = entries.order_by(Entry.datetime.desc())
+    
+    EST = timezone('America/New_York')
+    now = datetime.now(EST)
+   
     oldestentry = entries[-1]
     newestentry = entries[0]
     entrylist = []
     count = session.query(Entry).count()
-    while entrylist == []:
-        older = selected_date - timedelta(1)
-        newer = selected_date + timedelta(1)
-        print(newer)
-        #create a list (entrylist) that has just the entries from a certain day.
-        for entry in entries:
-            #print(entry.datetime)
-            #entry.datetime = datetime(timezone('UTC'))
-            #entry.datetime.astimezone(timezone('US/Eastern'))
-            #print(entry.datetime, "want this to be 15:43:21.262308")
-            daybefore = selected_date - timedelta(i)
-            if entry.datetime.strftime("%Y-%m-%d") == daybefore.strftime("%Y-%m-%d"):
-                entrylist.append(entry)
-                print(entrylist)
-        if entrylist == []:
-            selected_date = selected_date - timedelta(1)
-            return redirect(url_for("entries", selected_date = selected_date))
-            
+    
+    older = selected_date - timedelta(1)
+    newer = selected_date + timedelta(1)
+    print(newer)
+    #create a list (entrylist) that has just the entries from a certain day.
+    for entry in entries:
+        entrytime = entry.datetime
+        entrytime = entrytime.replace(tzinfo=pytz.utc).astimezone(EST)
+        entrytime = entrytime.strftime("%Y-%m-%d")
+        print(entrytime)
+        #entry.datetime = datetime(timezone('UTC'))
+        #entry.datetime.astimezone(timezone('US/Eastern'))
+        #print(entry.datetime, "want this to be 15:43:21.262308")
+        ##entrytime = entry.datetime.strftime("%Y-%m-%d")
+        #print(entrytime)
+        #entrytime = entry.datetime(timezone('UTC'))
+        
+        daybefore = selected_date - timedelta(i)
+        daybefore = daybefore.strftime("%Y-%m-%d")
+        print(daybefore, "daybefore")
+        if entrytime == daybefore:
+            entrylist.append(entry)
+            print(entrylist)
+    if entrylist == []:
+        selected_date = selected_date - timedelta(1)
+        return redirect(url_for("entries", selected_date = selected_date))
+                
             
     #NEED A NEW/SEPERATE METHOD FOR NEWER.**************
     
