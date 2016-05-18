@@ -21,8 +21,8 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
     print(selected_date, "selecteddate")
     EST = timezone('America/New_York')
     now = datetime.now(EST)
-    print(now, "now est?")
-    print(selected_date)
+    #print(now, "now est?")
+    #print(selected_date)
     try:
         selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
         #selected_date = selected_date.replace(tzinfo=pytz.utc).astimezone(EST).date()
@@ -32,11 +32,11 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
         selected_date = selected_date[:selected_date.rindex(" ")]
         selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
         #selected_date = selected_date.replace(tzinfo=pytz.utc).astimezone(EST).date()
-    print(selected_date)
+    
 
     # Zero-indexed page
     #page_index = page - 1
-    i = 0
+    i = 1
     entries = session.query(Entry)
     entries = entries.order_by(Entry.datetime.desc())
 
@@ -45,23 +45,27 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
     entrylist = []
     count = session.query(Entry).count()
     
+    #datedisplay is used for string version of selecteddate
+    datedisplay = selected_date.strftime("%Y-%m-%d")
     older = selected_date - timedelta(1)
     newer = selected_date + timedelta(1)
     print(newer)
     #create a list (entrylist) that has just the entries from a certain day.
     for entry in entries:
         entrytime = entry.datetime
-        entrytime = entrytime.replace(tzinfo=pytz.utc).astimezone(EST)
-        print(entrytime)
+        entrytime = entrytime.replace(tzinfo=pytz.utc).astimezone(EST).date()
         entrytime = entrytime.strftime("%Y-%m-%d")
-
-        daybefore = selected_date - timedelta(i)
+        
+        daybefore = selected_date - timedelta(1)
         daybefore = daybefore.strftime("%Y-%m-%d")
-        print(daybefore, "daybefore")
-        if entrytime == daybefore:
+        #print(daybefore, "daybefore")
+        if entrytime == datedisplay:
             entrylist.append(entry)
             print(entrylist)
     if entrylist == []:
+        i += 1
+        print(i)
+        newer = selected_date + timedelta(i)
         selected_date = older
         return redirect(url_for("entries", selected_date = selected_date))
                 
@@ -71,8 +75,8 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
     #Trying to classify a winner here
     
         
-    limit= len(entrylist)
-    total_pages = (count - 1) / limit + 1
+    #limit= len(entrylist)
+    #total_pages = (count - 1) / limit + 1
     
     #determine "newer" and/or "older" links should be shown
     if newestentry in entrylist:
@@ -84,7 +88,6 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
     else:
         has_prev = True
         has_next = False
-
         
     return render_template("entries.html",
         entries=entrylist,
@@ -93,8 +96,6 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
         selected_date = selected_date,
         older=older,
         newer=newer,
-        total_pages=total_pages,
-        entrytime = entrytime
     )
         
 @app.route("/login", methods=["GET"])
