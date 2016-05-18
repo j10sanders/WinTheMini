@@ -148,14 +148,18 @@ def add_entry_get():
 @app.route("/entry/add", methods=["POST"])
 @login_required
 def add_entry_post():
-    time = request.form["title"]
-    if time[0] == ":":
+    try:
+        time = int(request.form["title"])
         title = time
-    elif ":" not in time:
-        title = time
-    else:
-        title=sum(int(x) * 60 ** i for i,x in enumerate(reversed(time.split(":"))))
-    #print(sum(int(x) * 60 ** i for i,x in enumerate(reversed(time.split(":")))))
+    except ValueError:
+        time = request.form["title"]
+        if time[0] == ":":
+            title = time[1:]
+        elif ":" not in time:
+            flash(str("You entered something weird.  Your input should be integers (and you might have a semicolon)"), "danger")
+            return redirect(url_for("add_entry_get"))
+        else:
+            title=sum(int(x) * 60 ** i for i,x in enumerate(reversed(time.split(":"))))
     entry = Entry(
         title = title,
         content=request.form["content"],
