@@ -1,6 +1,6 @@
 {% macro render_entry(entry) %}
 <div class="row">
-    <div class="col-sm-2 text-right metadata">
+    <div class="col-sm-4 text-right metadata">
         <ul class="list-unstyled">
             <h2>
             <li>
@@ -10,7 +10,7 @@
             </h2>
         </ul>
     </div>
-    <div class="col-md-10">
+    <div class="col-md-10 text-left">
         <h1>
          <a href="{{ url_for( 'get_entry', id = entry.id)}}"> {{ entry.title }} </a>
         </h1>
