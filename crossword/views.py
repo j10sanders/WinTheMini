@@ -25,14 +25,10 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
     #print(selected_date)
     try:
         selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
-        #selected_date = selected_date.replace(tzinfo=pytz.utc).astimezone(EST).date()
-        
-        #selected_date = selected_date.replace(tzinfo=pytz.utc).astimezone(EST)
     except ValueError:
         selected_date = selected_date[:selected_date.rindex(" ")]
         selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
-        #selected_date = selected_date.replace(tzinfo=pytz.utc).astimezone(EST).date()
-    
+ 
 
     # Zero-indexed page
     #page_index = page - 1
@@ -43,29 +39,26 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
     oldestentry = entries[-1]
     newestentry = entries[0]
     entrylist = []
-    count = session.query(Entry).count()
     
     #datedisplay is used for string version of selecteddate
-    datedisplay = selected_date.strftime("%Y-%m-%d")
+    datedisplay = datetime.strftime(selected_date, "%b %-d, %Y")
     older = selected_date - timedelta(1)
-    newer = selected_date + timedelta(1)
-    print(newer)
+    newer = selected_date + timedelta(i)
+
     #create a list (entrylist) that has just the entries from a certain day.
     for entry in entries:
         entrytime = entry.datetime
         entrytime = entrytime.replace(tzinfo=pytz.utc).astimezone(EST).date()
-        entrytime = entrytime.strftime("%Y-%m-%d")
+        entrytime = entrytime.strftime("%b %-d, %Y")
         
         daybefore = selected_date - timedelta(1)
-        daybefore = daybefore.strftime("%Y-%m-%d")
+        daybefore = daybefore.strftime("%b %-d, %Y")
         #print(daybefore, "daybefore")
         if entrytime == datedisplay:
             entrylist.append(entry)
             print(entrylist)
     if entrylist == []:
-        i += 1
-        print(i)
-        newer = selected_date + timedelta(i)
+        newer = datedisplay + timedelta(i)
         selected_date = older
         return redirect(url_for("entries", selected_date = selected_date))
                 
@@ -93,7 +86,7 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
         entries=entrylist,
         has_next=has_next,
         has_prev=has_prev,
-        selected_date = selected_date,
+        datedisplay = datedisplay,
         older=older,
         newer=newer,
     )
