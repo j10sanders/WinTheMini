@@ -153,7 +153,10 @@ def add_entry_post():
         title = time
     except ValueError:
         time = request.form["title"]
-        if time[0] == ":":
+        if time.count(":") > 1:
+            flash(str("You entered something weird.  Your input should be integers (and you might have a semicolon)"), "danger")
+            return redirect(url_for("add_entry_get"))
+        elif time[0] == ":":
             title = time[1:]
         elif ":" not in time:
             flash(str("You entered something weird.  Your input should be integers (and you might have a semicolon)"), "danger")
