@@ -25,6 +25,7 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
     #print(selected_date)
     try:
         selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
+        
     except ValueError:
         selected_date = selected_date[:selected_date.rindex(" ")]
         selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
@@ -57,12 +58,18 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
         if entrytime == datedisplay:
             entrylist.append(entry)
             print(entrylist)
+            for x in entrylist:
+                entry.title = int(entry.title)
+                print(entry.title)
+            entrylist.sort(key=lambda x: x.title, reverse = False)
+            print(entrylist)
+                
     if entrylist == []:
-        newer = datedisplay + timedelta(i)
         selected_date = older
         return redirect(url_for("entries", selected_date = selected_date))
                 
-            
+    x = 1000 
+    
     #NEED A NEW/SEPERATE METHOD FOR NEWER.**************
     
     #Trying to classify a winner here
