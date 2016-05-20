@@ -58,11 +58,14 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
         if entrytime == datedisplay:
             entrylist.append(entry)
             print(entrylist)
-            for x in entrylist:
-                entry.title = int(entry.title)
-                print(entry.title)
-            entrylist.sort(key=lambda x: x.title, reverse = False)
-            print(entrylist)
+            try: 
+                for x in entrylist:
+                    entry.title = int(entry.title)
+                    print(entry.title)
+                    entrylist.sort(key=lambda x: x.title, reverse = False)
+                    print(entrylist)
+            except ValueError:
+                flash("There are some non-integers on this page.  Jon needs to fix it so you can see who won :)", "danger")
                 
     if entrylist == []:
         selected_date = older
