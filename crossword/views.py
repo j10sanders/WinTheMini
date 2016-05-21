@@ -13,6 +13,7 @@ from pytz import timezone
 import pytz
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
+#from scipy.stats import rankdata
 
 
 @app.route("/")
@@ -35,7 +36,7 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
     #page_index = page - 1
     i = 1
     entries = session.query(Entry)
-    entries = entries.order_by(Entry.datetime.desc())
+    #entries = entries.order_by(Entry.datetime.desc())
 
     oldestentry = entries[-1]
     newestentry = entries[0]
@@ -65,13 +66,14 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
                     print(entry.title)
                     entrylist.sort(key=lambda x: x.title, reverse = False)
                     print(entrylist)
-            except (ValueError, TypeError):
+            except ValueError:
                 flash("There are some non-integers on this page.  Jon needs to fix it so you can see who won :)", "danger")
                 
     if entrylist == []:
         selected_date = older
         return redirect(url_for("entries", selected_date = selected_date))
                 
+    
     
     #NEED A NEW/SEPERATE METHOD FOR NEWER.**************
     
@@ -171,6 +173,7 @@ def add_entry_post():
         content=request.form["content"],
         author=current_user
     )
+    
     session.add(entry)
     session.commit()
     return redirect(url_for("entries"))

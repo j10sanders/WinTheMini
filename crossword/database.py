@@ -33,9 +33,12 @@ class Entry(Base):
     title = Column(Integer)
     content = Column(Text)
     datetime = Column(DateTime(timezone=True), default=datetime.datetime.now)
+    #score = Column(Integer)
     author_id = Column(Integer, ForeignKey('users.id'))
+
     
-'''class Day_Stats(Base):
+'''class DayResults(Base):
+    __tablename__ = "dayresults"
     id = Column(Integer, primary_key=True)
     winner_id =Column(Integer, ForeignKey('users.id'))'''
     
