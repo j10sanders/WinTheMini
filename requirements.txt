@@ -13,3 +13,4 @@ flask-migrate
 mistune
 pytz
 ranking
+gunicorn
