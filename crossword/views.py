@@ -20,7 +20,7 @@ import ranking
 @app.route("/")
 @app.route("/date/<selected_date>")
 def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
-    print(selected_date, "selecteddate")
+    #print(selected_date, "selecteddate")
     EST = timezone('America/New_York')
     now = datetime.now(EST)
     #print(now, "now est?")
@@ -42,7 +42,7 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
     oldestentry = entries[-1]
     newestentry = entries[0]
     oldesttime = oldestentry.datetime.date()
-    print(oldesttime, "old time")
+    #print(oldesttime, "old time")
     entrylist = []
     
     #datedisplay is used for string version of selecteddate
@@ -60,14 +60,14 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
         daybefore = daybefore.strftime("%b %-d, %Y")
         if entrytime == datedisplay:
             entrylist.append(entry)
-            print(entrylist)
+            #print(entrylist)
             #sort the entries: top score (entry.title) should be at the top
             try: 
                 for x in entrylist:
                     entry.title = int(entry.title)
-                    print(entry.title)
+                    #print(entry.title)
                     entrylist.sort(key=lambda x: x.title, reverse = False)
-                    print(entrylist)
+                    #print(entrylist)
             except ValueError:
                 flash("There are some non-integers on this page.  Jon needs to fix it so you can see who won :)", "danger")
                 
