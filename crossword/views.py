@@ -21,6 +21,13 @@ import ranking
 @app.route("/date/<selected_date>")
 def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
     #print(selected_date, "selecteddate")
+    for i in range(2):
+        entry = Entry(
+            title="144",
+            content="meh"
+        )
+        session.add(entry)
+    session.commit()
     EST = timezone('America/New_York')
     now = datetime.now(EST)
     #print(now, "now est?")
