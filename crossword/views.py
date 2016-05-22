@@ -39,9 +39,9 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
     entries = session.query(Entry)
     entries = entries.order_by(Entry.datetime.desc())
 
-    oldestentry = entries[-1]
-    newestentry = entries[0]
-    oldesttime = oldestentry.datetime.date()
+    #oldestentry = entries[-1]
+    #newestentry = entries[0]
+    #oldesttime = oldestentry.datetime.date()
     #print(oldesttime, "old time")
     entrylist = []
     
@@ -73,10 +73,10 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
                 
     if entrylist == []:
         selected_date = older
-        if selected_date < oldesttime:
-            return redirect(url_for("entries", selected_date = oldesttime))
-        else:
-            return redirect(url_for("entries", selected_date = selected_date))
+        #if selected_date < oldesttime:
+            #return redirect(url_for("entries", selected_date = oldesttime))
+        #else:
+        return redirect(url_for("entries", selected_date = selected_date))
                 
     
     #NEED A NEW/SEPERATE METHOD FOR NEWER.**************
