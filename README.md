@@ -7,4 +7,4 @@ The data might help you determine what time of the day you perform best, which t
 
  
 ## Join!
-You can find the heroku-deployed version here: {Not Deployed Yet}
+You can find the heroku-deployed version here: https://salty-brook-41648.herokuapp.com/
