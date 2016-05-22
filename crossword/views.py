@@ -42,8 +42,6 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
     oldestentry = entries[-1]
     newestentry = entries[0]
     oldesttime = oldestentry.datetime.date()
-    print(oldesttime)
-    #.strptime(oldesttime, "%Y-%m-%d")
     print(oldesttime, "old time")
     entrylist = []
     
@@ -60,11 +58,10 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
         
         daybefore = selected_date - timedelta(1)
         daybefore = daybefore.strftime("%b %-d, %Y")
-        #print(daybefore, "daybefore")
         if entrytime == datedisplay:
             entrylist.append(entry)
             print(entrylist)
-            #sort the entries - top score (entry.title) should be at the top
+            #sort the entries: top score (entry.title) should be at the top
             try: 
                 for x in entrylist:
                     entry.title = int(entry.title)
@@ -82,14 +79,13 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
             return redirect(url_for("entries", selected_date = selected_date))
                 
     
-    
     #NEED A NEW/SEPERATE METHOD FOR NEWER.**************
     
     #Trying to classify a winner here
     
-        
-    #limit= len(entrylist)
-    #total_pages = (count - 1) / limit + 1
+    session.add(entry)
+    session.commit()
+    return redirect(url_for("entries"))
     
     #determine "newer" and/or "older" links should be shown
     if newestentry in entrylist:
