@@ -12,3 +12,4 @@ flask-login
 flask-migrate
 mistune
 pytz
+ranking
