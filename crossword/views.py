@@ -71,12 +71,12 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
             except ValueError:
                 flash("There are some non-integers on this page.  Jon needs to fix it so you can see who won :)", "danger")
                 
-    if entrylist == []:
+    '''if entrylist == []:
         selected_date = older
-        #if selected_date < oldesttime:
-            #return redirect(url_for("entries", selected_date = oldesttime))
-        #else:
-        return redirect(url_for("entries", selected_date = selected_date))
+        if selected_date < oldesttime:
+            return redirect(url_for("entries", selected_date = oldesttime))
+        else:
+            return redirect(url_for("entries", selected_date = selected_date))'''
                 
     
     #NEED A NEW/SEPERATE METHOD FOR NEWER.**************
@@ -88,7 +88,7 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
     return redirect(url_for("entries"))
     
     #determine "newer" and/or "older" links should be shown
-    if newestentry in entrylist:
+    '''if newestentry in entrylist:
         has_next = True
         has_prev = False
     elif oldestentry not in entrylist:    
@@ -96,7 +96,10 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
         has_prev = True
     else:
         has_prev = True
-        has_next = False
+        has_next = False'''
+    
+    has_prev = False
+    has_next = False
         
     return render_template("entries.html",
         entries=entrylist,
