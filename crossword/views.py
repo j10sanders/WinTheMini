@@ -40,9 +40,9 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
     entries = session.query(Entry)
     entries = entries.order_by(Entry.datetime.desc())
 
-    #oldestentry = entries[-1]
-    #newestentry = entries[0]
-    #oldesttime = oldestentry.datetime.date()
+    oldestentry = entries[-1]
+    newestentry = entries[0]
+    oldesttime = oldestentry.datetime.date()
     #print(oldesttime, "old time")
     entrylist = []
     
@@ -85,7 +85,7 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
     #Trying to classify a winner here
     
     #determine "newer" and/or "older" links should be shown
-    '''if newestentry in entrylist:
+    if newestentry in entrylist:
         has_next = True
         has_prev = False
     elif oldestentry not in entrylist:    
@@ -93,10 +93,8 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
         has_prev = True
     else:
         has_prev = True
-        has_next = False'''
-    
-    has_prev = False
-    has_next = False
+        has_next = False
+
         
     return render_template("entries.html",
         entries=entrylist,
