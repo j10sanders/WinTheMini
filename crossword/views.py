@@ -21,13 +21,7 @@ import ranking
 @app.route("/date/<selected_date>")
 def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
     #print(selected_date, "selecteddate")
-    for i in range(2):
-        entry = Entry(
-            title="144",
-            content="meh"
-        )
-        session.add(entry)
-    session.commit()
+
     EST = timezone('America/New_York')
     now = datetime.now(EST)
     #print(now, "now est?")
@@ -90,10 +84,6 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
     
     #Trying to classify a winner here
     
-    session.add(entry)
-    session.commit()
-    return redirect(url_for("entries"))
-    
     #determine "newer" and/or "older" links should be shown
     '''if newestentry in entrylist:
         has_next = True
@@ -146,7 +136,7 @@ def register_post():
         session.commit()
         flash("User successfully registered")
         login_user(name)
-        return redirect(request.args.get("next") or url_for("entries"))
+        return redirect(request.args.get("next") or url_for("add_entry_get)"))
     except IntegrityError:
         flash("The username or email was already taken.  This app isn't sophisticated enough to let you reset a password, so just register a new user", "danger")
         return redirect(url_for("register_get"))
