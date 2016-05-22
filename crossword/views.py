@@ -13,6 +13,7 @@ from pytz import timezone
 import pytz
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
+import ranking
 #from scipy.stats import rankdata
 
 
@@ -36,10 +37,14 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
     #page_index = page - 1
     i = 1
     entries = session.query(Entry)
-    #entries = entries.order_by(Entry.datetime.desc())
+    entries = entries.order_by(Entry.datetime.desc())
 
     oldestentry = entries[-1]
     newestentry = entries[0]
+    oldesttime = oldestentry.datetime.date()
+    print(oldesttime)
+    #.strptime(oldesttime, "%Y-%m-%d")
+    print(oldesttime, "old time")
     entrylist = []
     
     #datedisplay is used for string version of selecteddate
@@ -71,7 +76,10 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
                 
     if entrylist == []:
         selected_date = older
-        return redirect(url_for("entries", selected_date = selected_date))
+        if selected_date < oldesttime:
+            return redirect(url_for("entries", selected_date = oldesttime))
+        else:
+            return redirect(url_for("entries", selected_date = selected_date))
                 
     
     
