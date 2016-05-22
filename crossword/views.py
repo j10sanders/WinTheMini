@@ -72,12 +72,12 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
             except ValueError:
                 flash("There are some non-integers on this page.  Jon needs to fix it so you can see who won :)", "danger")
                 
-    '''if entrylist == []:
+    if entrylist == []:
         selected_date = older
         if selected_date < oldesttime:
             return redirect(url_for("entries", selected_date = oldesttime))
         else:
-            return redirect(url_for("entries", selected_date = selected_date))'''
+            return redirect(url_for("entries", selected_date = selected_date))
                 
     
     #NEED A NEW/SEPERATE METHOD FOR NEWER.**************
@@ -134,7 +134,7 @@ def register_post():
         session.commit()
         flash("User successfully registered")
         login_user(name)
-        return redirect(request.args.get("next") or url_for("add_entry_get)"))
+        return redirect(request.args.get("next") or url_for("entries"))
     except IntegrityError:
         flash("The username or email was already taken.  This app isn't sophisticated enough to let you reset a password, so just register a new user", "danger")
         return redirect(url_for("register_get"))
