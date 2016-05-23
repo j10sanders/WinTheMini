@@ -19,8 +19,8 @@ import ranking
 
 @app.route("/")
 @app.route("/date/<selected_date>")
-def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
-    #print(selected_date, "selecteddate")
+#def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
+def entries(selected_date = ("2016-5-30")):
 
     EST = timezone('America/New_York')
     now = datetime.now(EST)
@@ -32,7 +32,6 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
     except ValueError:
         selected_date = selected_date[:selected_date.rindex(" ")]
         selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
- 
 
     # Zero-indexed page
     #page_index = page - 1
