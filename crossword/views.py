@@ -13,7 +13,7 @@ from pytz import timezone
 import pytz
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
-import ranking
+from ranking import Ranking
 #from scipy.stats import rankdata
 
 
@@ -67,6 +67,8 @@ def entries(selected_date = ("2016-5-30")):
                     entry.title = int(entry.title)
                     #print(entry.title)
                     entrylist.sort(key=lambda x: x.title, reverse = False)
+                    #scores = [ student.name for student in names
+                    
                     #print(entrylist)
             except ValueError:
                 flash("There are some non-integers on this page.  Jon needs to fix it so you can see who won :)", "danger")
@@ -78,7 +80,17 @@ def entries(selected_date = ("2016-5-30")):
         else:
             return redirect(url_for("entries", selected_date = selected_date))
                 
-    
+    sortedscores = [ entry.title for entry in entrylist]
+    print(sortedscores)
+    for day_rank, score in Ranking(sortedscores, reverse=True):
+        print('%d. %d' % (day_rank + 1, score))
+        
+    for entry in entrylist:
+        entry = Entry(day_rank in (Ranking(sortedscores, reverse=True)))
+        session.add(entry)
+        session.commit()
+    for entry in entrylist:
+        print(entry.day_rank, "rank :)")
     #NEED A NEW/SEPERATE METHOD FOR NEWER.**************
     
     #Trying to classify a winner here
