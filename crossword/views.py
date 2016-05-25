@@ -19,8 +19,8 @@ from ranking import Ranking
 
 @app.route("/")
 @app.route("/date/<selected_date>")
-def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
-#def entries(selected_date = ("2016-5-30")):
+#def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
+def entries(selected_date = ("2016-5-27")):
 
     EST = timezone('America/New_York')
     now = datetime.now(EST)
@@ -74,10 +74,13 @@ def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
                 flash("There are some non-integers on this page.  Jon needs to fix it so you can see who won :)", "danger")
                 
     if entrylist == []:
-        selected_date = older
+        
         if selected_date < oldesttime:
+            print("hmmm2")
             return redirect(url_for("entries", selected_date = oldesttime))
         else:
+            selected_date = older
+            print("hmmm")
             return redirect(url_for("entries", selected_date = selected_date))
                 
     sortedscores = [ entry.title for entry in entrylist]
