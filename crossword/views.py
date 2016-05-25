@@ -19,8 +19,8 @@ from ranking import Ranking
 
 @app.route("/")
 @app.route("/date/<selected_date>")
-#def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
-def entries(selected_date = ("2016-5-30")):
+def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
+#def entries(selected_date = ("2016-5-30")):
 
     EST = timezone('America/New_York')
     now = datetime.now(EST)
@@ -82,15 +82,21 @@ def entries(selected_date = ("2016-5-30")):
                 
     sortedscores = [ entry.title for entry in entrylist]
     print(sortedscores)
-    for day_rank, score in Ranking(sortedscores, reverse=True):
-        print('%d. %d' % (day_rank + 1, score))
+    day_rank_list = []
+    for day_rank in Ranking(sortedscores, reverse=True):
+        day_rank_list.append(day_rank[0])
+    print(day_rank_list) 
+       
         
+    '''
     for entry in entrylist:
-        entry = Entry(day_rank in (Ranking(sortedscores, reverse=True)))
+ 
+        entry = Entry(day_rank = day_rank)
         session.add(entry)
-        session.commit()
+    session.commit()
+    
     for entry in entrylist:
-        print(entry.day_rank, "rank :)")
+        print(entry.day_rank, "rank :)")'''
     #NEED A NEW/SEPERATE METHOD FOR NEWER.**************
     
     #Trying to classify a winner here
