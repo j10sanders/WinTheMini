@@ -101,8 +101,6 @@ def entries(selected_date = ("2016-5-31")):
         print(entry.day_rank, "rank :)")'''
     #NEED A NEW/SEPERATE METHOD FOR NEWER.**************
     
-    #Trying to classify a winner here
-    
     #determine "newer" and/or "older" links should be shown
     if newestentry in entrylist:
         has_next = True
@@ -240,5 +238,4 @@ def delete_entry_post(id):
     session.delete(entry)
     session.commit()
     return redirect(url_for("entries"))
-    
-    
+
