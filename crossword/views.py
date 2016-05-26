@@ -76,19 +76,19 @@ def entries(selected_date = ("2016-5-31")):
     if entrylist == []:
         
         if selected_date < oldesttime:
-            print("hmmm2")
+            #print("hmmm2")
             return redirect(url_for("entries", selected_date = oldesttime))
         else:
             selected_date = older
-            print("hmmm")
+            #print("hmmm")
             return redirect(url_for("entries", selected_date = selected_date))
                 
-    sortedscores = [ entry.title for entry in entrylist]
+    '''sortedscores = [ entry.title for entry in entrylist]
     print(sortedscores)
     day_rank_list = []
     for day_rank in Ranking(sortedscores, reverse=True):
         day_rank_list.append(day_rank[0])
-    print(day_rank_list) 
+    print(day_rank_list) '''
        
         
     '''
