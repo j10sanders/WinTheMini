@@ -85,20 +85,19 @@ def entries(selected_date = ("2016-5-31")):
                 
     '''sortedscores = [ entry.title for entry in entrylist]
     print(sortedscores)
-    day_rank_list = []
+    dayranklist = []
     for day_rank in Ranking(sortedscores, reverse=True):
-        day_rank_list.append(day_rank[0])
-    print(day_rank_list) '''
+        dayranklist.append(day_rank[0])
+    print(dayranklist)'''
        
         
-    '''
-    for entry in entrylist:
- 
+    
+    '''for entry in entrylist:
         entry = Entry(day_rank = day_rank)
         session.add(entry)
-    session.commit()
+    session.commit()'''
     
-    for entry in entrylist:
+    '''for entry in entrylist:
         print(entry.day_rank, "rank :)")'''
     #NEED A NEW/SEPERATE METHOD FOR NEWER.**************
     
