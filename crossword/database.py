@@ -33,7 +33,7 @@ class Entry(Base):
     title = Column(Integer)
     content = Column(Text)
     datetime = Column(DateTime(timezone=True), default=datetime.datetime.now)
-    #day_rank = Column(Integer, default=0)
+    #day_rank = Column(Integer)
     author_id = Column(Integer, ForeignKey('users.id'))
 
     

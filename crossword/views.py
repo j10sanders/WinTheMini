@@ -225,7 +225,6 @@ def edit_entry_post(id):
         entry = session.query(Entry).get(id)
         entry.title = request.form["title"]
         entry.content = request.form["content"]
-        entry.datetime = request.form
         session.commit()
         return redirect(url_for("entries"))
         
