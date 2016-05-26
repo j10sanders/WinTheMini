@@ -124,7 +124,18 @@ def entries(selected_date = ("2016-5-27")):
         older=older,
         newer=newer,
     )
-        
+     
+     
+@app.route("/deleteit")
+def deleteit():
+    entries = session.query(Entry)
+    entries = entries.order_by(Entry.datetime.desc())
+    newestentry = entries[0]
+    
+    session.delete(newestentry)
+    session.commit()
+    return redirect(url_for("entries"))
+
 @app.route("/login", methods=["GET"])
 def login_get():
     return render_template("login.html")
