@@ -20,7 +20,7 @@ from ranking import Ranking
 @app.route("/")
 @app.route("/date/<selected_date>")
 #def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
-def entries(selected_date = ("2016-5-31")):
+def entries(selected_date = ("2016-6-7")):
 
     EST = timezone('America/New_York')
     now = datetime.now(EST)
