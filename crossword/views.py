@@ -22,8 +22,8 @@ from ranking import Ranking
 #def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
 def entries(selected_date = ("2017-6-7")):
     
-    print(current_user)
-    print(current_user.password)
+    #print(current_user)
+    #print(current_user.password)
     EST = timezone('America/New_York')
     now = datetime.now(EST)
     try:
@@ -152,7 +152,7 @@ def login_post():
         return redirect(url_for("login_get"))
     login_user(user, remember=True)
     flash('Logged in successfully')
-    print(current_user)
+    #print(current_user)
     return redirect(request.args.get('next') or url_for("add_entry_get"))
     
 
@@ -177,21 +177,21 @@ def register_post():
 @app.route("/entry/<id>", methods=["GET"])
 def get_entry(id):
     entry = session.query(Entry)
-    print(current_user)
+    #print(current_user)
     return render_template("render_entry.html", entry = entry.get(id))
     
     
 @app.route("/entry/add", methods=["GET"])
 @login_required
 def add_entry_get():
-    print(current_user)
+    #print(current_user)
     return render_template("add_entry.html")
 
     
 @app.route("/entry/add", methods=["POST"])
 @login_required
 def add_entry_post():
-    print(current_user)
+    #print(current_user)
     try:
         time = int(request.form["title"])
         title = time
