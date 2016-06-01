@@ -20,18 +20,24 @@ from ranking import Ranking
 @app.route("/")
 @app.route("/date/<selected_date>")
 #def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
-def entries(selected_date = ("2016-6-7")):
-
+def entries(selected_date = ("2017-6-7")):
+    
+    print(current_user)
+    print(current_user.password)
     EST = timezone('America/New_York')
     now = datetime.now(EST)
-    #print(now, "now est?")
-    #print(selected_date)
     try:
         selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
+        if selected_date > now.date():
+            selected_date = now.date()
+            return redirect(url_for("entries", selected_date = selected_date))
         
     except ValueError:
         selected_date = selected_date[:selected_date.rindex(" ")]
         selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
+        if selected_date > now.date():
+            selected_date = now.date()
+            return redirect(url_for("entries", selected_date = selected_date))
 
     # Zero-indexed page
     #page_index = page - 1
@@ -42,7 +48,6 @@ def entries(selected_date = ("2016-6-7")):
     oldestentry = entries[-1]
     newestentry = entries[0]
     oldesttime = oldestentry.datetime.date()
-    #print(oldesttime, "old time")
     entrylist = []
     
     #datedisplay is used for string version of selecteddate
@@ -145,8 +150,9 @@ def login_post():
     if not user or not check_password_hash(user.password, password):
         flash("Incorrect username or password", "danger")
         return redirect(url_for("login_get"))
-    login_user(user, remember=True, force=True)
+    login_user(user, remember=True)
     flash('Logged in successfully')
+    print(current_user)
     return redirect(request.args.get('next') or url_for("add_entry_get"))
     
 
@@ -171,18 +177,21 @@ def register_post():
 @app.route("/entry/<id>", methods=["GET"])
 def get_entry(id):
     entry = session.query(Entry)
+    print(current_user)
     return render_template("render_entry.html", entry = entry.get(id))
     
     
 @app.route("/entry/add", methods=["GET"])
 @login_required
 def add_entry_get():
+    print(current_user)
     return render_template("add_entry.html")
 
     
 @app.route("/entry/add", methods=["POST"])
 @login_required
 def add_entry_post():
+    print(current_user)
     try:
         time = int(request.form["title"])
         title = time
