@@ -28,17 +28,13 @@ def entries(selected_date = ("2017-6-7")):
     now = datetime.now(EST)
     try:
         selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
-        if selected_date > now.date():
-            selected_date = now.date()
-            return redirect(url_for("entries", selected_date = selected_date))
         
     except ValueError:
         selected_date = selected_date[:selected_date.rindex(" ")]
         selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
-        if selected_date > now.date():
-            selected_date = now.date()
-            return redirect(url_for("entries", selected_date = selected_date))
 
+    if selected_date > now.date():
+        selected_date = now.date()
     # Zero-indexed page
     #page_index = page - 1
     i = 1
@@ -95,14 +91,14 @@ def entries(selected_date = ("2017-6-7")):
         #list(map(int, dayranklist))
     print(dayranklist)
        
-        
-    
+    k=0
     for entry in entrylist:
         entry = Entry(day_rank = day_rank[0])
         print(entry)
-        session.add(entry)
+        #session.add(entry)
         print(entry.day_rank)
-    session.commit()
+        k +=1
+    #session.commit()
     
     
 
