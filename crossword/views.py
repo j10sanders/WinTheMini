@@ -60,6 +60,8 @@ def entries(selected_date = ("2017-6-7")):
         daybefore = selected_date - timedelta(1)
         daybefore = daybefore.strftime("%b %-d, %Y")
         if entrytime == datedisplay:
+            #entry.content = repr(entry.content)
+            #entry.content = entry.content.decode('utf-8')
             entrylist.append(entry)
             #print(entrylist)
             #sort the entries: top score (entry.title) should be at the top
@@ -71,7 +73,7 @@ def entries(selected_date = ("2017-6-7")):
                     #scores = [ student.name for student in names
                     
                     #print(entrylist)
-            except ValueError:
+            except (ValueError, TypeError):
                 flash("There are some non-integers on this page.  Jon needs to fix it so you can see who won :)", "danger")
                 
     if entrylist == []:
@@ -85,20 +87,24 @@ def entries(selected_date = ("2017-6-7")):
     sortedscores = [ entry.title for entry in entrylist]
     print(sortedscores)
     dayranklist = []
-    for day_rank in Ranking(sortedscores, reverse=True):
-        dayranklist.append(int(day_rank[0]))
-        #print(dayranklist)
-        #list(map(int, dayranklist))
+    try:
+        for day_rank in Ranking(sortedscores, reverse=True):
+            dayranklist.append(int(day_rank[0]))
+            #print(dayranklist)
+            #list(map(int, dayranklist))
+            k=0
+            for entry in entrylist:
+                entry = Entry(day_rank = dayranklist[k])
+                print(entry)
+                session.add(entry)
+                print(entry.day_rank)
+                k +=1
+            session.commit()
+    except (ValueError, TypeError):
+        pass
     print(dayranklist)
        
-    k=0
-    for entry in entrylist:
-        entry = Entry(day_rank = day_rank[0])
-        print(entry)
-        #session.add(entry)
-        print(entry.day_rank)
-        k +=1
-    #session.commit()
+
     
     
 
@@ -211,6 +217,7 @@ def add_entry_post():
     entry = Entry(
         title = title,
         content=request.form["content"],
+        #content=request.form["content"].encode('utf-8'),
         author=current_user
     )
     
@@ -233,6 +240,7 @@ def edit_entry_post(id):
         entry = session.query(Entry).get(id)
         entry.title = request.form["title"]
         entry.content = request.form["content"]
+        #entry.content = request.form["content"].encode('utf-8')
         session.commit()
         return redirect(url_for("entries"))
         
