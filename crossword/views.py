@@ -87,22 +87,22 @@ def entries(selected_date = ("2017-6-7")):
     sortedscores = [ entry.title for entry in entrylist]
     print(sortedscores)
     dayranklist = []
-    try:
-        for day_rank in Ranking(sortedscores, reverse=True):
-            dayranklist.append(int(day_rank[0]))
-            #print(dayranklist)
-            #list(map(int, dayranklist))
-            k=0
-            for entry in entrylist:
-                entry = Entry(day_rank = dayranklist[k])
-                print(entry)
-                session.add(entry)
-                print(entry.day_rank)
-                k +=1
-            session.commit()
-    except (ValueError, TypeError):
-        pass
-    print(dayranklist)
+#try:
+    for day_rank in Ranking(sortedscores, reverse=True):
+        dayranklist.append(int(day_rank[0]))
+        #print(dayranklist)
+        #list(map(int, dayranklist))
+    k=0
+    for entries in entrylist:
+        entry = Entry(day_rank = dayranklist[k])
+        print(entry)
+        #session.add(entry)
+        print(entry.day_rank)
+        k +=1
+        #session.commit()
+    #except (ValueError, TypeError):
+        #pass
+    print(dayranklist, "dayranklist")
        
 
     
@@ -130,8 +130,8 @@ def entries(selected_date = ("2017-6-7")):
         has_next=has_next,
         has_prev=has_prev,
         datedisplay = datedisplay,
-        older=older,
-        newer=newer,
+        #older=older,
+        #newer=newer,
     )
      
      
