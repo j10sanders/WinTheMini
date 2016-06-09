@@ -40,7 +40,8 @@ def entries(selected_date = ("2017-6-7")):
     i = 1
     entries = session.query(Entry)
     entries = entries.order_by(Entry.datetime.desc())
-
+    print(session.query(Entry.author_id).order_by(Entry.title).all())
+    
     oldestentry = entries[-1]
     newestentry = entries[0]
     oldesttime = oldestentry.datetime.date()
@@ -61,7 +62,7 @@ def entries(selected_date = ("2017-6-7")):
         daybefore = daybefore.strftime("%b %-d, %Y")
         if entrytime == datedisplay:
             #entry.content = repr(entry.content)
-            #entry.content = entry.content.decode('utf-8')
+            
             entrylist.append(entry)
             #print(entrylist)
             #sort the entries: top score (entry.title) should be at the top
@@ -75,7 +76,9 @@ def entries(selected_date = ("2017-6-7")):
                     #print(entrylist)
             except (ValueError, TypeError):
                 flash("There are some non-integers on this page.  Jon needs to fix it so you can see who won :)", "danger")
-                
+        #entry.content = entry.content.decode('utf-8')
+        #entry.content = repr(entry.content).encode('utf-8')
+        #entry.content = entry.content.decode('unicode-escape')
     if entrylist == []:
         
         if selected_date < oldesttime:
@@ -85,7 +88,7 @@ def entries(selected_date = ("2017-6-7")):
             return redirect(url_for("entries", selected_date = selected_date))
                 
     sortedscores = [ entry.title for entry in entrylist]
-    print(sortedscores)
+    print(sortedscores, "sorted scores")
     dayranklist = []
 #try:
     for day_rank in Ranking(sortedscores, reverse=True):
@@ -93,24 +96,28 @@ def entries(selected_date = ("2017-6-7")):
         #print(dayranklist)
         #list(map(int, dayranklist))
     k=0
-    for entries in entrylist:
+    for entry in entrylist:
+        entry_id = session.query(Entry).get(entry.id)
+        print(entry_id, "id")
         entry = Entry(day_rank = dayranklist[k])
-        print(entry)
+        print(entry, entry.day_rank)
+        print(entry_id, "entry.id")
         #session.add(entry)
-        print(entry.day_rank)
+        #print(entry.day_rank)
         k +=1
-        #session.commit()
+    #session.commit()
     #except (ValueError, TypeError):
         #pass
     print(dayranklist, "dayranklist")
-       
+    
+    
+    '''entry = session.query(Entry).get(entry.id)
+    entry.title = request.form["title"]
+    entry.content = request.form["content"]
+    #entry.content = request.form["content"].encode('utf-8')
+    session.commit()
+    return redirect(url_for("entries"))'''
 
-    
-    
-
-    
-    '''for entry in entrylist:
-        print(entry.day_rank, "rank :)")'''
     #NEED A NEW/SEPERATE METHOD FOR NEWER.**************
     
     #determine "newer" and/or "older" links should be shown
@@ -124,14 +131,16 @@ def entries(selected_date = ("2017-6-7")):
         has_prev = True
         has_next = False
 
-        
+    
+
+
     return render_template("entries.html",
         entries=entrylist,
         has_next=has_next,
         has_prev=has_prev,
         datedisplay = datedisplay,
-        #older=older,
-        #newer=newer,
+        older=older,
+        newer=newer,
     )
      
      
