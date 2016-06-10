@@ -267,3 +267,21 @@ def delete_entry_post(id):
     session.commit()
     return redirect(url_for("entries"))
 
+@app.route("/stats", methods=["GET"])
+def stats_get():
+    users = session.query(User).all()
+    entries = session.query(Entry).all()
+    day_rank = session.query(Entry.day_rank).all()
+    return render_template("stats.html", users=users, entries=entries)
+
+
+@app.route("/userinfo/<id>")
+def user_get(id):  
+    """Gets specific info for a user based on their ID"""
+    try:
+        user = session.query(User).filter_by(id=id).one()
+        day_rank = session.query(Entry.day_rank).all()
+    except NoResultFound:
+        #print("No result found for {0}".format(id))
+        user = None
+    return render_template("userinfo.html", user=user, day_rank=day_rank)

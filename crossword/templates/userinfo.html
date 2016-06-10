@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="user">
+  {% if user %}
+    <div class="panel panel-primary">
+      <div class="panel-heading">Name</div>
+      <div class="panel-body">{{ user.username }}</div>
+    </div>
+    <div class="panel panel-primary">
+      <div class="panel-heading">User Registered On</div>
+      <div class="panel-body">{{ user.registered_on }}</div>
+    </div>
+    <div class="panel panel-primary">
+      <div class="panel-heading">Games played</div>
+      <div class="panel-body">
+        {% for game in user.games %}
+          {{ game.dare + "."}}
+          {% endfor %}</div>
+    </div>
+  {% else %}
+    <div class="alert alert-warning" role="alert">
+      No results found!
+    </div>
+  </div>
+  {% endif %}
+{% endblock %}
