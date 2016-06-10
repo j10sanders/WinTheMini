@@ -97,15 +97,16 @@ def entries(selected_date = ("2017-6-7")):
         #list(map(int, dayranklist))
     k=0
     for entry in entrylist:
-        entry_id = session.query(Entry).get(entry.id)
-        print(entry_id, "id")
-        entry = Entry(day_rank = dayranklist[k])
+        entry = session.query(Entry).get(entry.id)
+        #entry = session.query(Entry).get(entry_id)
+        print(entry, "id?")
+        entry.day_rank = day_rank = dayranklist[k]
         print(entry, entry.day_rank)
-        print(entry_id, "entry.id")
-        #session.add(entry)
+        #print(entry.id, "entry.id")
+        session.add(entry)
         #print(entry.day_rank)
         k +=1
-    #session.commit()
+    session.commit()
     #except (ValueError, TypeError):
         #pass
     print(dayranklist, "dayranklist")
