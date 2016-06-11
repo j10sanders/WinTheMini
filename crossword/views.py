@@ -41,7 +41,7 @@ def entries(selected_date = ("2017-6-7")):
     i = 1
     entries = session.query(Entry)
     entries = entries.order_by(Entry.datetime.desc())
-    print(session.query(Entry.author_id).order_by(Entry.title).all(), "author_id's")
+    #print(session.query(Entry.author_id).order_by(Entry.title).all(), "author_id's")
     
     oldestentry = entries[-1]
     newestentry = entries[0]
@@ -63,7 +63,9 @@ def entries(selected_date = ("2017-6-7")):
         daybefore = daybefore.strftime("%b %-d, %Y")
         if entrytime == datedisplay:
             #entry.content = repr(entry.content)
-            
+            #entry.content = entry.content.encode('utf-8').decode()
+            #entry.content = str(entry.content,'utf-8')
+            #entry.content = entry.content.encode('utf-8').decode('ascii')
             entrylist.append(entry)
             #print(entrylist)
             #sort the entries: top score (entry.title) should be at the top
@@ -134,7 +136,7 @@ def entries(selected_date = ("2017-6-7")):
         has_next = False
 
     
-
+    
 
     return render_template("entries.html",
         entries=entrylist,
@@ -231,7 +233,7 @@ def add_entry_post():
         #content=request.form["content"].encode('utf-8'),
         author=current_user
     )
-    
+    print(entry.content)
     session.add(entry)
     session.commit()
     return redirect(url_for("entries"))
@@ -273,7 +275,7 @@ def stats_get():
     users = session.query(User).all()
     #entries = session.query(Entry).all()
     day_rank = session.query(Entry.day_rank).all()
-    entries = session.query(Entry.day_rank).join(User).all()
+    entries = session.query(Entry.day_rank).join(User).order_by(Entry.datetime.desc())
     print(day_rank) 
     '''aid = 0
     while aid < 10:
@@ -307,7 +309,8 @@ def user_get(id):
     """Gets specific info for a user based on their ID"""
     try:
         user = session.query(User).filter_by(id=id).one()
-        day_rank = session.query(Entry.day_rank).all()
+        day_rank = session.query(Entry.day_rank).join(User).filter(Entry.author_id == id).all()
+        #entries = session.query(Entry).join(User).filter(Entry.author_id = id).one()
     except NoResultFound:
         #print("No result found for {0}".format(id))
         user = None
