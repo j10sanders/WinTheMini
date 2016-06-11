@@ -96,7 +96,7 @@ def entries(selected_date = ("2017-6-7")):
 #try:
     for day_rank in Ranking(sortedscores, reverse=True):
         dayranklist.append(int(day_rank[0]+1))
-        print(dayranklist)
+        #print(dayranklist)
         #list(map(int, dayranklist))
     k=0
     for entry in entrylist:
