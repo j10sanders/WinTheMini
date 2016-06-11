@@ -91,20 +91,20 @@ def entries(selected_date = ("2017-6-7")):
             return redirect(url_for("entries", selected_date = selected_date))
                 
     sortedscores = [ entry.title for entry in entrylist]
-    print(sortedscores, "sorted scores")
+    #print(sortedscores, "sorted scores")
     dayranklist = []
 #try:
     for day_rank in Ranking(sortedscores, reverse=True):
-        dayranklist.append(int(day_rank[0]))
-        #print(dayranklist)
+        dayranklist.append(int(day_rank[0]+1))
+        print(dayranklist)
         #list(map(int, dayranklist))
     k=0
     for entry in entrylist:
         entry = session.query(Entry).get(entry.id)
         #entry = session.query(Entry).get(entry_id)
-        print(entry, "id?")
+        #print(entry, "id?")
         entry.day_rank = day_rank = dayranklist[k]
-        print(entry, entry.day_rank)
+        #print(entry, entry.day_rank)
         #print(entry.id, "entry.id")
         session.add(entry)
         #print(entry.day_rank)
@@ -112,7 +112,7 @@ def entries(selected_date = ("2017-6-7")):
     session.commit()
     #except (ValueError, TypeError):
         #pass
-    print(dayranklist, "dayranklist")
+    #print(dayranklist, "dayranklist")
     
     
     '''entry = session.query(Entry).get(entry.id)
@@ -233,7 +233,7 @@ def add_entry_post():
         #content=request.form["content"].encode('utf-8'),
         author=current_user
     )
-    print(entry.content)
+    #print(entry.content)
     session.add(entry)
     session.commit()
     return redirect(url_for("entries"))
@@ -276,7 +276,7 @@ def stats_get():
     #entries = session.query(Entry).all()
     day_rank = session.query(Entry.day_rank).all()
     entries = session.query(Entry.day_rank).join(User).order_by(Entry.datetime.desc())
-    print(day_rank) 
+    #print(day_rank) 
     '''aid = 0
     while aid < 10:
         d = session.query(Entry).filter(Entry.author_id == aid).all()
@@ -288,9 +288,9 @@ def stats_get():
     r = (session.query(Entry).filter(Entry.author_id == 1).all())
     q = session.query(Entry.day_rank).join(User).filter(Entry.author_id == 1).all()
     
-    print(entries, "entries")
+    '''print(entries, "entries")
     print(r)
-    print(q, "q")
+    print(q, "q")'''
     
     '''authorids = session.query(Entry.author_id).order_by(Entry.author_id.desc()).first()
     aid = 1
