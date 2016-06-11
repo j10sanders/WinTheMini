@@ -14,6 +14,7 @@ import pytz
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
 from ranking import Ranking
+from statistics import mean
 #from scipy.stats import rankdata
 
 
@@ -40,7 +41,7 @@ def entries(selected_date = ("2017-6-7")):
     i = 1
     entries = session.query(Entry)
     entries = entries.order_by(Entry.datetime.desc())
-    print(session.query(Entry.author_id).order_by(Entry.title).all())
+    print(session.query(Entry.author_id).order_by(Entry.title).all(), "author_id's")
     
     oldestentry = entries[-1]
     newestentry = entries[0]
@@ -272,7 +273,17 @@ def stats_get():
     users = session.query(User).all()
     entries = session.query(Entry).all()
     day_rank = session.query(Entry.day_rank).all()
-    return render_template("stats.html", users=users, entries=entries)
+    print(day_rank)
+    '''authorids = session.query(Entry.author_id).order_by(Entry.author_id.desc()).first()
+    aid = 1
+    for a in authorids:
+        r = (session.query(Entry).filter(Entry.author_id == aid).all())
+        #r = session.query(Entry).join(User).filter(Entry.author_id == 2).all()
+        print(r, "r :)")
+        aid += 1
+        for i in r:
+            print(i.day_rank)'''
+    return render_template("stats.html", users=users)
 
 
 @app.route("/userinfo/<id>")
