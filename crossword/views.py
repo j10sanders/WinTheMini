@@ -271,9 +271,25 @@ def delete_entry_post(id):
 @app.route("/stats", methods=["GET"])
 def stats_get():
     users = session.query(User).all()
-    entries = session.query(Entry).all()
+    #entries = session.query(Entry).all()
     day_rank = session.query(Entry.day_rank).all()
-    print(day_rank)
+    entries = session.query(Entry.day_rank).join(User).all()
+    print(day_rank) 
+    '''aid = 0
+    while aid < 10:
+        d = session.query(Entry).filter(Entry.author_id == aid).all()
+        #r = session.query(Entry).join(User).filter(Entry.author_id == 2).all()
+        aid += 1
+        for i in d:
+            print(i.day_rank)'''
+    
+    r = (session.query(Entry).filter(Entry.author_id == 1).all())
+    q = session.query(Entry.day_rank).join(User).filter(Entry.author_id == 1).all()
+    
+    print(entries, "entries")
+    print(r)
+    print(q, "q")
+    
     '''authorids = session.query(Entry.author_id).order_by(Entry.author_id.desc()).first()
     aid = 1
     for a in authorids:
@@ -283,7 +299,7 @@ def stats_get():
         aid += 1
         for i in r:
             print(i.day_rank)'''
-    return render_template("stats.html", users=users)
+    return render_template("stats.html", users=users, entries=entries)
 
 
 @app.route("/userinfo/<id>")

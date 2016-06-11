@@ -9,9 +9,8 @@
       <h2>
         <a href="{{ url_for('user_get', id=user.id) }}">{{ user.name }}</a>
         <span class="badge">
-            {{dayranks}}
-          {% for day_rank in entries %}
-          {{ entries}}
+          {% for entries in user.entries %}
+          {{ entries.day_rank }}
           {% endfor %}
           </span>
       </h2>
