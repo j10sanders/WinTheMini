@@ -1,6 +1,6 @@
 from flask import render_template
 from itertools import groupby
-from . import app
+from . import app, rankingint
 from .database import session, Entry
 from flask import flash
 from flask.ext.login import login_user, logout_user
@@ -276,7 +276,8 @@ def stats_get():
     #entries = session.query(Entry).all()
     day_rank = session.query(Entry.day_rank).all()
     entries = session.query(Entry.day_rank).join(User).order_by(Entry.datetime.desc())
-    
+    ranking = rankingint.toint(day_rank)
+    print(ranking)
 
     '''aid = 0
     while aid < 10:
@@ -311,14 +312,7 @@ def user_get(id):
     try:
         user = session.query(User).filter_by(id=id).one()
         day_rank = session.query(Entry.day_rank).join(User).filter(Entry.author_id == id).all()
-        strranking = []
-        for day in day_rank:
-            strranking.append(str(day))
-        for dayresult in strranking:
-            strranking = [dayresult.replace(',', "").replace('(', "").replace(')', "") for dayresult in strranking]
-        ranking = []
-        for string in strranking:
-            ranking.append(int(string))
+        ranking = rankingint.toint(day_rank)
         print(ranking)
         average = mean(ranking)
         print(average)
