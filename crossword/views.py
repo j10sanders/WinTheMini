@@ -276,7 +276,8 @@ def stats_get():
     #entries = session.query(Entry).all()
     day_rank = session.query(Entry.day_rank).all()
     entries = session.query(Entry.day_rank).join(User).order_by(Entry.datetime.desc())
-    #print(day_rank) 
+    
+
     '''aid = 0
     while aid < 10:
         d = session.query(Entry).filter(Entry.author_id == aid).all()
@@ -285,10 +286,10 @@ def stats_get():
         for i in d:
             print(i.day_rank)'''
     
-    r = (session.query(Entry).filter(Entry.author_id == 1).all())
+    '''r = (session.query(Entry).filter(Entry.author_id == 1).all())
     q = session.query(Entry.day_rank).join(User).filter(Entry.author_id == 1).all()
     
-    '''print(entries, "entries")
+    print(entries, "entries")
     print(r)
     print(q, "q")'''
     
@@ -310,8 +311,23 @@ def user_get(id):
     try:
         user = session.query(User).filter_by(id=id).one()
         day_rank = session.query(Entry.day_rank).join(User).filter(Entry.author_id == id).all()
+        strranking = []
+        for day in day_rank:
+            strranking.append(str(day))
+        for dayresult in strranking:
+            strranking = [dayresult.replace(',', "").replace('(', "").replace(')', "") for dayresult in strranking]
+        ranking = []
+        for string in strranking:
+            ranking.append(int(string))
+        print(ranking)
+        average = mean(ranking)
+        print(average)
+        #print(ranking, "iufrhfniurshn")
+        #print(day_rank)
+        #average = mean(ranking)
+        #print(average)
         #entries = session.query(Entry).join(User).filter(Entry.author_id = id).one()
     except NoResultFound:
         #print("No result found for {0}".format(id))
         user = None
-    return render_template("userinfo.html", user=user, day_rank=day_rank)
+    return render_template("userinfo.html", user=user, ranking=ranking, average=average)

@@ -4,9 +4,9 @@
   <ul class="list-group" id={{ user.name }}>
   {% if user %}
     <div class="panel panel-primary">
-      <div class="panel-heading">Day Ranks</div>
+      <div class="panel-heading">Day Ranks (Average place= {{ average }})</div>
       <div class="panel-body">
-        {{ day_rank }}</div>
+        {{ ranking }}</div>
     </div>
   {% else %}
     <div class="alert alert-warning" role="alert">
