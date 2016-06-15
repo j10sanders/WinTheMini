@@ -83,7 +83,6 @@ def entries(selected_date = ("2017-6-7")):
         #entry.content = repr(entry.content).encode('utf-8')
         #entry.content = entry.content.decode('unicode-escape')
     if entrylist == []:
-        
         if selected_date < oldesttime:
             return redirect(url_for("entries", selected_date = oldesttime))
         else:
@@ -123,7 +122,6 @@ def entries(selected_date = ("2017-6-7")):
     return redirect(url_for("entries"))'''
 
     #NEED A NEW/SEPERATE METHOD FOR NEWER.**************
-    
     #determine "newer" and/or "older" links should be shown
     if newestentry in entrylist:
         has_next = True
@@ -252,8 +250,8 @@ def edit_entry_post(id):
     else:
         entry = session.query(Entry).get(id)
         entry.title = request.form["title"]
-        entry.content = request.form["content"]
-        #entry.content = request.form["content"].encode('utf-8')
+        #entry.content = request.form["content"]
+        entry.content = request.form["content"].encode('utf-8')
         session.commit()
         return redirect(url_for("entries"))
         
