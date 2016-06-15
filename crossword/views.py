@@ -277,7 +277,6 @@ def stats_get():
     day_rank = session.query(Entry.day_rank).all()
     entries = session.query(Entry.day_rank).join(User).order_by(Entry.datetime.desc())
     ranking = rankingint.toint(entries)
-    print(ranking)
     average = mean(ranking)
 
     return render_template("stats.html", users=users, entries=entries, average=average, day_rank=day_rank)
@@ -290,9 +289,8 @@ def user_get(id):
         user = session.query(User).filter_by(id=id).one()
         day_rank = session.query(Entry.day_rank).join(User).filter(Entry.author_id == id).all()
         ranking = rankingint.toint(day_rank)
-        print(ranking)
         average = mean(ranking)
-        print(average)
+        average = round(average,1)
         #print(ranking, "iufrhfniurshn")
         #print(day_rank)
         #average = mean(ranking)
