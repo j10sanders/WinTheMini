@@ -4,10 +4,10 @@
 
 <h1> Users </h1>
   <ul class="list-group" id="users">
-  {% for user in users %}:
+  {% for user in users %}
     <li class="list-group-item">
       <h2>
-        <a href="{{ url_for('user_get', id=user.id) }}">{{ user.name }}</a>
+        <a href="{{ url_for('user_get', id=user.id) }}">{{ user.name }}:</a>
         <span class="note">
           {% for entries in user.entries %}
           {{ entries.day_rank }}
