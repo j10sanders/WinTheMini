@@ -1,13 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1> {{ user.name }} </h1>
-  <ul class="list-group" id={{ user.name }}>
+  <h1> {{ user.name }} 
+  <ul class="list-group" id={{ user.name }}></h1>
   {% if user %}
-    <div class="panel panel-primary">
-      <div class="panel-heading">Day Ranks (Average place= {{ average }})</div>
-      <div class="panel-body">
-        {{ ranking }}</div>
-    </div>
+    <h2>
+      Average daily rank= {{ average }}
+      <span class="note">
+        </br></br>
+        Each Day's rank: {% for x in ranking %}
+        {{ x }}
+        {% endfor %}</span></h2>
+    
   {% else %}
     <div class="alert alert-warning" role="alert">
       No results found!

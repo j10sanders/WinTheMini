@@ -276,34 +276,11 @@ def stats_get():
     #entries = session.query(Entry).all()
     day_rank = session.query(Entry.day_rank).all()
     entries = session.query(Entry.day_rank).join(User).order_by(Entry.datetime.desc())
-    ranking = rankingint.toint(day_rank)
+    ranking = rankingint.toint(entries)
     print(ranking)
+    average = mean(ranking)
 
-    '''aid = 0
-    while aid < 10:
-        d = session.query(Entry).filter(Entry.author_id == aid).all()
-        #r = session.query(Entry).join(User).filter(Entry.author_id == 2).all()
-        aid += 1
-        for i in d:
-            print(i.day_rank)'''
-    
-    '''r = (session.query(Entry).filter(Entry.author_id == 1).all())
-    q = session.query(Entry.day_rank).join(User).filter(Entry.author_id == 1).all()
-    
-    print(entries, "entries")
-    print(r)
-    print(q, "q")'''
-    
-    '''authorids = session.query(Entry.author_id).order_by(Entry.author_id.desc()).first()
-    aid = 1
-    for a in authorids:
-        r = (session.query(Entry).filter(Entry.author_id == aid).all())
-        #r = session.query(Entry).join(User).filter(Entry.author_id == 2).all()
-        print(r, "r :)")
-        aid += 1
-        for i in r:
-            print(i.day_rank)'''
-    return render_template("stats.html", users=users, entries=entries)
+    return render_template("stats.html", users=users, entries=entries, average=average, day_rank=day_rank)
 
 
 @app.route("/userinfo/<id>")
