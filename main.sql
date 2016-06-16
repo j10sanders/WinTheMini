@@ -4,7 +4,7 @@
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
-SET client_encoding = 'SQL_ASCII';
+SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
@@ -120,24 +120,9 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 --
 
 COPY entries (id, title, content, datetime, day_rank, author_id) FROM stdin;
-1	144	entry.content	2016-06-09 06:05:43.623752+00	1	\N
-2	50	entry.content	2016-06-10 00:44:15.166132+00	5	1
-3	50	entry.content	2016-06-10 00:52:18.737949+00	5	1
-4	46	entry.content	2016-06-10 00:52:30.693419+00	4	1
-5	20	entry.content	2016-06-10 05:44:13.179555+00	2	1
-6	10	entry.content	2016-06-10 05:50:11.428018+00	1	2
-7	30	entry.content	2016-06-10 05:50:19.652325+00	3	2
-8	83	entry.content	2016-06-10 05:50:57.85177+00	7	3
-9	111	entry.content	2016-06-10 05:51:09.214601+00	8	3
-10	12	entry.content	2016-06-11 18:28:31.105282+00	2	2
-12	90	entry.content	2016-06-11 21:02:59.666906+00	4	3
-15	110	entry.content	2016-06-11 21:57:02.915695+00	5	3
-32	40	entry.content	2016-06-11 23:38:26.637352+00	3	1
-39	6	entry.content	2016-06-11 23:58:41.928349+00	1	2
-40	45	entry.content	2016-06-14 05:16:13.204015+00	2	1
-41	67	entry.content	2016-06-14 05:16:32.612425+00	3	3
-42	23	entry.content	2016-06-14 05:16:54.866127+00	1	2
-43	69	:)	2016-06-15 06:00:14.786821+00	1	1
+2	50	test 1	2016-06-15 23:42:40.396112+00	1	1
+1	144	meh	2016-06-15 23:41:48.111222+00	3	\N
+3	68	1:08	2016-06-16 01:35:58.659701+00	2	1
 \.
 
 
@@ -145,7 +130,7 @@ COPY entries (id, title, content, datetime, day_rank, author_id) FROM stdin;
 -- Name: entries_id_seq; Type: SEQUENCE SET; Schema: public; Owner: ubuntu
 --
 
-SELECT pg_catalog.setval('entries_id_seq', 43, true);
+SELECT pg_catalog.setval('entries_id_seq', 3, true);
 
 
 --
@@ -153,9 +138,7 @@ SELECT pg_catalog.setval('entries_id_seq', 43, true);
 --
 
 COPY users (id, name, email, password) FROM stdin;
-1	jonsandersss	jonsandersss@gmail.com	pbkdf2:sha1:1000$CoWpFp7G$fa7490cd6ffd53bad7ff9d9938df33df7dfa7336
-2	goodatthis	goodatthis@gmail.com	pbkdf2:sha1:1000$IGjri5E2$1e04e28a0434464133ef5389d88ef35d5027dcb0
-3	badatthis	badatthis@gmail.com	pbkdf2:sha1:1000$vch3fvA5$11fc75549b6641d5125787b70f7390f7357b50af
+1	jonsandersss	jonsandersss@gmail.com	pbkdf2:sha1:1000$UsB69Ie5$93ca8cfb1b8de1b1f799d346a6af3b344604e620
 \.
 
 
@@ -163,7 +146,7 @@ COPY users (id, name, email, password) FROM stdin;
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: ubuntu
 --
 
-SELECT pg_catalog.setval('users_id_seq', 3, true);
+SELECT pg_catalog.setval('users_id_seq', 1, true);
 
 
 --

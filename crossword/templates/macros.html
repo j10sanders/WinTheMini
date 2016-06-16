@@ -16,10 +16,10 @@
          <a href="{{ url_for( 'get_entry', id = entry.id)}}">
          {% if entry.title < 60 %}
          {{entry.title}}
-         {% elif entry.title%60  < 10 %}
-         {{ entry.title //60 }}:0{{ entry.title %60 }}
+         {% elif entry.title %60 < 10 %}
+         {{ entry.title // 60 }}:0{{ entry.title %60 }}
          {% else %}
-         {{ entry.title   //60 }}:{{ entry.title %60 }}
+         {{ entry.title // 60 }}:{{ entry.title %60 }}
          {% endif %}
          </a>
         </h1>
