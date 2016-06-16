@@ -113,6 +113,7 @@ def entries(selected_date = ("2017-6-7")):
         #pass
     #print(dayranklist, "dayranklist")
     
+
     
     '''entry = session.query(Entry).get(entry.id)
     entry.title = request.form["title"]
@@ -133,9 +134,8 @@ def entries(selected_date = ("2017-6-7")):
         has_prev = True
         has_next = False
 
-    
-    
 
+    #entry.title = str(datetime.datetime.timedelta(seconds = entry.title))
     return render_template("entries.html",
         entries=entrylist,
         has_next=has_next,

@@ -11,3 +11,7 @@ def dateformat(date, format):
     if not date:
         return None
     return date.strftime(format).lstrip('0')
+    
+@app.template_filter()
+def datetimeformat(value, format='%M:%S / %m-%s'):
+    return value.strftime(format)
