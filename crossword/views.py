@@ -34,7 +34,6 @@ def entries(selected_date = ("2017-6-7")):
         selected_date = now.date()
     # Zero-indexed page
     #page_index = page - 1
-    i = 1
     entries = session.query(Entry)
     entries = entries.order_by(Entry.datetime.desc())
     #print(session.query(Entry.author_id).order_by(Entry.title).all(), "author_id's")
@@ -47,7 +46,7 @@ def entries(selected_date = ("2017-6-7")):
     #datedisplay is used for string version of selecteddate
     datedisplay = datetime.strftime(selected_date, "%b %-d, %Y")
     older = selected_date - timedelta(1)
-    newer = selected_date + timedelta(i)
+    newer = selected_date + timedelta(1)
 
     #create a list (entrylist) that has just the entries from a certain day.
     for entry in entries:
@@ -65,22 +64,24 @@ def entries(selected_date = ("2017-6-7")):
                     entry.title = int(entry.title)
                     #print(entry.title)
                     entrylist.sort(key=lambda x: x.title, reverse = False)
-                    olderentryday = min(entry.id for entry in entrylist) - 1
+                    olderentryid = min(entry.id for entry in entrylist) - 1
+                    #print(olderentryid)
                     newerentryday = max(entry.id for entry in entrylist) + 1
+                    #print(newerentryday)
             except (ValueError, TypeError):
                 flash("There are some non-integers on this page.  Jon needs to fix it so you can see who won :)", "danger")
         
         
-    
+        
     for entry in entries:
         try:
-            if entry.id == olderentryday:
-                olderentryday = entry.datetime.date()
-                #print(preventryday)
-                older = olderentryday
+            if entry.id == olderentryid:
+                #print(olderentryid)
+                older = entry.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date()
+                #print(older)
             if entry.id == newerentryday:
-                newerentryday = entry.datetime.date()
-                #print(preventryday)
+                newerentryday = entry.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date()
+                #print(newerentryday)
                 newer = newerentryday
         except UnboundLocalError:
             pass
