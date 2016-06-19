@@ -6,7 +6,7 @@ from sqlalchemy.orm import relationship
 
 from . import app
 
-engine = create_engine(app.config["SQLALCHEMY_DATABASE_URI"], connect_args={"options": "-c timezone=est"})
+engine = create_engine(app.config["SQLALCHEMY_DATABASE_URI"])
 Base = declarative_base()
 Session = sessionmaker(bind=engine)
 session = Session()

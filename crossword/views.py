@@ -20,11 +20,7 @@ from statistics import mean
 
 @app.route("/")
 @app.route("/date/<selected_date>")
-#def entries(selected_date = str(datetime.now(timezone('America/New_York')))):
 def entries(selected_date = ("2017-6-7")):
-    
-    #print(current_user)
-    #print(current_user.password)
     EST = timezone('America/New_York')
     now = datetime.now(EST)
     try:
@@ -62,26 +58,31 @@ def entries(selected_date = ("2017-6-7")):
         daybefore = selected_date - timedelta(1)
         daybefore = daybefore.strftime("%b %-d, %Y")
         if entrytime == datedisplay:
-            #entry.content = repr(entry.content)
-            #entry.content = entry.content.encode('utf-8').decode()
-            #entry.content = str(entry.content,'utf-8')
-            #entry.content = entry.content.encode('utf-8').decode('ascii')
             entrylist.append(entry)
-            #print(entrylist)
             #sort the entries: top score (entry.title) should be at the top
             try: 
                 for x in entrylist:
                     entry.title = int(entry.title)
                     #print(entry.title)
                     entrylist.sort(key=lambda x: x.title, reverse = False)
-                    #scores = [ student.name for student in names
-                    
-                    #print(entrylist)
+                    olderentryday = min(entry.id for entry in entrylist) - 1
+                    newerentryday = max(entry.id for entry in entrylist) + 1
             except (ValueError, TypeError):
                 flash("There are some non-integers on this page.  Jon needs to fix it so you can see who won :)", "danger")
-        #entry.content = entry.content.decode('utf-8')
-        #entry.content = repr(entry.content).encode('utf-8')
-        #entry.content = entry.content.decode('unicode-escape')
+        
+        
+    
+    for entry in entries:
+        try:
+            if entry.id == olderentryday:
+                olderentryday = entry.datetime.date()
+                #print(preventryday)
+                older = olderentryday
+                
+        except UnboundLocalError:
+            pass
+            
+    
     if entrylist == []:
         if selected_date < oldesttime:
             return redirect(url_for("entries", selected_date = oldesttime))
@@ -114,14 +115,6 @@ def entries(selected_date = ("2017-6-7")):
     #print(dayranklist, "dayranklist")
     
 
-    
-    '''entry = session.query(Entry).get(entry.id)
-    entry.title = request.form["title"]
-    entry.content = request.form["content"]
-    #entry.content = request.form["content"].encode('utf-8')
-    session.commit()
-    return redirect(url_for("entries"))'''
-
     #NEED A NEW/SEPERATE METHOD FOR NEWER.**************
     #determine "newer" and/or "older" links should be shown
     if newestentry in entrylist:
@@ -134,8 +127,6 @@ def entries(selected_date = ("2017-6-7")):
         has_prev = True
         has_next = False
 
-
-    #entry.title = str(datetime.datetime.timedelta(seconds = entry.title))
     return render_template("entries.html",
         entries=entrylist,
         has_next=has_next,

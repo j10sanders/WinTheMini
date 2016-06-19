@@ -4,9 +4,13 @@
 
 <h1>
     <b>
+    {% if entries == [] %}
+    No entries today.  <a href="{{ url_for('entries', older = older) }}"> Jump back to last day with entries?</a>
+    {% else %}
     {% for entry in entries[-1:] %}
     {{ datedisplay }}
     {% endfor %}
+    {% endif %}
     </b>
 </h1>
 </br>
