@@ -78,7 +78,10 @@ def entries(selected_date = ("2017-6-7")):
                 olderentryday = entry.datetime.date()
                 #print(preventryday)
                 older = olderentryday
-                
+            if entry.id == newerentryday:
+                newerentryday = entry.datetime.date()
+                #print(preventryday)
+                newer = newerentryday
         except UnboundLocalError:
             pass
             
