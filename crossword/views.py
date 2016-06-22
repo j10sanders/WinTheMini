@@ -21,17 +21,22 @@ from statistics import mean
 @app.route("/")
 @app.route("/date/<selected_date>")
 def entries(selected_date = ("2017-6-7")):
-    EST = timezone('America/New_York')
-    now = datetime.now(EST)
+    #EST = timezone('America/New_York')
+    EST = pytz.timezone('US/Eastern')
+    
+    now_utc = datetime.utcnow().replace(tzinfo=pytz.utc)
     try:
-        selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
+        selected_date = datetime.strptime(selected_date, "%Y-%m-%d")
         
     except ValueError:
         selected_date = selected_date[:selected_date.rindex(" ")]
-        selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
+        selected_date = datetime.strptime(selected_date, "%Y-%m-%d")
 
-    if selected_date > now.date():
-        selected_date = now.date()
+    selected_date = EST.localize(selected_date, is_dst=None)
+    #print(selected_date, "starting date")
+    
+    if selected_date.date() > now_utc.date():
+        selected_date = now_utc.date()
     # Zero-indexed page
     #page_index = page - 1
     entries = session.query(Entry)
@@ -51,7 +56,9 @@ def entries(selected_date = ("2017-6-7")):
     #create a list (entrylist) that has just the entries from a certain day.
     for entry in entries:
         entrytime = entry.datetime
+        papa = entrytime.replace(tzinfo=pytz.utc).astimezone(EST)
         entrytime = entrytime.replace(tzinfo=pytz.utc).astimezone(EST).date()
+
         entrytime = entrytime.strftime("%b %-d, %Y")
         
         daybefore = selected_date - timedelta(1)
@@ -62,27 +69,24 @@ def entries(selected_date = ("2017-6-7")):
             try: 
                 for x in entrylist:
                     entry.title = int(entry.title)
-                    #print(entry.title)
                     entrylist.sort(key=lambda x: x.title, reverse = False)
                     olderentryid = min(entry.id for entry in entrylist) - 1
-                    #print(olderentryid)
-                    newerentryday = max(entry.id for entry in entrylist) + 1
-                    #print(newerentryday)
+                    #print(olderentryid, "older")
+                    newerentryid = max(entry.id for entry in entrylist) + 1
+                    #print(newerentryid, "newer")
             except (ValueError, TypeError):
                 flash("There are some non-integers on this page.  Jon needs to fix it so you can see who won :)", "danger")
         
-        
-        
+
     for entry in entries:
         try:
             if entry.id == olderentryid:
                 #print(olderentryid)
                 older = entry.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date()
                 #print(older)
-            if entry.id == newerentryday:
-                newerentryday = entry.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date()
-                #print(newerentryday)
-                newer = newerentryday
+            if entry.id == newerentryid:
+                newer = entry.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date()
+                #print(newer)
         except UnboundLocalError:
             pass
             
