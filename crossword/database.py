@@ -22,7 +22,7 @@ class User(Base, UserMixin):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(128))
+    name = Column(String(128), unique=True)
     email = Column(String(128), unique=True)
     password = Column(String(128))
     entries = relationship("Entry", backref="author")

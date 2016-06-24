@@ -24,7 +24,7 @@ def entries(selected_date = ("2017-6-7")):
     #EST = timezone('America/New_York')
     EST = pytz.timezone('US/Eastern')
     
-    now_utc = datetime.utcnow().replace(tzinfo=pytz.utc)
+    now_utc = datetime.utcnow().replace(tzinfo=pytz.utc).date()
     try:
         selected_date = datetime.strptime(selected_date, "%Y-%m-%d")
         
@@ -32,31 +32,35 @@ def entries(selected_date = ("2017-6-7")):
         selected_date = selected_date[:selected_date.rindex(" ")]
         selected_date = datetime.strptime(selected_date, "%Y-%m-%d")
 
-    selected_date = EST.localize(selected_date, is_dst=None)
-    #print(selected_date, "starting date")
-    
-    if selected_date.date() > now_utc.date():
-        selected_date = now_utc.date()
-    # Zero-indexed page
-    #page_index = page - 1
+    selected_date = EST.localize(selected_date, is_dst=None).date()
+
+    if selected_date > now_utc:
+        selected_date = now_utc
+
     entries = session.query(Entry)
     entries = entries.order_by(Entry.datetime.desc())
     #print(session.query(Entry.author_id).order_by(Entry.title).all(), "author_id's")
     
     oldestentry = entries[-1]
     newestentry = entries[0]
-    oldesttime = oldestentry.datetime.date()
-    entrylist = []
+    oldesttime = oldestentry.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date()
+    newesttime = newestentry.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date()
+
+    older = selected_date - timedelta(1)
+    newer = selected_date + timedelta(1)
+    
+    if selected_date < oldesttime:
+        selected_date = oldesttime
+    if selected_date > newesttime:
+        selected_date = newesttime
     
     #datedisplay is used for string version of selecteddate
     datedisplay = datetime.strftime(selected_date, "%b %-d, %Y")
-    older = selected_date - timedelta(1)
-    newer = selected_date + timedelta(1)
-
+    
     #create a list (entrylist) that has just the entries from a certain day.
+    entrylist = []
     for entry in entries:
         entrytime = entry.datetime
-        papa = entrytime.replace(tzinfo=pytz.utc).astimezone(EST)
         entrytime = entrytime.replace(tzinfo=pytz.utc).astimezone(EST).date()
 
         entrytime = entrytime.strftime("%b %-d, %Y")
@@ -77,7 +81,14 @@ def entries(selected_date = ("2017-6-7")):
             except (ValueError, TypeError):
                 flash("There are some non-integers on this page.  Jon needs to fix it so you can see who won :)", "danger")
         
-
+    '''if entrylist == []:
+        if selected_date < oldesttime:
+            return redirect(url_for("entries", selected_date = oldesttime))
+        else:
+            selected_date = older
+            return redirect(url_for("entries", selected_date = selected_date))'''
+            
+            
     for entry in entries:
         try:
             if entry.id == olderentryid:
@@ -91,39 +102,21 @@ def entries(selected_date = ("2017-6-7")):
             pass
             
     
-    if entrylist == []:
-        if selected_date < oldesttime:
-            return redirect(url_for("entries", selected_date = oldesttime))
-        else:
-            selected_date = older
-            return redirect(url_for("entries", selected_date = selected_date))
+    
                 
     sortedscores = [ entry.title for entry in entrylist]
-    #print(sortedscores, "sorted scores")
+
     dayranklist = []
-#try:
     for day_rank in Ranking(sortedscores, reverse=True):
         dayranklist.append(int(day_rank[0]+1))
-        #print(dayranklist)
-        #list(map(int, dayranklist))
     k=0
     for entry in entrylist:
         entry = session.query(Entry).get(entry.id)
-        #entry = session.query(Entry).get(entry_id)
-        #print(entry, "id?")
         entry.day_rank = day_rank = dayranklist[k]
-        #print(entry, entry.day_rank)
-        #print(entry.id, "entry.id")
         session.add(entry)
-        #print(entry.day_rank)
         k +=1
     session.commit()
-    #except (ValueError, TypeError):
-        #pass
-    #print(dayranklist, "dayranklist")
     
-
-    #NEED A NEW/SEPERATE METHOD FOR NEWER.**************
     #determine "newer" and/or "older" links should be shown
     if newestentry in entrylist:
         has_next = True
