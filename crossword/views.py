@@ -56,55 +56,46 @@ def entries(selected_date = ("2017-6-7")):
     #datedisplay is used for string version of selecteddate
     datedisplay = datetime.strftime(selected_date, "%b %-d, %Y")
     
-    #create a list (entrylist) that has just the entries from a certain day.
+    #create a list (entrylist) that has just the entries from a certain day.  This is one of the central pieces of the app.
     entrylist = []
     for entry in entries:
+        #convert datetime fron db to EST
         entrytime = entry.datetime
         entrytime = entrytime.replace(tzinfo=pytz.utc).astimezone(EST).date()
-
         entrytime = entrytime.strftime("%b %-d, %Y")
         
+        #define the day before
         daybefore = selected_date - timedelta(1)
         daybefore = daybefore.strftime("%b %-d, %Y")
+        
+        #what to do when user has selected a day with entries
         if entrytime == datedisplay:
             entrylist.append(entry)
             #sort the entries: top score (entry.title) should be at the top
             try: 
                 for x in entrylist:
+                    #display the entries in order of best time to worst
                     entry.title = int(entry.title)
                     entrylist.sort(key=lambda x: x.title, reverse = False)
+                    
+                    #define the next entries that are outside of this day.  These will be converted to "older" and "newer" which is helpful for the buttons "older and "newer" to skip days that have no entries.
                     olderentryid = min(entry.id for entry in entrylist) - 1
-                    #print(olderentryid, "older")
                     newerentryid = max(entry.id for entry in entrylist) + 1
-                    #print(newerentryid, "newer")
             except (ValueError, TypeError):
                 flash("There are some non-integers on this page.  Jon needs to fix it so you can see who won :)", "danger")
-        
-    '''if entrylist == []:
-        if selected_date < oldesttime:
-            return redirect(url_for("entries", selected_date = oldesttime))
-        else:
-            selected_date = older
-            return redirect(url_for("entries", selected_date = selected_date))'''
-            
-            
+
+   
     for entry in entries:
         try:
             if entry.id == olderentryid:
-                #print(olderentryid)
                 older = entry.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date()
-                #print(older)
             if entry.id == newerentryid:
                 newer = entry.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date()
-                #print(newer)
         except UnboundLocalError:
             pass
-            
     
-    
-                
+    #for statistics, this method is for keeping track of daily scores
     sortedscores = [ entry.title for entry in entrylist]
-
     dayranklist = []
     for day_rank in Ranking(sortedscores, reverse=True):
         dayranklist.append(int(day_rank[0]+1))
@@ -136,16 +127,6 @@ def entries(selected_date = ("2017-6-7")):
         newer=newer,
     )
      
-     
-@app.route("/deleteit")
-def deleteit():
-    entries = session.query(Entry)
-    entries = entries.order_by(Entry.datetime.desc())
-    newestentry = entries[0]
-    
-    session.delete(newestentry)
-    session.commit()
-    return redirect(url_for("entries"))
 
 @app.route("/login", methods=["GET"])
 def login_get():
@@ -161,7 +142,6 @@ def login_post():
         return redirect(url_for("login_get"))
     login_user(user, remember=True)
     flash('Logged in successfully')
-    #print(current_user)
     return redirect(request.args.get('next') or url_for("add_entry_get"))
     
 
@@ -187,21 +167,18 @@ def register_post():
 @app.route("/entry/<id>", methods=["GET"])
 def get_entry(id):
     entry = session.query(Entry)
-    #print(current_user)
     return render_template("render_entry.html", entry = entry.get(id))
     
     
 @app.route("/entry/add", methods=["GET"])
 @login_required
 def add_entry_get():
-    #print(current_user)
     return render_template("add_entry.html")
 
     
 @app.route("/entry/add", methods=["POST"])
 @login_required
 def add_entry_post():
-    #print(current_user)
     try:
         time = int(request.form["title"])
         title = time
@@ -220,7 +197,6 @@ def add_entry_post():
     entry = Entry(
         title = title,
         content=request.form["content"],
-        #content=request.form["content"].encode('utf-8'),
         author=current_user
     )
     #print(entry.content)
@@ -242,7 +218,6 @@ def edit_entry_post(id):
     else:
         entry = session.query(Entry).get(id)
         entry.title = request.form["title"]
-        #entry.content = request.form["content"]
         entry.content = request.form["content"].encode('utf-8')
         session.commit()
         return redirect(url_for("entries"))
@@ -263,7 +238,6 @@ def delete_entry_post(id):
 @app.route("/stats", methods=["GET"])
 def stats_get():
     users = session.query(User).all()
-    #entries = session.query(Entry).all()
     day_rank = session.query(Entry.day_rank).all()
     entries = session.query(Entry.day_rank).join(User).order_by(Entry.datetime.desc())
     ranking = rankingint.toint(entries)
@@ -274,7 +248,7 @@ def stats_get():
 
 @app.route("/userinfo/<id>")
 def user_get(id):  
-    """Gets specific info for a user based on their ID"""
+    #Gets specific info for a user based on their ID
     try:
         user = session.query(User).filter_by(id=id).one()
         day_rank = session.query(Entry.day_rank).join(User).filter(Entry.author_id == id).all()
@@ -289,4 +263,14 @@ def user_get(id):
     
 
     
-
+'''
+#emergency method for getting rid of new entry that is troublesome
+@app.route("/deleteit")
+def deleteit():
+    entries = session.query(Entry)
+    entries = entries.order_by(Entry.datetime.desc())
+    newestentry = entries[0]
+    
+    session.delete(newestentry)
+    session.commit()
+    return redirect(url_for("entries"))'''
