@@ -255,11 +255,17 @@ def user_get(id):
         ranking = rankingint.toint(day_rank)
         average = mean(ranking)
         average = round(average,1)
+        times = session.query(Entry.title).join(User).filter(Entry.author_id == id).all()
+        rankingtimes = rankingint.toint(times)
+        avetime = mean(rankingtimes)
+        avetime = round(avetime)
+        besttime = min(rankingtimes)
+        worsttime = max(rankingtimes)
 
     except NoResultFound:
         #print("No result found for {0}".format(id))
         user = None
-    return render_template("userinfo.html", user=user, ranking=ranking, average=average)
+    return render_template("userinfo.html", user=user, ranking=ranking, average=average, avetime = avetime, besttime = besttime, worsttime = worsttime)
     
 
     

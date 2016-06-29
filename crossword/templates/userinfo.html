@@ -5,11 +5,17 @@
   {% if user %}
     <h2>
       Average daily rank= {{ average }}
+      </br></br>
       <span class="note">
-        </br></br>
         Each Day's rank: {% for x in ranking %}
         {{ x }}
-        {% endfor %}</span></h2>
+        {% endfor %}</span>
+        </br> </br>
+      Average time = {{ avetime }} seconds
+      </br></br>
+      Best time = {{ besttime }} seconds
+      </br></br>
+      Worst time = {{ worsttime }} seconds</h2>
     
   {% else %}
     <div class="alert alert-warning" role="alert">
