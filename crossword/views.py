@@ -41,18 +41,6 @@ def entries(selected_date = ("2017-6-7")):
     entries = entries.order_by(Entry.datetime.desc())
     #print(session.query(Entry.author_id).order_by(Entry.title).all(), "author_id's")
 
-    users = session.query(User.name)
-    getid = session.query(User.name).order_by(User.id).all()
-    print(getid)
-    
-    print(users)
-    '''for x in users:
-        if id == 1:
-            session.delete(x)
-            session.commit()'''
-        
-    
-    
     oldestentry = entries[-1]
     newestentry = entries[0]
     oldesttime = oldestentry.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date()
@@ -294,22 +282,11 @@ def user_get(id):
         average = mean(ranking)
         average = round(average,1)
 
-        Userid = session.query(User)
     except NoResultFound:
         #print("No result found for {0}".format(id))
         user = None
-    return render_template("userinfo.html", user=user, ranking=ranking, average=average, id = Userid.get(id))
+    return render_template("userinfo.html", user=user, ranking=ranking, average=average)
     
-@app.route("/userinfo/<id>/delete", methods=["GET"])
-def delete_user_get(id):
-    user = session.query(User)
-    return render_template("delete_user.html", user = user.get(id))
-        
-@app.route("/userinfo/<id>/delete", methods=["POST"])
-def delete_user_post(id):
-    user = session.query(User).get(id)
-    session.delete(user)
-    session.commit()
-    return redirect(url_for("entries"))
+
     
 
