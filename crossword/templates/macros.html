@@ -18,6 +18,8 @@
          {{entry.title}}
          {% elif entry.title %60 < 10 %}
          {{ entry.title // 60 }}:0{{ entry.title %60 }}
+         {% elif entry.title > 5999 %} 
+         {{ entry.title //60 }}.{{ entry.title %6 }} minutes
          {% else %}
          {{ entry.title // 60 }}:{{ entry.title %60 }}
          {% endif %}
