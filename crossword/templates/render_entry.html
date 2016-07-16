@@ -12,7 +12,7 @@
 </h2>-->  
 
  <h2>
-       {% if current_user == entry.author %}
+       {% if (current_user == entry.author) or (current_user.name == 'admin') %}
        <a href="{{ url_for( 'delete_entry_get', id = entry.id)}}">   Delete This Entry    </a>
        {% endif %}
 </h2>
