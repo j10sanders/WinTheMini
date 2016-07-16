@@ -173,6 +173,7 @@ def get_entry(id):
 @app.route("/entry/add", methods=["GET"])
 @login_required
 def add_entry_get():
+    print(current_user.name)
     return render_template("add_entry.html")
 
     
