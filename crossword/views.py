@@ -22,6 +22,7 @@ import matplotlib.pyplot as plt
 import pygal
 import json
 from urllib.request import urlopen
+from pygal.style import BlueStyle
 
 @app.route("/")
 @app.route("/date/<selected_date>")
@@ -282,12 +283,18 @@ def user_get(id):
         
         
         #create a bar chart
-        title = "Scores over time"
-        line_chart = pygal.Line(width=1200, height=600, title=title,
+        title = "Seconds to complete"
+        line_chart = pygal.Line(width=1200, height=600, title=title, style=BlueStyle, fill=True, interpolate='cubic',
         disable_xml_declaration=True)
         line_chart.x_labels = entrydaylist
         line_chart.add('Time', rankingtimes)
-        line_chart.add('Day Rank', ranking)
+        
+        
+        title = "Day Rankings"
+        line_chart2 = pygal.Line(width=1200, height=600, title=title, style=BlueStyle, fill=True, interpolate='cubic',
+        disable_xml_declaration=True)
+        line_chart2.x_labels = entrydaylist
+        line_chart2.add('Day Rank', ranking)
  
  
         
@@ -301,7 +308,7 @@ def user_get(id):
         #print("No result found for {0}".format(id))
         user = None
     return render_template("userinfo.html", user=user, ranking=ranking, average=average, avetime = avetime, besttime = besttime, worsttime = worsttime, title=title,
-                           line_chart=line_chart)
+                           line_chart=line_chart, line_chart2 = line_chart2)
     
 
     

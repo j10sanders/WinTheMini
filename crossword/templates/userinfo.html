@@ -17,6 +17,7 @@
       </br></br>
       Worst time = {{ worsttime }} seconds</h2>
       
+      {{ line_chart2.render()|safe }}
       {{ line_chart.render()|safe }}
     
   {% else %}
