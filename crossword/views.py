@@ -277,8 +277,8 @@ def user_get(id):
             entrytime = entrytime.replace(tzinfo=pytz.utc).date()
             entrytime = entrytime.strftime("%b %-d, %Y")
             entrydaylist.append(entrytime)
-        print(entrydaylist)
-        print(rankingtimes)
+        #print(entrydaylist)
+        #print(rankingtimes)
         
         
         #create a bar chart
