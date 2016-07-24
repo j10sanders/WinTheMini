@@ -16,6 +16,8 @@
       Best time = {{ besttime }} seconds
       </br></br>
       Worst time = {{ worsttime }} seconds</h2>
+      
+      {{ line_chart.render()|safe }}
     
   {% else %}
     <div class="alert alert-warning" role="alert">

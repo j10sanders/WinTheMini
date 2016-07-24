@@ -15,14 +15,19 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
 from ranking import Ranking
 from statistics import mean
-
+import numpy as np
+import pandas as pd
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import pygal
+import json
+from urllib.request import urlopen
 
 @app.route("/")
 @app.route("/date/<selected_date>")
 def entries(selected_date = ("2017-6-7")):
     #EST = timezone('America/New_York')
     EST = pytz.timezone('US/Eastern')
-    
     now_utc = datetime.utcnow().replace(tzinfo=pytz.utc).date()
     try:
         selected_date = datetime.strptime(selected_date, "%Y-%m-%d")
@@ -89,6 +94,7 @@ def entries(selected_date = ("2017-6-7")):
         try:
             if entry.id == olderentryid:
                 older = entry.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date()
+                #print(older)
             if entry.id == newerentryid:
                 newer = entry.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date()
         except UnboundLocalError:
@@ -173,7 +179,7 @@ def get_entry(id):
 @app.route("/entry/add", methods=["GET"])
 @login_required
 def add_entry_get():
-    print(current_user.name)
+    #print(current_user.name)
     return render_template("add_entry.html")
 
     
@@ -262,11 +268,40 @@ def user_get(id):
         avetime = round(avetime)
         besttime = min(rankingtimes)
         worsttime = max(rankingtimes)
-
+        entryday = session.query(Entry).join(User).filter(Entry.author_id == id).all()
+        entrydaylist = []
+        for entry in entryday:
+        #convert datetime fron db
+            
+            entrytime = entry.datetime
+            entrytime = entrytime.replace(tzinfo=pytz.utc).date()
+            entrytime = entrytime.strftime("%b %-d, %Y")
+            entrydaylist.append(entrytime)
+        print(entrydaylist)
+        print(rankingtimes)
+        
+        
+        #create a bar chart
+        title = "Scores over time"
+        line_chart = pygal.Line(width=1200, height=600, title=title,
+        disable_xml_declaration=True)
+        line_chart.x_labels = entrydaylist
+        line_chart.add('Time', rankingtimes)
+        line_chart.add('Day Rank', ranking)
+ 
+ 
+        
+        '''plt.hist(rankingtimes)
+        plt.xlabel('Rankingtime')
+        plt.ylabel('Frequency')
+        print(plt.show())'''
+        
+        
     except NoResultFound:
         #print("No result found for {0}".format(id))
         user = None
-    return render_template("userinfo.html", user=user, ranking=ranking, average=average, avetime = avetime, besttime = besttime, worsttime = worsttime)
+    return render_template("userinfo.html", user=user, ranking=ranking, average=average, avetime = avetime, besttime = besttime, worsttime = worsttime, title=title,
+                           line_chart=line_chart)
     
 
     
