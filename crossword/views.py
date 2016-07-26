@@ -284,14 +284,14 @@ def user_get(id):
         
         #create a bar chart
         title = "Seconds to complete"
-        line_chart = pygal.Line(width=1200, height=600, title=title, style=BlueStyle, fill=True, interpolate='cubic',
+        line_chart = pygal.Line(width=1200, height=600, title=title, style=BlueStyle, fill=True, interpolate='hermite', interpolation_parameters={'type': 'cardinal', 'c': .75},
         disable_xml_declaration=True)
         line_chart.x_labels = entrydaylist
         line_chart.add('Time', rankingtimes)
         
         
         title = "Day Rankings"
-        line_chart2 = pygal.Line(width=1200, height=600, title=title, style=BlueStyle, fill=True, interpolate='cubic',
+        line_chart2 = pygal.Line(width=1200, height=600, title=title, style=BlueStyle, fill=True, interpolate='hermite', interpolation_parameters={'type': 'cardinal', 'c': .75},
         disable_xml_declaration=True)
         line_chart2.x_labels = entrydaylist
         line_chart2.add('Day Rank', ranking)
