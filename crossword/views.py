@@ -1,7 +1,7 @@
 from flask import render_template
 from itertools import groupby
 from . import app, rankingint
-from .database import session, Entry
+from .database import session, Entry, followers, User
 from flask import flash
 from flask.ext.login import login_user, logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -148,6 +148,8 @@ def login_post():
         flash("Incorrect username or password", "danger")
         return redirect(url_for("login_get"))
     login_user(user, remember=True)
+    session.add(user.follow(user))
+    session.commit()
     flash('Logged in successfully')
     return redirect(request.args.get('next') or url_for("add_entry_get"))
     
@@ -159,11 +161,12 @@ def register_get():
 @app.route("/register", methods=["POST"])
 def register_post():
     try: 
-        name = User(name=request.form["username"], password=generate_password_hash(request.form["password"]), email=request.form["email"])
-        session.add(name)
+        user = User(name=request.form["username"], password=generate_password_hash(request.form["password"]), email=request.form["email"])
+        session.add(user)
+        session.add(user.follow(user))
         session.commit()
         flash("User successfully registered")
-        login_user(name)
+        login_user(user)
         return redirect(request.args.get("next") or url_for("entries"))
     except IntegrityError:
         flash("The username or email was already taken.  This app isn't sophisticated enough to let you reset a password, so just register a new user", "danger")
@@ -207,7 +210,6 @@ def add_entry_post():
         content=request.form["content"],
         author=current_user
     )
-    #print(entry.content)
     session.add(entry)
     session.commit()
     return redirect(url_for("entries"))
@@ -251,6 +253,7 @@ def stats_get():
     ranking = rankingint.toint(entries)
     average = mean(ranking)
 
+
     return render_template("stats.html", users=users, entries=entries, average=average, day_rank=day_rank)
 
 
@@ -271,27 +274,24 @@ def user_get(id):
         worsttime = max(rankingtimes)
         entryday = session.query(Entry).join(User).filter(Entry.author_id == id).all()
         entrydaylist = []
+        
         for entry in entryday:
         #convert datetime fron db
-            
             entrytime = entry.datetime
             entrytime = entrytime.replace(tzinfo=pytz.utc).date()
             entrytime = entrytime.strftime("%b %-d, %Y")
             entrydaylist.append(entrytime)
-        #print(entrydaylist)
-        #print(rankingtimes)
-        
-        
+
         #create a bar chart
         title = "Seconds to complete"
-        line_chart = pygal.Line(width=1200, height=600, title=title, style=BlueStyle, fill=True, interpolate='hermite', interpolation_parameters={'type': 'cardinal', 'c': .75},
+        line_chart = pygal.Line(width=1200, height=600, title=title, style=BlueStyle, fill=True, interpolate='cubic',
         disable_xml_declaration=True)
         line_chart.x_labels = entrydaylist
         line_chart.add('Time', rankingtimes)
         
         
         title = "Day Rankings"
-        line_chart2 = pygal.Line(width=1200, height=600, title=title, style=BlueStyle, fill=True, interpolate='hermite', interpolation_parameters={'type': 'cardinal', 'c': .75},
+        line_chart2 = pygal.Line(width=1200, height=600, title=title, style=BlueStyle, fill=True, interpolate='cubic',
         disable_xml_declaration=True)
         line_chart2.x_labels = entrydaylist
         line_chart2.add('Day Rank', ranking)
@@ -311,6 +311,42 @@ def user_get(id):
                            line_chart=line_chart, line_chart2 = line_chart2)
     
 
+@app.route("/follow/<int:id>")
+def followuser(id):  
+    user = session.query(User).filter_by(id=id).one()
+    if user is current_user:
+        flash("You follow yourself by default!  Let Jon know if you can't see your own posts", "error")
+        return redirect(url_for("entries"))
+    else:
+        print("yes")
+        fuser = session.query(followers).filter_by(followed_id=id).all()
+        print(fuser)
+        ids = [item[0] for item in fuser]
+        for entry in session.query(Entry).filter(Entry.author_id.in_(ids)).all():
+            print(entry.user.name)
+        #print(session.query(Entry.author_id).order_by(Entry.title).all(), "author_id's")
+        #if current_user is in session.query(User.followed.)
+        #cid = current_user
+        #print(cid)
+        print(current_user.get_id())
+        #wantstofollow = User.(current_user.id)
+        #print(wantstofollow, "wants to follow")
+        return render_template("follow.html", user=user)
+    
+    
+@app.route("/follow/<int:id>", methods=["POST"])
+@login_required
+def follow_post(id):
+    user = session.query(User).filter_by(id=id).one()
+    print(current_user.id)
+    cuid = current_user.get_id()
+    cuser = session.query(User).filter_by(id=cuid).one()
+    print(cuser)
+    session.add(cuser.follow(user))
+    session.commit()
+    flash("You are now following " + user.name +".", "success")
+    return redirect(url_for("entries"))
+    
     
 '''
 #emergency method for getting rid of new entry that is troublesome
