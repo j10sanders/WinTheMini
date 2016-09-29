@@ -347,6 +347,44 @@ def follow_post(id):
     flash("You are now following " + user.name +".", "success")
     return redirect(url_for("entries"))
     
+@app.route("/unfollow/<int:id>")
+@login_required
+def unfollow(id):
+    user = session.query(User).filter_by(id=id).one()
+    if user is current_user:
+        flash("You want to unfollow yourself??  Ask Jon if you are serious", "error")
+        return redirect(url_for("entries"))
+    if user is None:
+        flash('Player %s not found.' % user.name)
+        return redirect(url_for("entries"))
+    else:
+        print("yes unfollow")
+        fuser = session.query(followers).filter_by(followed_id=id).all()
+        print(fuser)
+        ids = [item[0] for item in fuser]
+        for entry in session.query(Entry).filter(Entry.author_id.in_(ids)).all():
+            print(entry.user.name)
+        #print(session.query(Entry.author_id).order_by(Entry.title).all(), "author_id's")
+        #if current_user is in session.query(User.followed.)
+        #cid = current_user
+        #print(cid)
+        print(current_user.get_id())
+        #wantstofollow = User.(current_user.id)
+        #print(wantstofollow, "wants to follow")
+        return render_template("unfollow.html", user=user)
+
+@app.route("/unfollow/<int:id>", methods=["POST"])
+@login_required
+def unfollow_post(id):
+    user = session.query(User).filter_by(id=id).one()
+    print(current_user.id)
+    cuid = current_user.get_id()
+    cuser = session.query(User).filter_by(id=cuid).one()
+    print(cuser)
+    session.add(cuser.unfollow(user))
+    session.commit()
+    flash("Good call unfollowing " + user.name +".  They suck!", "success")
+    return redirect(url_for("entries"))
     
 '''
 #emergency method for getting rid of new entry that is troublesome

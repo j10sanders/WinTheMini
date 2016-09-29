@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+
+ <h1> {{ user.name }} 
+  <ul class="list-group" id={{ user.name }}></h1>
+  {% if user %}
+  <form role="form" method="POST">
+  <div class="checkbox">
+    <label>
+    <input type="checkbox" name="check" value="edit"> Unfollow {{ user.name }}?
+    </label>
+    </div>
+    <button type="submit" class="btn btn-default">Submit</button> 
+    </form>
+    
+  {% else %}
+    <div class="alert alert-warning" role="alert">
+      No results found!
+    </div>
+  </div>
+  {% endif %}
+
+{% endblock %}
