@@ -5,12 +5,11 @@
   <ul class="list-group" id={{ user.name }}></h1>
   {% if user %}
   <form role="form" method="POST">
-  <div class="checkbox">
+  <div class="container">
     <label>
-    <input type="checkbox" name="check" value="edit"> Follow {{ user.name }}?
+    <button type="submit" class="btn btn-primary"> Follow {{ user.name }}?</button> 
     </label>
     </div>
-    <button type="submit" class="btn btn-default">Submit</button> 
     </form>
     
   {% else %}

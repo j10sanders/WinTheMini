@@ -272,12 +272,10 @@ def stats_get():
     entries = session.query(Entry.day_rank).join(User).order_by(Entry.datetime.desc())
     ranking = rankingint.toint(entries)
     average = mean(ranking)
-
-
     return render_template("stats.html", users=users, entries=entries, average=average, day_rank=day_rank)
 
 
-@app.route("/userinfo/<id>")
+@app.route("/userinfo/<id>", methods=["GET"])
 def user_get(id):  
     #Gets specific info for a user based on their ID
     try:
@@ -356,7 +354,7 @@ def followuser(id):
         return render_template("follow.html", user=user)
     
     
-@app.route("/follow/<int:id>", methods=["POST"])
+@app.route("/userinfo/<int:id>", methods=["POST"])
 @login_required
 def follow_post(id):
     user = session.query(User).filter_by(id=id).one()
@@ -367,7 +365,7 @@ def follow_post(id):
     session.add(cuser.follow(user))
     session.commit()
     flash("You are now following " + user.name +".", "success")
-    return redirect(url_for("entries"))
+    return redirect(url_for("stats_get"))
     
 @app.route("/unfollow/<int:id>")
 @login_required
