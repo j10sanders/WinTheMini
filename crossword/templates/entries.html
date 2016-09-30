@@ -12,12 +12,16 @@
     {{ datedisplay }}
     {% endfor %}
     {% endif %}
+
     </b>
 </h1>
 </br>
 
 {% for entry in entries %}
+{% if entry.author_id in c_user_follows %}
 {{ macros.render_entry(entry) }}
+{% else %}
+{% endif %}
 {% endfor %}
 
 

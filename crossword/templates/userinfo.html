@@ -6,10 +6,15 @@
     <h2>
       Average daily rank= {{ average }}
       </br></br>
-      <span class="note">
-        Each Day's rank: {% for x in ranking %}
-        {{ x }}
-        {% endfor %}</span>
+      <form role="form" method="POST">
+      <div class="checkbox">
+      <label>
+      <input type="checkbox" name="check" value="edit"> Follow {{ user.name }}?
+      </label>
+      </div>
+      <button type="submit" class="btn btn-default">Submit</button> 
+      </form>
+    
         </br> </br>
       Average time = {{ avetime }} seconds
       </br></br>

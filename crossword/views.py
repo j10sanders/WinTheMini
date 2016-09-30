@@ -63,6 +63,8 @@ def entries(selected_date = ("2017-6-7")):
     datedisplay = datetime.strftime(selected_date, "%b %-d, %Y")
     
     #create a list (entrylist) that has just the entries from a certain day.  This is one of the central pieces of the app.
+    #testfollowers = session.query(followers.c.followed_id).filter(followers.c.follower_id==current_user.get_id()).all()
+    #print(testfollowers)
     entrylist = []
     for entry in entries:
         #convert datetime fron db to EST
@@ -107,8 +109,24 @@ def entries(selected_date = ("2017-6-7")):
     for day_rank in Ranking(sortedscores, reverse=True):
         dayranklist.append(int(day_rank[0]+1))
     k=0
+    #need a list of who follows these authors
+    authorids = []
+    authors_followers = []
+    current_user_id = current_user.get_id()
+    
+    #c_user_follows = 
     for entry in entrylist:
         entry = session.query(Entry).get(entry.id)
+        a_ids = entry.author_id
+        authorids.append(a_ids)
+        print(authorids, "authorids!")
+        '''for x in authorids:
+            print(session.query(User.id).filter_by(id=x).all(), "x in authorids :)")'''
+        c_follows = session.query(followers).filter_by(follower_id=current_user_id).all()
+        c_user_follows = [item[1] for item in c_follows]
+        print(c_user_follows, "IDS")
+        '''for entry in session.query(Entry).filter(Entry.author_id.in_(ids)).all():
+            authors_followers.append(entry.user.name)'''
         entry.day_rank = day_rank = dayranklist[k]
         session.add(entry)
         k +=1
@@ -132,6 +150,8 @@ def entries(selected_date = ("2017-6-7")):
         datedisplay = datedisplay,
         older=older,
         newer=newer,
+        current_user_id = current_user_id,
+        c_user_follows = c_user_follows
     )
      
 
@@ -150,7 +170,7 @@ def login_post():
     login_user(user, remember=True)
     session.add(user.follow(user))
     session.commit()
-    flash('Logged in successfully')
+    flash("Logged in successfully", "success")
     return redirect(request.args.get('next') or url_for("add_entry_get"))
     
 
@@ -165,7 +185,7 @@ def register_post():
         session.add(user)
         session.add(user.follow(user))
         session.commit()
-        flash("User successfully registered")
+        flash("User successfully registered", "success")
         login_user(user)
         return redirect(request.args.get("next") or url_for("entries"))
     except IntegrityError:
@@ -320,10 +340,12 @@ def followuser(id):
     else:
         print("yes")
         fuser = session.query(followers).filter_by(followed_id=id).all()
-        print(fuser)
+        print(fuser, "fuser")
         ids = [item[0] for item in fuser]
+        usernamelist = []
         for entry in session.query(Entry).filter(Entry.author_id.in_(ids)).all():
-            print(entry.user.name)
+            usernamelist.append(entry.user.name)
+        print(usernamelist, "usernamelist")
         #print(session.query(Entry.author_id).order_by(Entry.title).all(), "author_id's")
         #if current_user is in session.query(User.followed.)
         #cid = current_user
@@ -360,7 +382,7 @@ def unfollow(id):
     else:
         print("yes unfollow")
         fuser = session.query(followers).filter_by(followed_id=id).all()
-        print(fuser)
+        print(fuser, "fuser")
         ids = [item[0] for item in fuser]
         for entry in session.query(Entry).filter(Entry.author_id.in_(ids)).all():
             print(entry.user.name)
