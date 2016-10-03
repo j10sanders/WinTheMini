@@ -191,7 +191,7 @@ def register_post():
         flash("User successfully registered", "success")
         login_user(user)
         return redirect(request.args.get("next") or url_for("entries"))
-    except IntegrityError:
+    except IntegrityError, StaleDataError:
         flash("The username or email was already taken.  This app isn't sophisticated enough to let you reset a password, so just register a new user", "danger")
         session.rollback()
         return redirect(url_for("register_get"))
