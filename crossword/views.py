@@ -109,30 +109,22 @@ def entries(selected_date = ("2017-6-7")):
     for day_rank in Ranking(sortedscores, reverse=True):
         dayranklist.append(int(day_rank[0]+1))
     k=0
-    #need a list of who follows these authors
-    authorids = []
-    authors_followers = []
-    current_user_id = current_user.get_id()
     
-    #c_user_follows = 
+    #collect list of the current_user's followers, so it can be compared in the entries.html with the entry's author_id (to determine if entry is displaoyed to current_user or not)
+    current_user_id = current_user.get_id()
+    c_follows = session.query(followers).filter_by(follower_id=current_user_id).all()
+    c_user_follows = [item[1] for item in c_follows]
+    print(c_user_follows, "IDS")
+        
+    #determine the day_rank of the entries, so the user's stats are tracked:
     for entry in entrylist:
         entry = session.query(Entry).get(entry.id)
-        a_ids = entry.author_id
-        authorids.append(a_ids)
-        print(authorids, "authorids!")
-        '''for x in authorids:
-            print(session.query(User.id).filter_by(id=x).all(), "x in authorids :)")'''
-        c_follows = session.query(followers).filter_by(follower_id=current_user_id).all()
-        c_user_follows = [item[1] for item in c_follows]
-        print(c_user_follows, "IDS")
-        '''for entry in session.query(Entry).filter(Entry.author_id.in_(ids)).all():
-            authors_followers.append(entry.user.name)'''
         entry.day_rank = day_rank = dayranklist[k]
         session.add(entry)
         k +=1
     session.commit()
     
-    #determine "newer" and/or "older" links should be shown
+    #determine if "newer" and/or "older" links should be shown
     if newestentry in entrylist:
         has_next = True
         has_prev = False

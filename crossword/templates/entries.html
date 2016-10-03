@@ -18,9 +18,10 @@
 </br>
 
 {% for entry in entries %}
-{% if entry.author_id in c_user_follows %}
+{% if current_user_id == None %}
 {{ macros.render_entry(entry) }}
-{% else %}
+{% elif entry.author_id in c_user_follows %}
+{{ macros.render_entry(entry) }}
 {% endif %}
 {% endfor %}
 
