@@ -341,16 +341,21 @@ def follow_post(id):
     #print(current_user.id)
     cuid = current_user.get_id()
     cuser = session.query(User).filter_by(id=cuid).one()
-    if 'Unfollow' in request.form:
-        session.add(cuser.unfollow(user))
-        session.commit()
-        flash("Good call unfollowing " + user.name +".  They suck!", "success")
+    try:
+        if 'Unfollow' in request.form:
+            session.add(cuser.unfollow(user))
+            session.commit()
+            flash("Good call unfollowing " + user.name +".  They suck!", "success")
+            return redirect(url_for("entries"))
+        elif 'Follow' in request.form:
+            session.add(cuser.follow(user))
+            session.commit()
+            flash("You are now following " + user.name +".", "success")
+            return redirect(url_for("stats_get"))
+    except IntegrityError:
+        flash("THat didn't work... mind letting Jon know?", "danger")
+        session.rollback()
         return redirect(url_for("entries"))
-    elif 'Follow' in request.form:
-        session.add(cuser.follow(user))
-        session.commit()
-        flash("You are now following " + user.name +".", "success")
-        return redirect(url_for("stats_get"))
         
 '''
 #emergency method for getting rid of new entry that is troublesome
