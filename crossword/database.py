@@ -24,8 +24,6 @@ followers = Table('followers', Base.metadata,
 )
 
 
-    
-
 class User(Base, UserMixin):
     __tablename__ = "users"
 
@@ -55,11 +53,6 @@ class User(Base, UserMixin):
     def is_following(self, user):
         return self.followed.filter(followers.c.followed_id == user.id).count() > 0
         
-'''class Followers(Base):
-    __tablename__ = "followers"
-    id = Column(Integer, primary_key=True)
-    follower_id = Column(Integer, ForeignKey('users.id'))
-    followed_id = Column(Integer, ForeignKey('users.id'))'''
 
 class Entry(Base):
     __tablename__ = "entries"
