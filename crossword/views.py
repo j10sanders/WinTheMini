@@ -112,10 +112,7 @@ def entries(selected_date = ("2017-6-7")):
     current_user_id = current_user.get_id()
     c_follows = session.query(followers).filter_by(follower_id=current_user_id).all()
     c_user_follows = [item[1] for item in c_follows]
-    print(c_user_follows, "IDS")
-    
-    
-    #for (number, users) in enumerate(allu):
+    #print(c_user_follows, "IDS")
 
     '''
     allu = session.query(User).all()
@@ -327,91 +324,34 @@ def user_get(id):
         plt.ylabel('Frequency')
         print(plt.show())'''
         
+        current_user_id = current_user.get_id()
+        c_follows = session.query(followers).filter_by(follower_id=current_user_id).all()
+        c_user_follows = [item[1] for item in c_follows]
         
     except NoResultFound:
         #print("No result found for {0}".format(id))
         user = None
     return render_template("userinfo.html", user=user, ranking=ranking, average=average, avetime = avetime, besttime = besttime, worsttime = worsttime, title=title,
-                           line_chart=line_chart, line_chart2 = line_chart2)
-    
-
-@app.route("/follow/<int:id>")
-def followuser(id):  
-    user = session.query(User).filter_by(id=id).one()
-    if user is current_user:
-        flash("You follow yourself by default!  Let Jon know if you can't see your own posts", "error")
-        return redirect(url_for("entries"))
-    else:
-        print("yes")
-        fuser = session.query(followers).filter_by(followed_id=id).all()
-        print(fuser, "fuser")
-        ids = [item[0] for item in fuser]
-        usernamelist = []
-        for entry in session.query(Entry).filter(Entry.author_id.in_(ids)).all():
-            usernamelist.append(entry.user.name)
-        print(usernamelist, "usernamelist")
-        #print(session.query(Entry.author_id).order_by(Entry.title).all(), "author_id's")
-        #if current_user is in session.query(User.followed.)
-        #cid = current_user
-        #print(cid)
-        print(current_user.get_id())
-        #wantstofollow = User.(current_user.id)
-        #print(wantstofollow, "wants to follow")
-        return render_template("follow.html", user=user)
-    
+                           line_chart=line_chart, line_chart2 = line_chart2, c_user_follows = c_user_follows, current_user_id = current_user_id)
     
 @app.route("/userinfo/<int:id>", methods=["POST"])
 @login_required
 def follow_post(id):
     user = session.query(User).filter_by(id=id).one()
-    print(current_user.id)
+    #print(current_user.id)
     cuid = current_user.get_id()
     cuser = session.query(User).filter_by(id=cuid).one()
-    print(cuser)
-    session.add(cuser.follow(user))
-    session.commit()
-    flash("You are now following " + user.name +".", "success")
-    return redirect(url_for("stats_get"))
-    
-@app.route("/unfollow/<int:id>")
-@login_required
-def unfollow(id):
-    user = session.query(User).filter_by(id=id).one()
-    if user is current_user:
-        flash("You want to unfollow yourself??  Ask Jon if you are serious", "error")
+    if 'Unfollow' in request.form:
+        session.add(cuser.unfollow(user))
+        session.commit()
+        flash("Good call unfollowing " + user.name +".  They suck!", "success")
         return redirect(url_for("entries"))
-    if user is None:
-        flash('Player %s not found.' % user.name)
-        return redirect(url_for("entries"))
-    else:
-        print("yes unfollow")
-        fuser = session.query(followers).filter_by(followed_id=id).all()
-        print(fuser, "fuser")
-        ids = [item[0] for item in fuser]
-        for entry in session.query(Entry).filter(Entry.author_id.in_(ids)).all():
-            print(entry.user.name)
-        #print(session.query(Entry.author_id).order_by(Entry.title).all(), "author_id's")
-        #if current_user is in session.query(User.followed.)
-        #cid = current_user
-        #print(cid)
-        print(current_user.get_id())
-        #wantstofollow = User.(current_user.id)
-        #print(wantstofollow, "wants to follow")
-        return render_template("unfollow.html", user=user)
-
-@app.route("/unfollow/<int:id>", methods=["POST"])
-@login_required
-def unfollow_post(id):
-    user = session.query(User).filter_by(id=id).one()
-    print(current_user.id)
-    cuid = current_user.get_id()
-    cuser = session.query(User).filter_by(id=cuid).one()
-    print(cuser)
-    session.add(cuser.unfollow(user))
-    session.commit()
-    flash("Good call unfollowing " + user.name +".  They suck!", "success")
-    return redirect(url_for("entries"))
-    
+    elif 'Follow' in request.form:
+        session.add(cuser.follow(user))
+        session.commit()
+        flash("You are now following " + user.name +".", "success")
+        return redirect(url_for("stats_get"))
+        
 '''
 #emergency method for getting rid of new entry that is troublesome
 @app.route("/deleteit")

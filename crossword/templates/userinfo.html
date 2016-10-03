@@ -1,15 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1> {{ user.name }} 
-  <ul class="list-group" id={{ user.name }}> 
+  <h1> {{ user.name }} </h1>
   <form role="form" method="POST">
-      <div class="container">
+      <div class="btn-group">
         <label>
-        <button type="submit" class="btn btn-primary"> Follow {{ user.name }}?</button> 
+        {% if user in c_user_follows or current_user_id == None %}
+        <button type="submit" name="Follow" class="btn btn-primary btn-lg">Follow {{ user.name }}?</button> 
+        <button type="button" class="btn btn-primary btn-lg disabled">Unfollow</button>
+        {% else %}
+        <button type="button" class="btn btn-primary btn-lg disabled">Follow {{ user.name }}?</button> 
+        <button type="submit" name="Unfollow" class="btn btn-primary btn-lg">Unfollow</button>
+        {% endif %}
         </label>
         </div>
         </form>
-        </h1>
+        
+  
         
   {% if user %}
     <h2>
