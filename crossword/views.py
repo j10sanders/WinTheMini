@@ -11,8 +11,8 @@ from flask.ext.login import login_required, current_user
 from datetime import datetime, timedelta
 from pytz import timezone
 import pytz
-from sqlalchemy.exc import IntegrityError, StaleDataError
-from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm.exc import NoResultFound, StaleDataError
 from ranking import Ranking
 from statistics import mean
 import numpy as np
