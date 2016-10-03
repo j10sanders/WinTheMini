@@ -63,8 +63,7 @@ def entries(selected_date = ("2017-6-7")):
     datedisplay = datetime.strftime(selected_date, "%b %-d, %Y")
     
     #create a list (entrylist) that has just the entries from a certain day.  This is one of the central pieces of the app.
-    #testfollowers = session.query(followers.c.followed_id).filter(followers.c.follower_id==current_user.get_id()).all()
-    #print(testfollowers)
+
     entrylist = []
     for entry in entries:
         #convert datetime fron db to EST
@@ -115,6 +114,7 @@ def entries(selected_date = ("2017-6-7")):
     c_follows = session.query(followers).filter_by(follower_id=current_user_id).all()
     c_user_follows = [item[1] for item in c_follows]
     print(c_user_follows, "IDS")
+    
         
     #determine the day_rank of the entries, so the user's stats are tracked:
     for entry in entrylist:
@@ -175,7 +175,12 @@ def register_post():
     try: 
         user = User(name=request.form["username"], password=generate_password_hash(request.form["password"]), email=request.form["email"])
         session.add(user)
-        session.add(user.follow(user))
+        #session.add(user.follow(user))
+        allusers = session.query(User).all()
+        for users in allusers:
+            print(allusers)
+            session.add(user.follow(users))
+            session.add(users.follow(user))
         session.commit()
         flash("User successfully registered", "success")
         login_user(user)
