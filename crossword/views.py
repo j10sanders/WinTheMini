@@ -273,7 +273,8 @@ def stats_get():
     entries = session.query(Entry.day_rank).join(User).order_by(Entry.datetime.desc())
     ranking = rankingint.toint(entries)
     average = mean(ranking)
-    return render_template("stats.html", users=users, entries=entries, average=average, day_rank=day_rank)
+    rows = len([session.query(Entry).join(User).all()])
+    return render_template("stats.html", users=users, entries=entries, average=average, day_rank=day_rank, rows=rows)
 
 
 @app.route("/userinfo/<id>", methods=["GET"])
