@@ -3,25 +3,21 @@
 {% block content %}
 
 <h1> Players </h1>
-<h2>Daily rankings for each post:</h2>
+<h2>Number of entries:</h2>
   <ul class="list-group" id="users">
   {% for user in users %}
     <li class="list-group-item">
       <h2>
         <a href="{{ url_for('user_get', id=user.id) }}">{{ user.name }}:</a>
         <span class="note">
-          {% for entries in user.entries %}
-          {{ entries.day_rank }} 
-          {% endfor %}
-
+          {{ user.entries | length }}
           </span>
-           
       </h2>
     </li>
   {% else %}
     <div class="alert alert-info" role="alert">
       <span class="glyphicon glyphicon-hand-right" aria-hidden="true"></span>
-      <strong>Ahh</strong> No Users are registered yet!
+      <strong>Ahh</strong> Nothin here!
     </div>
   {% endfor %}
   </ul>

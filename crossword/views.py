@@ -14,7 +14,7 @@ import pytz
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import NoResultFound, StaleDataError, UnmappedInstanceError
 from ranking import Ranking
-from statistics import mean
+from statistics import mean, StatisticsError
 import numpy as np
 import pandas as pd
 import matplotlib as mpl
@@ -269,12 +269,8 @@ def delete_entry_post(id):
 @app.route("/stats", methods=["GET"])
 def stats_get():
     users = session.query(User).all()
-    day_rank = session.query(Entry.day_rank).all()
     entries = session.query(Entry.day_rank).join(User).order_by(Entry.datetime.desc())
-    ranking = rankingint.toint(entries)
-    average = mean(ranking)
-    rows = len([session.query(Entry).join(User).all()])
-    return render_template("stats.html", users=users, entries=entries, average=average, day_rank=day_rank, rows=rows)
+    return render_template("stats.html", users=users, entries=entries)
 
 
 @app.route("/userinfo/<id>", methods=["GET"])
@@ -326,13 +322,16 @@ def user_get(id):
         current_user_id = current_user.get_id()
         c_follows = session.query(followers).filter_by(follower_id=current_user_id).all()
         c_user_follows = [item[1] for item in c_follows]
-
         
-    except NoResultFound:
-        #print("No result found for {0}".format(id))
-        user = None
-    return render_template("userinfo.html", user=user, ranking=ranking, average=average, avetime = avetime, besttime = besttime, worsttime = worsttime, title=title,
+        return render_template("userinfo.html", user=user, ranking=ranking, average=average, avetime = avetime, besttime = besttime, worsttime = worsttime, title=title,
                            line_chart=line_chart, line_chart2 = line_chart2, c_user_follows = c_user_follows, current_user_id = current_user_id)
+        
+    except (NoResultFound, StatisticsError):
+        #print("No result found for {0}".format(id))
+        flash("Nothing to see there!", "danger")
+        return redirect(url_for("stats_get"))
+        
+    
     
 @app.route("/userinfo/<int:id>", methods=["POST"])
 @login_required
