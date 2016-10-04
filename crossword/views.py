@@ -115,11 +115,11 @@ def entries(selected_date = ("2017-6-7")):
     #print(c_user_follows, "IDS")
     
 
-    allu = session.query(User).all()
+    '''allu = session.query(User).all()
     allusercombos = [(x,y) for x in allu for y in allu]
     for x,y in allusercombos:
         session.add(x.follow(y))
-    session.commit()
+    session.commit()'''
         
     #determine the day_rank of the entries, so the user's stats are tracked:
     for entry in entrylist:
