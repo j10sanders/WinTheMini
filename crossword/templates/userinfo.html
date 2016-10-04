@@ -4,7 +4,7 @@
   <form role="form" method="POST">
       <div class="btn-group">
         <label>
-        {% if user in c_user_follows or current_user_id == None %}
+        {% if user.id not in c_user_follows or current_user_id == None %}
         <button type="submit" name="Follow" class="btn btn-primary btn-lg">Follow {{ user.name }}?</button> 
         <button type="button" class="btn btn-primary btn-lg disabled">Unfollow</button>
         {% else %}

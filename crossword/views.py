@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 from pytz import timezone
 import pytz
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm.exc import NoResultFound, StaleDataError
+from sqlalchemy.orm.exc import NoResultFound, StaleDataError, UnmappedInstanceError
 from ranking import Ranking
 from statistics import mean
 import numpy as np
@@ -325,6 +325,7 @@ def user_get(id):
         current_user_id = current_user.get_id()
         c_follows = session.query(followers).filter_by(follower_id=current_user_id).all()
         c_user_follows = [item[1] for item in c_follows]
+
         
     except NoResultFound:
         #print("No result found for {0}".format(id))
@@ -350,7 +351,7 @@ def follow_post(id):
             session.commit()
             flash("You are now following " + user.name +".", "success")
             return redirect(url_for("stats_get"))
-    except (IntegrityError, StaleDataError):
+    except (IntegrityError, StaleDataError, UnmappedInstanceError):
         flash("That didn't work... mind letting Jon know?", "danger")
         session.rollback()
         return redirect(url_for("entries"))
