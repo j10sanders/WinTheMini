@@ -24,6 +24,7 @@ import json
 from urllib.request import urlopen
 from pygal.style import BlueStyle
 
+
 @app.route("/")
 @app.route("/date/<selected_date>")
 def entries(selected_date = ("2017-6-7")):
@@ -165,8 +166,6 @@ def login_post():
         flash("Incorrect username or password", "danger")
         return redirect(url_for("login_get"))
     login_user(user, remember=True)
-    session.add(user.follow(user))
-    session.commit()
     flash("Logged in successfully", "success")
     return redirect(request.args.get('next') or url_for("add_entry_get"))
     
@@ -180,7 +179,6 @@ def register_post():
     try: 
         user = User(name=request.form["username"], password=generate_password_hash(request.form["password"]), email=request.form["email"])
         session.add(user)
-        #session.add(user.follow(user))
         allusers = session.query(User).all()
         for users in allusers:
             session.add(user.follow(users))
