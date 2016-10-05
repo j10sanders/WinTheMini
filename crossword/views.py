@@ -305,7 +305,7 @@ def user_get(id):
         
         
         title = "Day Rankings"
-        graph_of_rankings = pygal.Line(width=1200, height=600, title=title, style=BlueStyle, fill=True, interpolate='hermite', interpolation_parameters={'type': 'kochanek_bartels', 'b': -1, 'c': 1, 't': 1},
+        graph_of_rankings = pygal.Bar(width=1200, height=600, title=title, style=BlueStyle, fill=True, interpolate='hermite', interpolation_parameters={'type': 'kochanek_bartels', 'b': -1, 'c': 1, 't': 1},
         disable_xml_declaration=True)
         graph_of_rankings.x_labels = entrydaylist
         graph_of_rankings.add('Day Rank', ranking)
