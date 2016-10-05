@@ -27,8 +27,8 @@
       </br></br>
       Worst time = {{ worsttime }} seconds</h2>
       
-      {{ line_chart2.render()|safe }}
-      {{ line_chart.render()|safe }}
+      {{ graph_of_rankings.render()|safe }}
+      {{ graph_of_times.render()|safe }}
     
   {% else %}
     <div class="alert alert-warning" role="alert">

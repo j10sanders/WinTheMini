@@ -278,39 +278,39 @@ def user_get(id):
     #Gets specific info for a user based on their ID
     try:
         user = session.query(User).filter_by(id=id).one()
-        day_rank = session.query(Entry.day_rank).join(User).filter(Entry.author_id == id).all()
+        day_rank = session.query(Entry.day_rank).join(User).filter(Entry.author_id == id).order_by(Entry.datetime.asc()).all()
         ranking = rankingint.toint(day_rank)
         average = mean(ranking)
         average = round(average,1)
-        times = session.query(Entry.title).join(User).filter(Entry.author_id == id).all()
+        times = session.query(Entry.title).join(User).filter(Entry.author_id == id).order_by(Entry.datetime.asc()).all()
         rankingtimes = rankingint.toint(times)
         avetime = mean(rankingtimes)
         avetime = round(avetime)
         besttime = min(rankingtimes)
         worsttime = max(rankingtimes)
-        entryday = session.query(Entry).join(User).filter(Entry.author_id == id).all()
+        entryday = session.query(Entry).join(User).filter(Entry.author_id == id).order_by(Entry.datetime.asc()).all()
         entrydaylist = []
         
         for entry in entryday:
         #convert datetime fron db
             entrytime = entry.datetime
             entrytime = entrytime.replace(tzinfo=pytz.utc).date()
-            entrytime = entrytime.strftime("%b %-d, %Y")
+            entrytime = entrytime.strftime("%b %-d")
             entrydaylist.append(entrytime)
+            
 
-        #create a bar chart
         title = "Seconds to complete"
-        line_chart = pygal.Line(width=1200, height=600, title=title, style=BlueStyle, fill=True, interpolate='cubic',
+        graph_of_times = pygal.Line(width=1200, height=600, title=title, style=BlueStyle, fill=True, interpolate='cubic',
         disable_xml_declaration=True)
-        line_chart.x_labels = entrydaylist
-        line_chart.add('Time', rankingtimes)
+        graph_of_times.x_labels = entrydaylist
+        graph_of_times.add('Time', rankingtimes)
         
         
         title = "Day Rankings"
-        line_chart2 = pygal.Line(width=1200, height=600, title=title, style=BlueStyle, fill=True, interpolate='cubic',
+        graph_of_rankings = pygal.Line(width=1200, height=600, title=title, style=BlueStyle, fill=True, interpolate='cubic',
         disable_xml_declaration=True)
-        line_chart2.x_labels = entrydaylist
-        line_chart2.add('Day Rank', ranking)
+        graph_of_rankings.x_labels = entrydaylist
+        graph_of_rankings.add('Day Rank', ranking)
  
  
         
@@ -324,7 +324,7 @@ def user_get(id):
         c_user_follows = [item[1] for item in c_follows]
         
         return render_template("userinfo.html", user=user, ranking=ranking, average=average, avetime = avetime, besttime = besttime, worsttime = worsttime, title=title,
-                           line_chart=line_chart, line_chart2 = line_chart2, c_user_follows = c_user_follows, current_user_id = current_user_id)
+                           graph_of_times=graph_of_times, graph_of_rankings = graph_of_rankings, c_user_follows = c_user_follows, current_user_id = current_user_id)
         
     except (NoResultFound, StatisticsError):
         #print("No result found for {0}".format(id))
