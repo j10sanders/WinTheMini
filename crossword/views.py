@@ -300,14 +300,14 @@ def user_get(id):
             
 
         title = "Seconds to complete"
-        graph_of_times = pygal.Line(width=1200, height=600, title=title, style=BlueStyle, fill=True, interpolate='cubic',
+        graph_of_times = pygal.Line(width=1200, height=600, title=title, style=BlueStyle, fill=True, 
         disable_xml_declaration=True)
         graph_of_times.x_labels = entrydaylist
         graph_of_times.add('Time', rankingtimes)
         
         
         title = "Day Rankings"
-        graph_of_rankings = pygal.Line(width=1200, height=600, title=title, style=BlueStyle, fill=True, interpolate='cubic',
+        graph_of_rankings = pygal.Line(width=1200, height=600, title=title, style=BlueStyle, fill=True,
         disable_xml_declaration=True)
         graph_of_rankings.x_labels = entrydaylist
         graph_of_rankings.add('Day Rank', ranking)
