@@ -4,7 +4,9 @@ from . import app, rankingint
 from .database import session, Entry, followers, User
 from flask import flash
 from flask.ext.login import login_user, logout_user
+from getpass import getpass
 from werkzeug.security import check_password_hash, generate_password_hash
+from getpass import getpass
 from .database import User
 from flask import request, redirect, url_for
 from flask.ext.login import login_required, current_user
@@ -177,6 +179,12 @@ def register_get():
 @app.route("/register", methods=["POST"])
 def register_post():
     try: 
+        if request.form["password"] != request.form["password2"]:
+            flash("Your password and password verification didn't match.", "danger")
+            return redirect(url_for("register_get"))
+        if len(request.form["password"]) < 8:
+            flash("Your password needs to be at least 8 characters", "danger")
+            return redirect(url_for("register_get"))
         user = User(name=request.form["username"], password=generate_password_hash(request.form["password"]), email=request.form["email"])
         session.add(user)
         allusers = session.query(User).all()
