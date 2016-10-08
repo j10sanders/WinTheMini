@@ -12,7 +12,7 @@
         </ul>
     </div>
     <div class="col-md-10 text-left">
-        <h1>
+        <h3>
          <a href="{{ url_for( 'get_entry', id = entry.id)}}">
          {% if entry.title < 60 %}
          {{entry.title}}
@@ -24,7 +24,7 @@
          {{ entry.title // 60 }}:{{ entry.title %60 }}
          {% endif %}
          </a>
-        </h1>
+        </h3>
         <p>
         {{ entry.content | markdown }}
         </p>
