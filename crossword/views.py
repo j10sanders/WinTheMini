@@ -105,7 +105,7 @@ def entries(selected_date = ("2017-6-7")):
             pass
     
     #for statistics, this method is for keeping track of daily scores
-    sortedscores = [ entry.title for entry in entrylist]
+    sortedscores = [entry.title for entry in entrylist]
     dayranklist = []
     for day_rank in Ranking(sortedscores, reverse=True):
         dayranklist.append(int(day_rank[0]+1))
@@ -276,6 +276,11 @@ def delete_entry_post(id):
 def stats_get():
     users = session.query(User).all()
     entries = session.query(Entry.day_rank).join(User).order_by(Entry.datetime.desc())
+    yesterday = datetime.now() - timedelta(days=1)
+    today = datetime.now()
+    print(yesterday)
+    ywinner = session.query(Entry.author_id).join(User).filter(Entry.datetime > yesterday, Entry.day_rank == (1,)).all()
+    print(ywinner)
     return render_template("stats.html", users=users, entries=entries)
 
 
@@ -285,6 +290,7 @@ def user_get(id):
     try:
         user = session.query(User).filter_by(id=id).one()
         day_rank = session.query(Entry.day_rank).join(User).filter(Entry.author_id == id).order_by(Entry.datetime.asc()).all()
+        #print(day_rank)
         ranking = rankingint.toint(day_rank)
         average = mean(ranking)
         average = round(average,1)
@@ -361,6 +367,7 @@ def follow_post(id):
         flash("That didn't work... mind letting Jon know?", "danger")
         session.rollback()
         return redirect(url_for("entries"))
+        
         
 '''
 #emergency method for getting rid of new entry that is troublesome

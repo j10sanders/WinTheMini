@@ -5,8 +5,6 @@
             <h2>
             <li>
                 <a href="{{ url_for('user_get', id=entry.author.id) }}">{{ entry.author.name|default('unknown') }}  </a>
-                
-                <!--{{ entry.datetime |default('unknown') }} -->   
             </li>
             </h2>
         </ul>
