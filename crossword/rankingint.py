@@ -9,3 +9,12 @@ def toint(day_rank):
         ranking.append(int(string))
     return ranking
             
+def tointplain(ywinner):
+    strranking = []
+    for z in ywinner:
+       strranking.append(str(z))
+    for dayresult in strranking:
+        strranking = [dayresult.replace(',', "").replace('(', "").replace(')', "") for dayresult in strranking]
+    for s in strranking:
+        int(s)
+    return s

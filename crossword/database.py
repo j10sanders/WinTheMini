@@ -64,7 +64,7 @@ class Entry(Base):
     datetime = Column(DateTime(timezone=True), default=datetime.datetime.now)
     day_rank = Column(Integer)
     author_id = Column(Integer, ForeignKey('users.id'))
-    user = relationship(User)
+    user = relationship(User, lazy='joined')
 
     
     

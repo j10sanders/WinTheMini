@@ -272,17 +272,6 @@ def delete_entry_post(id):
     session.commit()
     return redirect(url_for("entries"))
 
-@app.route("/stats", methods=["GET"])
-def stats_get():
-    users = session.query(User).all()
-    entries = session.query(Entry.day_rank).join(User).order_by(Entry.datetime.desc())
-    yesterday = datetime.now() - timedelta(days=1)
-    today = datetime.now()
-    print(yesterday)
-    ywinner = session.query(Entry.author_id).join(User).filter(Entry.datetime > yesterday, Entry.day_rank == (1,)).all()
-    print(ywinner)
-    return render_template("stats.html", users=users, entries=entries)
-
 
 @app.route("/userinfo/<id>", methods=["GET"])
 def user_get(id):  
@@ -369,6 +358,26 @@ def follow_post(id):
         return redirect(url_for("entries"))
         
         
+@app.route("/stats", methods=["GET"])
+def stats_get():
+    EST = pytz.timezone('US/Eastern')
+    users = session.query(User).all()
+    twodaysago = datetime.now() - timedelta(days=2)
+    twodaysago = twodaysago.replace(tzinfo=pytz.utc).astimezone(EST).date()
+    today = datetime.now()
+    today = today.replace(tzinfo=pytz.utc).astimezone(EST).date()
+    print(twodaysago)
+    ywinner = session.query(Entry).filter(Entry.datetime >= twodaysago, Entry.datetime < today, Entry.day_rank == (1,)).all()
+    for s in ywinner:
+        s = s.user.name
+        print(s)
+    #print(ywinner)
+    #streakmaster = session.query(User.name).filter_by(id=ywinner).one()
+    '''print(streakmaster)
+    print(str(streakmaster))'''
+    return render_template("stats.html", users=users, entries=entries)
+    
+    
 '''
 #emergency method for getting rid of new entry that is troublesome
 @app.route("/deleteit")
