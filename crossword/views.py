@@ -145,15 +145,18 @@ def entries(selected_date = ("2017-6-7")):
         has_prev = True
         has_next = False
         
-    '''if has_prev == False:
-        fivedaysago = selected_date - timedelta(days=5)
-        print(fivedaysago)
+    if has_prev == False:
+        sevendaysago = selected_date - timedelta(days=7)
+        print(sevendaysago)
         print(selected_date)
-        ywinner = session.query(Entry).filter(Entry.datetime >= fivedaysago, Entry.datetime < selected_date, Entry.day_rank == (1,)).all()
+        ywinner = session.query(Entry).filter(Entry.datetime >= sevendaysago, Entry.datetime < selected_date, Entry.day_rank == (1,)).all()
+        ywinner.reverse()
+        for s in ywinner:
+            print(s.user.name)
         streak = 1
         ywinnername = ywinner[0].user.name
         if ywinnername == ywinner[streak].user.name:
-            streak += 1'''
+            streak += 1
 
     return render_template("entries.html",
         entries=entrylist,
