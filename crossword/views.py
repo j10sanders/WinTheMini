@@ -145,7 +145,7 @@ def entries(selected_date = ("2017-6-7")):
         has_prev = True
         has_next = False
         
-    if has_prev == False:
+    '''if has_prev == False:
         fivedaysago = selected_date - timedelta(days=5)
         print(fivedaysago)
         print(selected_date)
@@ -153,7 +153,7 @@ def entries(selected_date = ("2017-6-7")):
         streak = 1
         ywinnername = ywinner[0].user.name
         if ywinnername == ywinner[streak].user.name:
-            streak += 1
+            streak += 1'''
 
     return render_template("entries.html",
         entries=entrylist,
