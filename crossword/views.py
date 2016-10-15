@@ -132,6 +132,8 @@ def entries(selected_date = ("2017-6-7")):
         k +=1
     session.commit()
     
+    streak = 0
+    ywinnername = "nobody"
     #determine if "newer" and/or "older" links should be shown
     if newestentry in entrylist:
         has_next = True
@@ -145,14 +147,12 @@ def entries(selected_date = ("2017-6-7")):
         
     if has_prev == False:
         fivedaysago = selected_date - timedelta(days=5)
-        #fivedaysago = fivedaysago.replace(tzinfo=pytz.utc).astimezone(EST).date()
-        today = datetime.now()
-        today = today.replace(tzinfo=pytz.utc).astimezone(EST).date()
         print(fivedaysago)
-        ywinner = session.query(Entry).filter(Entry.datetime >= fivedaysago, Entry.datetime < today, Entry.day_rank == (1,)).all()
+        print(selected_date)
+        ywinner = session.query(Entry).filter(Entry.datetime >= fivedaysago, Entry.datetime < selected_date, Entry.day_rank == (1,)).all()
         streak = 1
         ywinnername = ywinner[0].user.name
-        if ywinnername == ywinner[1].user.name:
+        if ywinnername == ywinner[streak].user.name:
             streak += 1
 
     return render_template("entries.html",

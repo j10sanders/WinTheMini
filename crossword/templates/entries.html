@@ -10,17 +10,21 @@
     {% else %}
     {% for entry in entries[-1:] %}
     {{ datedisplay }} 
+
     </b>
     </h1>
     <h3>
+    {% if streak != 0 %}
         {{ywinnername}} 
-        {% if i == 1 %}
+        {% if streak == 1 %}
         won yesterday.
         {% else %}
         won the last {{streak}} days.
         {% endif %}
+    {% endif %}
     {% endfor %}
     {% endif %}
+    
     </h3>
     
 
