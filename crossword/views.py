@@ -61,6 +61,7 @@ def entries(selected_date = ("2017-6-7")):
         selected_date = oldesttime
     if selected_date > newesttime:
         selected_date = newesttime
+        
     
     #datedisplay is used for string version of selecteddate
     datedisplay = datetime.strftime(selected_date, "%b %-d, %Y")
@@ -115,7 +116,6 @@ def entries(selected_date = ("2017-6-7")):
     current_user_id = current_user.get_id()
     c_follows = session.query(followers).filter_by(follower_id=current_user_id).all()
     c_user_follows = [item[1] for item in c_follows]
-    #print(c_user_follows, "IDS")
     
 
     '''allu = session.query(User).all()
@@ -142,6 +142,18 @@ def entries(selected_date = ("2017-6-7")):
     else:
         has_prev = True
         has_next = False
+        
+    if has_prev == False:
+        fivedaysago = selected_date - timedelta(days=5)
+        #fivedaysago = fivedaysago.replace(tzinfo=pytz.utc).astimezone(EST).date()
+        today = datetime.now()
+        today = today.replace(tzinfo=pytz.utc).astimezone(EST).date()
+        print(fivedaysago)
+        ywinner = session.query(Entry).filter(Entry.datetime >= fivedaysago, Entry.datetime < today, Entry.day_rank == (1,)).all()
+        streak = 1
+        ywinnername = ywinner[0].user.name
+        if ywinnername == ywinner[1].user.name:
+            streak += 1
 
     return render_template("entries.html",
         entries=entrylist,
@@ -150,8 +162,10 @@ def entries(selected_date = ("2017-6-7")):
         datedisplay = datedisplay,
         older=older,
         newer=newer,
-        current_user_id = current_user_id,
-        c_user_follows = c_user_follows
+        current_user_id=current_user_id,
+        c_user_follows=c_user_follows,
+        streak=streak, 
+        ywinnername=ywinnername
     )
      
 
@@ -360,21 +374,7 @@ def follow_post(id):
         
 @app.route("/stats", methods=["GET"])
 def stats_get():
-    EST = pytz.timezone('US/Eastern')
     users = session.query(User).all()
-    twodaysago = datetime.now() - timedelta(days=2)
-    twodaysago = twodaysago.replace(tzinfo=pytz.utc).astimezone(EST).date()
-    today = datetime.now()
-    today = today.replace(tzinfo=pytz.utc).astimezone(EST).date()
-    print(twodaysago)
-    ywinner = session.query(Entry).filter(Entry.datetime >= twodaysago, Entry.datetime < today, Entry.day_rank == (1,)).all()
-    for s in ywinner:
-        s = s.user.name
-        print(s)
-    #print(ywinner)
-    #streakmaster = session.query(User.name).filter_by(id=ywinner).one()
-    '''print(streakmaster)
-    print(str(streakmaster))'''
     return render_template("stats.html", users=users, entries=entries)
     
     

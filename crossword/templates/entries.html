@@ -9,12 +9,21 @@
     No entries today.  <a href="{{ url_for('entries', older = older) }}"> Jump back to last day with entries?</a>
     {% else %}
     {% for entry in entries[-1:] %}
-    {{ datedisplay }}
+    {{ datedisplay }} 
+    </b>
+    </h1>
+    <h3>
+        {{ywinnername}} 
+        {% if i == 1 %}
+        won yesterday.
+        {% else %}
+        won the last {{streak}} days.
+        {% endif %}
     {% endfor %}
     {% endif %}
+    </h3>
+    
 
-    </b>
-</h1>
 </br>
 
 {% for entry in entries %}
