@@ -27,3 +27,4 @@ pytz==2016.4
 ranking==0.3.1
 six==1.10.0
 treelib==1.2.8
+splinter
