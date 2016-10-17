@@ -9,3 +9,8 @@ app.config.from_object(config_path)
 from . import views
 from . import filters
 from . import login
+
+class TestingConfig(object):
+    SQLALCHEMY_DATABASE_URI = "postgresql://ubuntu:thinkful@localhost:5432/newcrossword"
+    DEBUG = False
+    SECRET_KEY = "Not secret"

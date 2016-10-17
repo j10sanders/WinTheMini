@@ -4,7 +4,7 @@ import json
 try: from urllib.parse import urlparse
 except ImportError: from urlparse import urlparse # Python 2 compatibility
 
-# Configure our app to use the testing databse
+# Configure app to use the testing databse
 os.environ["CONFIG_PATH"] = "crossword.config.TestingConfig"
 
 from crossword import app

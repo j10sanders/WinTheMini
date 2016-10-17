@@ -18,6 +18,8 @@
         {{ywinnername}} 
         {% if streak == 1 %}
         won yesterday.
+        {% elif streak >= 7 %}
+        keeps winning.  Someone stop them.
         {% else %}
         won the last {{streak}} days.
         {% endif %}
