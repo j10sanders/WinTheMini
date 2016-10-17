@@ -146,7 +146,7 @@ def entries(selected_date = ("2017-6-7")):
         has_next = False
         
     if has_prev == False:
-        sevendaysago = selected_date - timedelta(days=7)
+        sevendaysago = selected_date - timedelta(days=8)
         ywinner = session.query(Entry).filter(Entry.datetime >= sevendaysago, Entry.datetime < selected_date, Entry.day_rank == (1,)).all()
         ywinner.reverse()
         streak = 1
@@ -292,7 +292,6 @@ def user_get(id):
     try:
         user = session.query(User).filter_by(id=id).one()
         day_rank = session.query(Entry.day_rank).join(User).filter(Entry.author_id == id).order_by(Entry.datetime.asc()).all()
-        #print(day_rank)
         ranking = rankingint.toint(day_rank)
         average = mean(ranking)
         average = round(average,1)
@@ -351,7 +350,6 @@ def user_get(id):
 @login_required
 def follow_post(id):
     user = session.query(User).filter_by(id=id).one()
-    #print(current_user.id)
     cuid = current_user.get_id()
     cuser = session.query(User).filter_by(id=cuid).one()
     try:
