@@ -30,7 +30,6 @@ class TestCase(unittest.TestCase):
         session.add(u2)
         session.add(u3)
         session.add(u4)
-        # make four entrys
         utcnow = datetime.utcnow()
         # setup the followers
         u1.follow(u1)
