@@ -19,16 +19,11 @@ class TestViews(unittest.TestCase):
         #Base.metadata.create_all(engine)
 
         # Create an example user
-        '''self.user = User(name="Alice", email="alice@example.com",
+        self.user = User(name="Alice", email="alice@example.com",
                          password=generate_password_hash("test"))
         session.add(self.user)
         session.commit()
 
-    def tearDown(self):
-        """ Test teardown """
-        session.close()
-        # Remove the tables and their data from the database
-        Base.metadata.drop_all(engine)'''
         
     def simulate_login(self):
         with self.client.session_transaction() as http_session:
@@ -39,7 +34,7 @@ class TestViews(unittest.TestCase):
         self.simulate_login()
 
         response = self.client.post("/entry/add", data={
-            "time": "40",
+            "title": "40",
             "content": "Test content"
         })
 
@@ -49,10 +44,15 @@ class TestViews(unittest.TestCase):
         self.assertEqual(len(entries), 1)
 
         entry = entries[0]
-        self.assertEqual(entry.time, "Test Entry")
+        self.assertEqual(entry.title, 40)
         self.assertEqual(entry.content, "Test content")
         self.assertEqual(entry.author, self.user)
         
+    def tearDown(self):
+        """ Test teardown """
+        session.close()
+        # Remove the tables and their data from the database
+        Base.metadata.drop_all(engine)
         
 if __name__ == "__main__":
     unittest.main()
