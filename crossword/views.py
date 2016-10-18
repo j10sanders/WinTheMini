@@ -17,10 +17,6 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import NoResultFound, StaleDataError, UnmappedInstanceError
 from ranking import Ranking
 from statistics import mean, StatisticsError
-import numpy as np
-import pandas as pd
-import matplotlib as mpl
-import matplotlib.pyplot as plt
 import pygal
 import json
 from urllib.request import urlopen
@@ -325,13 +321,6 @@ def user_get(id):
         disable_xml_declaration=True)
         graph_of_rankings.x_labels = entrydaylist
         graph_of_rankings.add('Day Rank', ranking)
- 
- 
-        
-        '''plt.hist(rankingtimes)
-        plt.xlabel('Rankingtime')
-        plt.ylabel('Frequency')
-        print(plt.show())'''
         
         current_user_id = current_user.get_id()
         c_follows = session.query(followers).filter_by(follower_id=current_user_id).all()
