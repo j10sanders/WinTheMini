@@ -3,7 +3,7 @@ python:
     - "3.4"
 install: python3 -m pip install -r requirements.txt
 env:
-    - CONFIG_PATH=blog.config.TravisConfig
+    - CONFIG_PATH=crossword.config.TravisConfig
 before_script:
     - psql -c 'create database "crossword-test";' -U postgres
 script:
