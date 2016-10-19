@@ -4,6 +4,7 @@ import datetime
 
 # Configure your app to use the testing configuration
 if not "CONFIG_PATH" in os.environ:
+    os.environ["CONFIG_PATH"] = "crossword.config.TravisConfig"
     os.environ["CONFIG_PATH"] = "crossword.config.TestingConfig"
 
 import crossword

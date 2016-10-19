@@ -5,6 +5,7 @@ from urllib.parse import urlparse
 from werkzeug.security import generate_password_hash
 
 # Configure app to use the testing database
+os.environ["CONFIG_PATH"] = "crossword.config.TravisConfig"
 os.environ["CONFIG_PATH"] = "crossword.config.TestingConfig"
 
 from crossword import app
