@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash
 
 # Configure app to use the testing database
 os.environ["CONFIG_PATH"] = "crossword.config.TravisConfig"
-os.environ["CONFIG_PATH"] = "crossword.config.TestingConfig"
+#os.environ["CONFIG_PATH"] = "crossword.config.TestingConfig"
 
 from crossword import app
 from crossword.database import Base, engine, session, User, Entry
