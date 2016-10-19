@@ -6,6 +6,7 @@ env:
     - CONFIG_PATH=crossword.config.TravisConfig
 before_script:
     - psql -c 'create database "crossword";' -U postgres
+     - psql -c "CREATE USER ubuntu WITH PASSWORD 'ubuntu';" -U postgres
 script:
     - PYTHONPATH=. python3 tests/test_filters.py
     - PYTHONPATH=. python3 tests/test_views_integration.py
