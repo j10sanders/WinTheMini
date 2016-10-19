@@ -1,6 +1,3 @@
-# Travis CI status: [![Build Status](https://travis-ci.org/j10sanders/crossword.svg?branch=master)](https://travis-ci.org/j10sanders/crossword)
-___
-
 # NYT Mini Puzzle - Social Network
 
 The [New York Times (Daily) Mini Crossword Puzzle](http://www.nytimes.com/crosswords/game/mini) is more fun when you compete against your friends.
@@ -12,3 +9,5 @@ For now, feel free to join, invite your friends, or contribute to the project!
 
 ## Try it out!
 You can find the heroku-deployed version here: https://salty-brook-41648.herokuapp.com/
+
+# Travis CI status: [![Build Status](https://travis-ci.org/j10sanders/crossword.svg?branch=master)](https://travis-ci.org/j10sanders/crossword)
