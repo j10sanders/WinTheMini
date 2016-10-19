@@ -1,6 +1,9 @@
-# Crossword results
+[![Build Status](https://travis-ci.org/j10sanders/crossword.svg?branch=master)](https://travis-ci.org/j10sanders/crossword)
+___
 
-The [New York Times Daily Mini Crossword](http://www.nytimes.com/crosswords/game/mini) is more fun when you compete against your friends.
+# NYT Mini Puzzle - Social Network
+
+The [New York Times (Daily) Mini Crossword Puzzle](http://www.nytimes.com/crosswords/game/mini) is more fun when you compete against your friends.
 
 Since no social elements are built in, this application allows groups of people to track their times, compare scores, and trash talk.  
 
