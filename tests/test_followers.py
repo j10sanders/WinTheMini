@@ -9,6 +9,7 @@ from splinter import Browser
 
 # Configure app to use the testing database
 os.environ["CONFIG_PATH"] = "crossword.config.TestingConfig"
+os.environ["CONFIG_PATH"] = "crossword.config.TravisConfig"
 
 from crossword import app
 from crossword.database import Base, engine, session, User, Entry
