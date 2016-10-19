@@ -43,7 +43,7 @@ CREATE TABLE entries (
 );
 
 
-ALTER TABLE public.entries OWNER TO ubuntu;
+-- ALTER TABLE public.entries OWNER TO ubuntu;
 
 --
 -- Name: entries_id_seq; Type: SEQUENCE; Schema: public; Owner: ubuntu
@@ -57,13 +57,13 @@ CREATE SEQUENCE entries_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.entries_id_seq OWNER TO ubuntu;
+-- ALTER TABLE public.entries_id_seq OWNER TO ubuntu;
 
 --
 -- Name: entries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ubuntu
 --
 
-ALTER SEQUENCE entries_id_seq OWNED BY entries.id;
+-- ALTER SEQUENCE entries_id_seq OWNED BY entries.id;
 
 
 --
@@ -78,7 +78,7 @@ CREATE TABLE users (
 );
 
 
-ALTER TABLE public.users OWNER TO ubuntu;
+-- ALTER TABLE public.users OWNER TO ubuntu;
 
 --
 -- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: ubuntu
@@ -92,7 +92,7 @@ CREATE SEQUENCE users_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.users_id_seq OWNER TO ubuntu;
+-- ALTER TABLE public.users_id_seq OWNER TO ubuntu;
 
 --
 -- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ubuntu
