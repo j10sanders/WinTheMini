@@ -13,7 +13,7 @@ class TestingConfig(object):
     
 
 class TravisConfig(object):
-    SQLALCHEMY_DATABASE_URI = "postgresql://localhost:5432/crossword-test"
+    SQLALCHEMY_DATABASE_URI = "postgresql://localhost:5432/crossword"
     DEBUG = False
     SECRET_KEY = "Not secret"
     
