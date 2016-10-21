@@ -1,14 +1,17 @@
 import os
+
+class TravisConfig(object):
+    SQLALCHEMY_DATABASE_URI = "postgresql://localhost:5432/crossword"
+    DEBUG = False
+    SECRET_KEY = "Not secret"
+    
+    
 class DevelopmentConfig(object):
     SQLALCHEMY_DATABASE_URI = "postgresql://ubuntu:thinkful@localhost:5432/newcrossword"
     DEBUG = True
     SECRET_KEY = os.environ.get("CROSSWORD_SECRET_KEY", os.urandom(12))
   
-  
-class TravisConfig(object):
-    SQLALCHEMY_DATABASE_URI = "postgresql://localhost:5432/crossword"
-    DEBUG = False
-    SECRET_KEY = "Not secret"
+
 
 '''
 class TestingConfig(object):
