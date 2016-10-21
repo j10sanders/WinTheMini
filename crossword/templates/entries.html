@@ -14,18 +14,21 @@
     </b>
     </h1>
     <h2>
+    {% if current_user_id == None or ywinnerid in c_user_follows %}
     {% if streak != 0 %}
         {{ywinnername}} 
         {% if streak == 1 %}
         won yesterday.
         {% elif streak >= 7 %}
-        keeps winning.  Someone stop them.
+        keeps winning.  Someone stop that popmous asshole!
         {% else %}
         won the last {{streak}} days.
+        {% endif %}
         {% endif %}
     {% endif %}
     {% endfor %}
     {% endif %}
+    
     
     </h2>
     
