@@ -3,7 +3,7 @@ import os
 class TravisConfig(object):
     SQLALCHEMY_DATABASE_URI = "postgresql://localhost:5432/crossword"
     DEBUG = False
-    SECRET_KEY = "Not secret"
+    SECRET_KEY = "Not secret" 
     
     
 class DevelopmentConfig(object):
