@@ -5,7 +5,6 @@ class DevelopmentConfig(object):
     SECRET_KEY = os.environ.get("CROSSWORD_SECRET_KEY", os.urandom(12))
   
   
-
 class TravisConfig(object):
     SQLALCHEMY_DATABASE_URI = "postgresql://localhost:5432/crossword"
     DEBUG = False
