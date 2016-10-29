@@ -155,8 +155,7 @@ def entries(selected_date = ("2017-6-7")):
         while streak < len(ywinner) - 1:
             if ywinnername == ywinner[streak].user.name:
                 streak += 1
-            else:
-                break
+            
 
     return render_template("entries.html",
         entries=entrylist,
