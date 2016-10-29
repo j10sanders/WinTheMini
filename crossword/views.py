@@ -145,7 +145,7 @@ def entries(selected_date = ("2017-6-7")):
         
     if has_prev == False:
         sevendaysago = selected_date - timedelta(days=8)
-        ywinner = session.query(Entry).filter(Entry.datetime >= sevendaysago, Entry.datetime < selected_date, Entry.day_rank == (1,)).all()
+        ywinner = session.query(Entry).filter(Entry.datetime >= sevendaysago, Entry.datetime < selected_date, Entry.day_rank == (1,)).desc()
         ywinner.reverse()
         #print(ywinner[0].user.name)
         streak = 1
