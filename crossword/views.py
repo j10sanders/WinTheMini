@@ -153,7 +153,7 @@ def entries(selected_date = ("2017-6-7")):
         #print(ywinnerid)
         ywinnername = ywinner[0].user.name
         if ywinnername == ywinner[streak].user.name:
-                streak += 1
+            streak += 1
         else:
             streak = 7
             
