@@ -152,9 +152,11 @@ def entries(selected_date = ("2017-6-7")):
         ywinnerid = ywinner[0].user.id
         #print(ywinnerid)
         ywinnername = ywinner[0].user.name
-        if streak < len(ywinner) - 1:
+        if streak < (len(ywinner) - 1):
             while ywinnername == ywinner[streak].user.name:
                 streak += 1
+        else:
+            streak = 7
             
 
     return render_template("entries.html",
