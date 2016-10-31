@@ -149,8 +149,11 @@ def entries(selected_date = ("2017-6-7")):
         streak = 1
         ywinnerid = ywinner[0].user.id
         ywinnername = ywinner[0].user.name
+        for x in ywinner:
+            print(x.user.name)
         while ywinnername == ywinner[streak].user.name:
             streak += 1
+        
         
             
 
