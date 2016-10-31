@@ -148,11 +148,11 @@ def entries(selected_date = ("2017-6-7")):
         ywinner = session.query(Entry).filter(Entry.datetime >= sevendaysago, Entry.day_rank == (1,)).order_by(Entry.datetime.desc())
         #print(selected_date)
         streak = 1
-        ywinnerid = ywinner[0].user.id
-        ywinnername = ywinner[0].user.name
+        ywinnerid = ywinner[1].user.id
+        ywinnername = ywinner[1].user.name
         for x in ywinner:
             print(x.user.name, x.datetime)
-        while ywinnername == ywinner[streak].user.name:
+        while ywinnername == ywinner[streak+1].user.name:
             streak += 1
         
         
