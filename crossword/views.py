@@ -145,7 +145,7 @@ def entries(selected_date = ("2017-6-7")):
         
     if has_prev == False:
         sevendaysago = selected_date - timedelta(days=8)
-        ywinner = session.query(Entry).filter(Entry.datetime >= sevendaysago, Entry.day_rank == (1,)).order_by(Entry.datetime.desc())
+        ywinner = session.query(Entry).filter(Entry.datetime >= sevendaysago, Entry.datetime < selected_date, Entry.day_rank == (1,)).order_by(Entry.datetime.desc())
         streak = 1
         ywinnerid = ywinner[1].user.id
         ywinnername = ywinner[1].user.name
@@ -232,20 +232,20 @@ def add_entry_get():
 @login_required
 def add_entry_post():
     try:
-        time = int(request.form["title"])
-        title = time
+        title = int(request.form["title"])
+        #title = time
     except ValueError:
-        time = request.form["title"]
-        if time.count(":") > 1:
+        title = request.form["title"]
+        if title.count(":") > 1:
             flash(str("You entered something weird.  Your input should be integers (and you might have a semicolon)"), "danger")
             return redirect(url_for("add_entry_get"))
-        elif time[0] == ":":
-            title = time[1:]
-        elif ":" not in time:
+        elif title[0] == ":":
+            title = title[1:]
+        elif ":" not in title:
             flash(str("You entered something weird.  Your input should be integers (and you might have a semicolon)"), "danger")
             return redirect(url_for("add_entry_get"))
         else:
-            title=sum(int(x) * 60 ** i for i,x in enumerate(reversed(time.split(":"))))
+            title=sum(int(x) * 60 ** i for i,x in enumerate(reversed(title.split(":"))))
     entry = Entry(
         title = title,
         content=request.form["content"],
