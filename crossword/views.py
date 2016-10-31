@@ -152,14 +152,17 @@ def entries(selected_date = ("2017-6-7")):
         ywinnername = ywinner[0].user.name
         for count, x in enumerate(ywinner):
             print(x.user.name, x.datetime, count)
-        while ywinnername == ywinner[streak+1].user.name:
+        while ywinnername == ywinner[streak].user.name:
             streak += 1
         i = 0
+        
+        #try for loop, once item breaks logic
+        
         '''while True:
             selected_date != ywinner[i].datetime.replace(tzinfo=pytz.utc).astimezone(EST).date():
                 break
             else:
-                i += 1
+                i += 1'''
             #ywinnername = "nobody"
             #ywinnerid = "no_id"
             #streak = 0
