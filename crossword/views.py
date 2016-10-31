@@ -113,7 +113,7 @@ def entries(selected_date = ("2017-6-7")):
     current_user_id = current_user.get_id()
     c_follows = session.query(followers).filter_by(follower_id=current_user_id).all()
     c_user_follows = [item[1] for item in c_follows]
-    
+    print(selected_date)
 
     '''allu = session.query(User).all()
     allusercombos = [(x,y) for x in allu for y in allu]
@@ -145,7 +145,8 @@ def entries(selected_date = ("2017-6-7")):
         
     if has_prev == False:
         sevendaysago = selected_date - timedelta(days=8)
-        ywinner = session.query(Entry).filter(Entry.datetime >= sevendaysago, Entry.datetime < selected_date, Entry.day_rank == (1,)).order_by(Entry.datetime.desc())
+        ywinner = session.query(Entry).filter(Entry.datetime >= sevendaysago, Entry.day_rank == (1,)).order_by(Entry.datetime.desc())
+        #print(selected_date)
         streak = 1
         ywinnerid = ywinner[0].user.id
         ywinnername = ywinner[0].user.name
