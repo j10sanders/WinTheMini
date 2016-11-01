@@ -65,6 +65,15 @@ class Entry(Base):
     day_rank = Column(Integer)
     author_id = Column(Integer, ForeignKey('users.id'))
     user = relationship(User, lazy='joined')
+    
+    
+class PWReset(Base):
+    __tablename__ = "pwreset"
+    id = Column(Integer, primary_key=True)
+    reset_key = Column(String(128), unique=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    datetime = Column(DateTime(timezone=True), default=datetime.datetime.now)
+    user = relationship(User, lazy='joined')
 
     
     

@@ -25,7 +25,7 @@ import unittest
 
 @app.route("/")
 @app.route("/date/<selected_date>")
-def entries(selected_date = ("2017-6-7")):
+def entries(selected_date = ("2017-10-7")):
     #EST = timezone('America/New_York')
     EST = pytz.timezone('US/Eastern')
     now_utc = datetime.utcnow().replace(tzinfo=pytz.utc).date()
@@ -156,16 +156,6 @@ def entries(selected_date = ("2017-6-7")):
             print(x.user.name, x.datetime, count)'''
         while ywinnername == ywinner[streak+1].user.name:
             streak += 1
-        
-        #check if there was a tie for first place
-        i = 0
-        try:
-            while selected_date == ywinner[i].datetime.replace(tzinfo=pytz.utc).astimezone(EST).date():
-                print("i")
-                print(i)
-                i += 1
-        except IndexError:
-            i = i
         
             #ywinnername = "nobody"
             #ywinnerid = "no_id"
@@ -389,6 +379,26 @@ def stats_get():
     return render_template("stats.html", users=users, entries=entries)
     
     
+@app.route("/pwreset/<id>", methods=["GET"])
+def pwreset_get():
+    return render_template('pwreset.html')
+
+@app.route("/pwreset/<id>", methods=["POST"])
+def pwreset_post():
+    if request.form["password"] != request.form["password2"]:
+        flash("Your password and password verification didn't match.", "danger")
+        return redirect(url_for("pwreset_get"))
+    if len(request.form["password"]) < 8:
+        flash("Your password needs to be at least 8 characters", "danger")
+        return redirect(url_for("pwreset_get"))
+    user = User(name=request.form["username"], password=generate_password_hash(request.form["password"]), email=request.form["email"])
+    session.add(user)
+    session.commit()
+    flash("Your new password is saved.", "success")
+    login_user(user)
+    return redirect(url_for("entries"))
+
+
 '''
 #emergency method for getting rid of new entry that is troublesome
 @app.route("/deleteit")
