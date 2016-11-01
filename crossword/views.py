@@ -6,7 +6,6 @@ from flask import flash
 from flask.ext.login import login_user, logout_user
 from getpass import getpass
 from werkzeug.security import check_password_hash, generate_password_hash
-from getpass import getpass
 from .database import User
 from flask import request, redirect, url_for
 from flask.ext.login import login_required, current_user
@@ -43,11 +42,10 @@ def entries(selected_date = ("2017-6-7")):
         selected_date = now_utc
 
     entries = session.query(Entry)
-    entries = entries.order_by(Entry.datetime.desc())
-    #print(session.query(Entry.author_id).order_by(Entry.title).all(), "author_id's")
-
-    oldestentry = entries[-1]
-    newestentry = entries[0]
+    
+    #determine which entries are oldest and newest, so later can determine if "Older" or "Newer" buttons should be displayed.
+    oldestentry = entries.order_by(Entry.datetime.asc()).first()
+    newestentry = entries.order_by(Entry.datetime.desc()).first()
     oldesttime = oldestentry.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date()
     newesttime = newestentry.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date()
 
@@ -75,12 +73,12 @@ def entries(selected_date = ("2017-6-7")):
         daybefore = selected_date - timedelta(1)
         daybefore = daybefore.strftime("%b %-d, %Y")
         
-        #what to do when user has selected a day with entries
+        #what to do when user has selected a day with entriesS
         if entrytime == datedisplay:
             entrylist.append(entry)
             #sort the entries: top score (entry.title) should be at the top
             try: 
-                for x in entrylist:
+                for entry in entrylist:
                     #display the entries in order of best time to worst
                     entry.title = int(entry.title)
                     entrylist.sort(key=lambda x: x.title, reverse = False)
@@ -96,7 +94,6 @@ def entries(selected_date = ("2017-6-7")):
         try:
             if entry.id == olderentryid:
                 older = entry.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date()
-                #print(older)
             if entry.id == newerentryid:
                 newer = entry.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date()
         except UnboundLocalError:
@@ -114,13 +111,8 @@ def entries(selected_date = ("2017-6-7")):
     c_follows = session.query(followers).filter_by(follower_id=current_user_id).all()
     c_user_follows = [item[1] for item in c_follows]
 
-    '''allu = session.query(User).all()
-    allusercombos = [(x,y) for x in allu for y in allu]
-    for x,y in allusercombos:
-        session.add(x.follow(y))
-    session.commit()'''
-        
-    #determine the day_rank of the entries, so the user's stats are tracked:
+
+    #determine the day_rank of the entries, so the users' stats are tracked:
     for entry in entrylist:
         entry = session.query(Entry).get(entry.id)
         entry.day_rank = day_rank = dayranklist[k]
@@ -146,23 +138,35 @@ def entries(selected_date = ("2017-6-7")):
         sevendaysago = selected_date - timedelta(days=8)
         ywinner = session.query(Entry).filter(Entry.datetime >= sevendaysago, Entry.day_rank == (1,)).order_by(Entry.datetime.desc())
         
-        #print(selected_date)
+        #check if there was a tie for first place.  If so, push the winner back to last day
+        i = 0
+        try:
+            while selected_date == ywinner[i].datetime.replace(tzinfo=pytz.utc).astimezone(EST).date():
+                print("i")
+                print(i)
+                i += 1
+        except IndexError:
+            i = i
+        
+        
         streak = 1
-        ywinnerid = ywinner[1].user.id
-        ywinnername = ywinner[1].user.name
+        ywinnerid = ywinner[i+1].user.id
+        ywinnername = ywinner[i+1].user.name
         '''for count, x in enumerate(ywinner):
             print(x.user.name, x.datetime, count)'''
         while ywinnername == ywinner[streak+1].user.name:
             streak += 1
+        
+        #check if there was a tie for first place
         i = 0
+        try:
+            while selected_date == ywinner[i].datetime.replace(tzinfo=pytz.utc).astimezone(EST).date():
+                print("i")
+                print(i)
+                i += 1
+        except IndexError:
+            i = i
         
-        #try for loop, once item breaks logic
-        
-        '''while True:
-            selected_date != ywinner[i].datetime.replace(tzinfo=pytz.utc).astimezone(EST).date():
-                break
-            else:
-                i += 1'''
             #ywinnername = "nobody"
             #ywinnerid = "no_id"
             #streak = 0
@@ -170,8 +174,6 @@ def entries(selected_date = ("2017-6-7")):
 
         
         
-            
-
     return render_template("entries.html",
         entries=entrylist,
         has_next=has_next,
