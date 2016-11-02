@@ -1,7 +1,7 @@
 from flask import render_template
 from itertools import groupby
-from . import app, rankingint
-from .database import session, Entry, followers, User
+from . import app, rankingint, keygenerator
+from .database import session, Entry, followers, User, PWReset
 from flask import flash
 from flask.ext.login import login_user, logout_user
 from getpass import getpass
@@ -21,6 +21,7 @@ import json
 from urllib.request import urlopen
 from pygal.style import BlueStyle
 import unittest
+import yagmail
 
 
 @app.route("/")
@@ -142,8 +143,8 @@ def entries(selected_date = ("2017-10-7")):
         i = 0
         try:
             while selected_date == ywinner[i].datetime.replace(tzinfo=pytz.utc).astimezone(EST).date():
-                print("i")
-                print(i)
+                #print("i")
+                #print(i)
                 i += 1
         except IndexError:
             i = i
@@ -360,7 +361,7 @@ def follow_post(id):
         if 'Unfollow' in request.form:
             session.add(cuser.unfollow(user))
             session.commit()
-            flash("Good call unfollowing " + user.name +".  They suck!", "success")
+            flash("Good call unfollowing " + user.name +".  Nobody needs that.", "success")
             return redirect(url_for("entries"))
         elif 'Follow' in request.form:
             session.add(cuser.follow(user))
@@ -376,26 +377,62 @@ def follow_post(id):
 @app.route("/stats", methods=["GET"])
 def stats_get():
     users = session.query(User).all()
-    return render_template("stats.html", users=users, entries=entries)
+    return render_template("stats.html", users=users)
     
+    
+    
+    
+    
+@app.route("/pwresetrq", methods=["GET"])
+def pwresetrq_get():
+    return render_template('pwresetrq.html')
+    
+@app.route("/pwresetrq", methods=["POST"])
+def pwresetrq_post():
+    emails = session.query(User.email).all()
+    emails = [item[0] for item in emails]
+    if request.form["email"] not in emails:
+        flash("Your email was never registered.", "danger")
+        return redirect(url_for("pwresetrq_get"))
+    user = session.query(User).filter_by(email=request.form["email"]).one()
+    print(user.id, "is the id")
+    key = keygenerator.make_key()
+    user_reset = PWReset(reset_key=key, user_id = user.id)
+    session.add(user_reset)
+    session.commit()
+    yag = yagmail.SMTP()
+    contents = ['Please go to this URL to reset your password:', "http://workspace2-jonsanders.c9users.io:8080" + url_for("pwreset_get",  id = (str(key))),
+                "Email jonsandersss@gmail.com if this doesn't work for you.     'With a Crossword, we're challenging ourselves to make order out of chaos' - Will Shortz"]
+    yag.send('jps458@nyu.edu', 'TEST', contents)
+    flash(user.name + ", check your email for a link to reset your password.  It expires in a day!", "success")
+    return redirect(url_for("entries"))
     
 @app.route("/pwreset/<id>", methods=["GET"])
-def pwreset_get():
-    return render_template('pwreset.html')
+def pwreset_get(id):
+    key = id
+    return render_template('pwreset.html', id = key)
 
 @app.route("/pwreset/<id>", methods=["POST"])
-def pwreset_post():
+def pwreset_post(id):
     if request.form["password"] != request.form["password2"]:
         flash("Your password and password verification didn't match.", "danger")
-        return redirect(url_for("pwreset_get"))
+        return redirect(url_for("pwreset_get", id = id))
     if len(request.form["password"]) < 8:
         flash("Your password needs to be at least 8 characters", "danger")
-        return redirect(url_for("pwreset_get"))
-    user = User(name=request.form["username"], password=generate_password_hash(request.form["password"]), email=request.form["email"])
-    session.add(user)
-    session.commit()
+        return redirect(url_for("pwreset_get", id = id))
+    user_reset = session.query(PWReset).filter_by(reset_key=id).one()
+    #session.query(User).filter_by(id=user_reset.user.id).one()
+    #print(user_reset.user_id, "PRINTING ID")
+    try:
+        session.query(User).filter_by(id = user_reset.user_id).update({'password': generate_password_hash(request.form["password"])})
+        session.commit()
+    except IntegrityError:
+        flash("ERROR", "danger")
+        session.rollback()
+        return redirect(url_for("entries"))
+    
     flash("Your new password is saved.", "success")
-    login_user(user)
+    #login_user(user)
     return redirect(url_for("entries"))
 
 
