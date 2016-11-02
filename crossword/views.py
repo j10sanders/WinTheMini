@@ -400,7 +400,7 @@ def pwresetrq_post():
     user_reset = PWReset(reset_key=key, user_id = user.id)
     session.add(user_reset)
     session.commit()
-    yag = yagmail.SMTP()
+    yag = yagmail.SMTP('pwreset.winthemini@gmail.com', 'P)O(I*U&p0o9i8u7')
     contents = ['Please go to this URL to reset your password:', "http://workspace2-jonsanders.c9users.io:8080" + url_for("pwreset_get",  id = (str(key))),
                 "Email jonsandersss@gmail.com if this doesn't work for you.     'With a Crossword, we're challenging ourselves to make order out of chaos' - Will Shortz"]
     yag.send('jps458@nyu.edu', 'TEST', contents)
@@ -410,6 +410,14 @@ def pwresetrq_post():
 @app.route("/pwreset/<id>", methods=["GET"])
 def pwreset_get(id):
     key = id
+    key_datetime = session.query(PWReset).filter_by(reset_key=id).one()
+    print(key_datetime.datetime)
+    EST = pytz.timezone('US/Eastern')
+    x = datetime.utcnow().replace(tzinfo=pytz.utc).date()- timedelta(days=2)
+    print(x)
+    if key_datetime.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date() < x:
+        flash("Your password reset link expired.  Please generate a new one here.", "danger")
+        return redirect(url_for("pwresetrq_get"))
     return render_template('pwreset.html', id = key)
 
 @app.route("/pwreset/<id>", methods=["POST"])
