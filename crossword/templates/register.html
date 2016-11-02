@@ -19,10 +19,9 @@
     <button type="submit" class="btn btn-default">Submit</button>
 </form>
 
-<h2>
-   <b></b>If you've already registered, please: 
-    <a href="{{ url_for('login_get')}}">Login</a></b>
-</h2>
+<h2>If you've already registered, please: <b><a href="{{ url_for('login_get')}}">Login</a></b></h2>
+
+<h2></br>Already register and just forget your password? <b><a href="{{ url_for('pwresetrq_get')}}">Reset your password here.</a></b></h2>
 
 
 {% endblock %} 
