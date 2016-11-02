@@ -408,8 +408,8 @@ def pwresetrq_post():
     from_email = 'winthemini@' + os.environ.get('SPARKPOST_SANDBOX_DOMAIN') # 'winthemini@sparkpostbox.com'
     
     response = sparky.transmission.send(
-        recipients=['jps458@nyu.edu'],
-        text='Please go to this URL to reset your password: http://workspace2-jonsanders.c9users.io:8080' + url_for("pwreset_get",  id = (str(key))) + "Email jonsandersss@gmail.com if this doesn't work for you.     'With a Crossword, we're challenging ourselves to make order out of chaos' - Will Shortz",
+        recipients=[request.form["email"]],
+        text='Please go to this URL to reset your password: https://salty-brook-41648.herokuapp.com' + url_for("pwreset_get",  id = (str(key))) + "   Email jonsandersss@gmail.com if this doesn't work for you.     'With a Crossword, we're challenging ourselves to make order out of chaos' - Will Shortz",
         from_email=from_email,
         subject='Reset your password')
 
