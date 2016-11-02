@@ -411,9 +411,8 @@ def pwresetrq_post():
         recipients=['jps458@nyu.edu'],
         text='Please go to this URL to reset your password: http://workspace2-jonsanders.c9users.io:8080' + url_for("pwreset_get",  id = (str(key))) + "Email jonsandersss@gmail.com if this doesn't work for you.     'With a Crossword, we're challenging ourselves to make order out of chaos' - Will Shortz",
         from_email=from_email,
-        subject='Reset your password'
-    
-    print(response)
+        subject='Reset your password')
+
 
 
     '''contents = ['Please go to this URL to reset your password: http://workspace2-jonsanders.c9users.io:8080' + url_for("pwreset_get",  id = (str(key))),
