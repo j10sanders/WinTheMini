@@ -409,7 +409,7 @@ def pwresetrq_post():
     
     response = sparky.transmission.send(
         recipients=[request.form["email"]],
-        text='Please go to this URL to reset your password: https://salty-brook-41648.herokuapp.com' + url_for("pwreset_get",  id = (str(key))) + "\nEmail jonsandersss@gmail.com if this doesn't work for you.     \n\n'With a Crossword, we're challenging ourselves to make order out of chaos' - Will Shortz",
+        text="With a Crossword, we're challenging ourselves to make order out of chaos' - Will Shortz  \nPlease go to this URL to reset your password: https://salty-brook-41648.herokuapp.com" + url_for("pwreset_get",  id = (str(key))) + "\n Email jonsandersss@gmail.com if this doesn't work for you.",
         from_email=from_email,
         subject='Reset your password')
 
