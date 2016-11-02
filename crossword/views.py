@@ -155,7 +155,7 @@ def entries(selected_date = ("2017-10-7")):
         ywinnername = ywinner[i].user.name
         for count, x in enumerate(ywinner):
             print(x.user.name, x.datetime, count)
-        while ywinnername == ywinner[streak+1].user.name:
+        while ywinnername == ywinner[streak+1+i].user.name:
             streak += 1
         
             #ywinnername = "nobody"
