@@ -167,7 +167,7 @@ def entries(selected_date = ("2017-10-7")):
         #print(i)
 
         
-    #flash("On Friday, the app will no longer be here.  Please add https://winthemini.herokuapp.com/ to your bookmarks!", "danger")
+    flash("On Friday, the app will no longer be here.  Please add https://winthemini.herokuapp.com/ to your bookmarks!", "danger")
     return render_template("entries.html",
         entries=entrylist,
         has_next=has_next,
@@ -224,7 +224,7 @@ def register_post():
         login_user(user)
         return redirect(request.args.get("next") or url_for("entries"))
     except IntegrityError:
-        flash("The username or email was already taken.  This app isn't sophisticated enough to let you reset a password, so just register a new user", "danger")
+        flash("The username or email was already taken.  Maybe you need to reset your password (below)?", "danger")
         session.rollback()
         return redirect(url_for("register_get"))
     
