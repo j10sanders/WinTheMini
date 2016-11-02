@@ -144,7 +144,7 @@ def entries(selected_date = ("2017-10-7")):
         try:
             while selected_date == ywinner[i].datetime.replace(tzinfo=pytz.utc).astimezone(EST).date():
                 #print("i")
-                #print(i)
+                print(i)
                 i += 1
         except IndexError:
             i = i
@@ -153,8 +153,8 @@ def entries(selected_date = ("2017-10-7")):
         streak = 1
         ywinnerid = ywinner[i+1].user.id
         ywinnername = ywinner[i+1].user.name
-        '''for count, x in enumerate(ywinner):
-            print(x.user.name, x.datetime, count)'''
+        for count, x in enumerate(ywinner):
+            print(x.user.name, x.datetime, count)
         while ywinnername == ywinner[streak+1].user.name:
             streak += 1
         
