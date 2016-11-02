@@ -22,6 +22,9 @@ from urllib.request import urlopen
 from pygal.style import BlueStyle
 import unittest
 import yagmail
+from sparkpost import SparkPost
+import os
+
 
 
 @app.route("/")
@@ -164,7 +167,7 @@ def entries(selected_date = ("2017-10-7")):
         #print(i)
 
         
-        
+    #flash("On Friday, the app will no longer be here.  Please add https://winthemini.herokuapp.com/ to your bookmarks!", "danger")
     return render_template("entries.html",
         entries=entrylist,
         has_next=has_next,
@@ -400,10 +403,23 @@ def pwresetrq_post():
     user_reset = PWReset(reset_key=key, user_id = user.id)
     session.add(user_reset)
     session.commit()
-    yag = yagmail.SMTP('pwreset.winthemini@gmail.com', 'P)O(I*U&p0o9i8u7')
-    contents = ['Please go to this URL to reset your password:', "http://workspace2-jonsanders.c9users.io:8080" + url_for("pwreset_get",  id = (str(key))),
+    
+    sparky = SparkPost() # uses environment variable
+    from_email = 'test@' + os.environ.get('SPARKPOST_SANDBOX_DOMAIN') # 'test@sparkpostbox.com'
+    
+    response = sparky.transmission.send(
+        recipients=['jps458@nyu.edu'],
+        html='<html><body><p>Testing SparkPost - the world\'s most awesomest email service!</p></body></html>',
+        from_email=from_email,
+        subject='Oh hey!'
+    )
+    
+    print(response)
+
+
+    '''contents = ['Please go to this URL to reset your password: http://workspace2-jonsanders.c9users.io:8080' + url_for("pwreset_get",  id = (str(key))),
                 "Email jonsandersss@gmail.com if this doesn't work for you.     'With a Crossword, we're challenging ourselves to make order out of chaos' - Will Shortz"]
-    yag.send('jps458@nyu.edu', 'TEST', contents)
+    yag.send('jps458@nyu.edu', 'TEST', contents)'''
     flash(user.name + ", check your email for a link to reset your password.  It expires in a day!", "success")
     return redirect(url_for("entries"))
     

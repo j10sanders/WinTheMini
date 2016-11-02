@@ -1,3 +1,5 @@
 env
 __pycache__
-GhostDriver.log
+GhostDriver.logsendgrid.env
+sendgrid.env
+.env
