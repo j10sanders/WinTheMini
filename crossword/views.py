@@ -398,21 +398,20 @@ def pwresetrq_post():
         flash("Your email was never registered.", "danger")
         return redirect(url_for("pwresetrq_get"))
     user = session.query(User).filter_by(email=request.form["email"]).one()
-    print(user.id, "is the id")
+    #print(user.id, "is the id")
     key = keygenerator.make_key()
     user_reset = PWReset(reset_key=key, user_id = user.id)
     session.add(user_reset)
     session.commit()
     
     sparky = SparkPost() # uses environment variable
-    from_email = 'test@' + os.environ.get('SPARKPOST_SANDBOX_DOMAIN') # 'test@sparkpostbox.com'
+    from_email = 'winthemini@' + os.environ.get('SPARKPOST_SANDBOX_DOMAIN') # 'winthemini@sparkpostbox.com'
     
     response = sparky.transmission.send(
         recipients=['jps458@nyu.edu'],
-        html='<html><body><p>Testing SparkPost - the world\'s most awesomest email service!</p></body></html>',
+        text='Please go to this URL to reset your password: http://workspace2-jonsanders.c9users.io:8080' + url_for("pwreset_get",  id = (str(key))) + "Email jonsandersss@gmail.com if this doesn't work for you.     'With a Crossword, we're challenging ourselves to make order out of chaos' - Will Shortz",
         from_email=from_email,
-        subject='Oh hey!'
-    )
+        subject='Reset your password'
     
     print(response)
 
@@ -427,10 +426,10 @@ def pwresetrq_post():
 def pwreset_get(id):
     key = id
     key_datetime = session.query(PWReset).filter_by(reset_key=id).one()
-    print(key_datetime.datetime)
+    #print(key_datetime.datetime)
     EST = pytz.timezone('US/Eastern')
     x = datetime.utcnow().replace(tzinfo=pytz.utc).date()- timedelta(days=2)
-    print(x)
+    #print(x)
     if key_datetime.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date() < x:
         flash("Your password reset link expired.  Please generate a new one here.", "danger")
         return redirect(url_for("pwresetrq_get"))
