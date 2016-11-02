@@ -151,8 +151,8 @@ def entries(selected_date = ("2017-10-7")):
         
         
         streak = 1
-        ywinnerid = ywinner[i+1].user.id
-        ywinnername = ywinner[i+1].user.name
+        ywinnerid = ywinner[i].user.id
+        ywinnername = ywinner[i].user.name
         for count, x in enumerate(ywinner):
             print(x.user.name, x.datetime, count)
         while ywinnername == ywinner[streak+1].user.name:
