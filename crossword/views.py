@@ -167,7 +167,7 @@ def entries(selected_date = ("2017-10-7")):
         #print(i)
 
         
-    flash("The app will no longer be here tomorrow.  Please add https://winthemini.herokuapp.com/ to your bookmarks!", "danger")
+    #flash("The app will no longer be here tomorrow.  Please add https://winthemini.herokuapp.com/ to your bookmarks!", "danger")
     return render_template("entries.html",
         entries=entrylist,
         has_next=has_next,
@@ -409,7 +409,7 @@ def pwresetrq_post():
     
     response = sparky.transmission.send(
         recipients=[request.form["email"]],
-        text="With a Crossword, we're challenging ourselves to make order out of chaos' - Will Shortz  \n\n\nPlease go to this URL to reset your password: https://salty-brook-41648.herokuapp.com" + url_for("pwreset_get",  id = (str(key))) + "\n Email jonsandersss@gmail.com if this doesn't work for you.",
+        text="With a Crossword, we're challenging ourselves to make order out of chaos' - Will Shortz  \n\n\nPlease go to this URL to reset your password: https://winthemini.herokuapp.com" + url_for("pwreset_get",  id = (str(key))) + "\n Email jonsandersss@gmail.com if this doesn't work for you.",
         from_email=from_email,
         subject='Reset your password')
 
