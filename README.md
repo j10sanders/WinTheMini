@@ -8,6 +8,6 @@ In the future, the data will be useful for determining what times of the day you
 For now, feel free to join, invite your friends, or contribute to the project!
 
 ## Try it out!
-You can find the heroku-deployed version here: https://salty-brook-41648.herokuapp.com/
+You can find the heroku-deployed version here: https://winthemini.herokuapp.com/
 
 # Travis CI status: [![Build Status](https://travis-ci.org/j10sanders/crossword.svg?branch=master)](https://travis-ci.org/j10sanders/crossword)
