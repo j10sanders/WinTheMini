@@ -167,7 +167,7 @@ def entries(selected_date = ("2017-10-7")):
         #print(i)
 
         
-    flash("On Friday, the app will no longer be here.  Please add https://winthemini.herokuapp.com/ to your bookmarks!", "danger")
+    flash("The app will no longer be here tomorrow.  Please add https://winthemini.herokuapp.com/ to your bookmarks!", "danger")
     return render_template("entries.html",
         entries=entrylist,
         has_next=has_next,
@@ -413,11 +413,6 @@ def pwresetrq_post():
         from_email=from_email,
         subject='Reset your password')
 
-
-
-    '''contents = ['Please go to this URL to reset your password: http://workspace2-jonsanders.c9users.io:8080' + url_for("pwreset_get",  id = (str(key))),
-                "Email jonsandersss@gmail.com if this doesn't work for you.     'With a Crossword, we're challenging ourselves to make order out of chaos' - Will Shortz"]
-    yag.send('jps458@nyu.edu', 'TEST', contents)'''
     flash(user.name + ", check your email for a link to reset your password.  It expires in a day!", "success")
     return redirect(url_for("entries"))
     
