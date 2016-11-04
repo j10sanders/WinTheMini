@@ -108,13 +108,12 @@ body { padding-top: 3em; }
           <a class="navbar-brand" href="{{ url_for('entries') }}">Mini Crossword</a>
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
-          <ul class="nav navbar-nav navbar-right">
+          <ul class="nav navbar-nav navbar-right"><span class="sr-only">(current)</span>
             <li><a href="http://www.nytimes.com/crosswords/game/mini">PLAY NOW</a></li>
-            <li><a href="{{ url_for('register_get') }}">REGISTER</a> <span class="sr-only">(current)</span></a></li>
-            <li><a href="{{ url_for('login_get') }}">LOGIN</a> <span class="sr-only">(current)</span></a></li>
+            <li><a href="{{ url_for('register_get') }}">REGISTER</a></li>
+            <li><a href="{{ url_for('login_get') }}">LOGIN</a></li>
             <li><a href="{{ url_for('stats_get') }}">PLAYER PROFILES</a></li>
-
-            <li><a href="{{ url_for('add_entry_get') }}">POST YOUR TIME</a> <span class="sr-only">(current)</span></a></li>
+            <li><a href="{{ url_for('add_entry_get') }}">POST YOUR TIME</a></li>
             
             
           </ul>
