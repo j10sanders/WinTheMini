@@ -153,7 +153,7 @@ def entries(selected_date = ("2017-10-7")):
             i = i
         
         
-        streak = 1
+        streak = 0
         ywinnerid = ywinner[i].user.id
         ywinnername = ywinner[i].user.name
         #for count, x in enumerate(ywinner):
@@ -166,8 +166,6 @@ def entries(selected_date = ("2017-10-7")):
             #streak = 0
         #print(i)
 
-        
-    #flash("The app will no longer be here tomorrow.  Please add https://winthemini.herokuapp.com/ to your bookmarks!", "danger")
     return render_template("entries.html",
         entries=entrylist,
         has_next=has_next,
@@ -392,29 +390,30 @@ def pwresetrq_get():
     
 @app.route("/pwresetrq", methods=["POST"])
 def pwresetrq_post():
-    emails = session.query(User.email).all()
-    emails = [item[0] for item in emails]
-    if request.form["email"] not in emails:
+    user = session.query(User).filter_by(email=request.form["email"]).one()
+    if user:
+        user = session.query(User).filter_by(email=request.form["email"]).one()
+        #print(user.id, "is the id")
+        key = keygenerator.make_key()
+        user_reset = PWReset(reset_key=key, user_id = user.id)
+        session.add(user_reset)
+        session.commit()
+        
+        sparky = SparkPost() # uses environment variable
+        from_email = 'winthemini@' + os.environ.get('SPARKPOST_SANDBOX_DOMAIN') # 'winthemini@sparkpostbox.com'
+        
+        response = sparky.transmission.send(
+            recipients=[request.form["email"]],
+            text="With a Crossword, we're challenging ourselves to make order out of chaos' - Will Shortz  \n\n\nPlease go to this URL to reset your password: https://winthemini.herokuapp.com" + url_for("pwreset_get",  id = (str(key))) + "\n Email jonsandersss@gmail.com if this doesn't work for you.",
+            from_email=from_email,
+            subject='Reset your password')
+    
+        flash(user.name + ", check your email for a link to reset your password.  It expires in a day!", "success")
+        return redirect(url_for("entries"))
+    else:
         flash("Your email was never registered.", "danger")
         return redirect(url_for("pwresetrq_get"))
-    user = session.query(User).filter_by(email=request.form["email"]).one()
-    #print(user.id, "is the id")
-    key = keygenerator.make_key()
-    user_reset = PWReset(reset_key=key, user_id = user.id)
-    session.add(user_reset)
-    session.commit()
-    
-    sparky = SparkPost() # uses environment variable
-    from_email = 'winthemini@' + os.environ.get('SPARKPOST_SANDBOX_DOMAIN') # 'winthemini@sparkpostbox.com'
-    
-    response = sparky.transmission.send(
-        recipients=[request.form["email"]],
-        text="With a Crossword, we're challenging ourselves to make order out of chaos' - Will Shortz  \n\n\nPlease go to this URL to reset your password: https://winthemini.herokuapp.com" + url_for("pwreset_get",  id = (str(key))) + "\n Email jonsandersss@gmail.com if this doesn't work for you.",
-        from_email=from_email,
-        subject='Reset your password')
-
-    flash(user.name + ", check your email for a link to reset your password.  It expires in a day!", "success")
-    return redirect(url_for("entries"))
+        
     
 @app.route("/pwreset/<id>", methods=["GET"])
 def pwreset_get(id):
