@@ -394,9 +394,23 @@ def pwresetrq_post():
     if user:
         user = session.query(User).filter_by(email=request.form["email"]).one()
         #print(user.id, "is the id")
-        key = keygenerator.make_key()
-        user_reset = PWReset(reset_key=key, user_id = user.id)
-        session.add(user_reset)
+        
+        #check if user already has reset their password, so they will update the current key instead of generating a separate entry in the table.
+        pwalready = session.query(PWReset).filter_by(user_id = user.id).one()
+        if pwalready:
+            #if the key hasn't been used yet, just send the same key.
+            if pwalready.has_activated == False:
+                pwalready.datetime = datetime.now()
+                key = pwalready.reset_key
+            else:    
+                key = keygenerator.make_key()
+                pwalready.reset_key = key
+                pwalready.datetime = datetime.now()
+                pwalready.has_activated = False
+        else:  
+            key = keygenerator.make_key()
+            user_reset = PWReset(reset_key=key, user_id = user.id)
+            session.add(user_reset)
         session.commit()
         
         sparky = SparkPost() # uses environment variable
@@ -404,7 +418,7 @@ def pwresetrq_post():
         
         response = sparky.transmission.send(
             recipients=[request.form["email"]],
-            text="With a Crossword, we're challenging ourselves to make order out of chaos' - Will Shortz  \n\n\nPlease go to this URL to reset your password: https://winthemini.herokuapp.com" + url_for("pwreset_get",  id = (str(key))) + "\n Email jonsandersss@gmail.com if this doesn't work for you.",
+            text="'With a Crossword, we're challenging ourselves to make order out of chaos' - Will Shortz  \n\n\nPlease go to this URL to reset your password: https://winthemini.herokuapp.com" + url_for("pwreset_get",  id = (str(key))) + "\n Email jonsandersss@gmail.com if this doesn't work for you.",
             from_email=from_email,
             subject='Reset your password')
     
@@ -418,12 +432,15 @@ def pwresetrq_post():
 @app.route("/pwreset/<id>", methods=["GET"])
 def pwreset_get(id):
     key = id
-    key_datetime = session.query(PWReset).filter_by(reset_key=id).one()
+    pwresetkey = session.query(PWReset).filter_by(reset_key=id).one()
     #print(key_datetime.datetime)
     EST = pytz.timezone('US/Eastern')
     x = datetime.utcnow().replace(tzinfo=pytz.utc).date()- timedelta(days=2)
     #print(x)
-    if key_datetime.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date() < x:
+    if pwresetkey.has_activated == True:
+        flash("You already reset your password with the URL you are using.  If you need to reset your password again, please make a new request here.", "danger")
+        return redirect(url_for("pwresetrq_get"))
+    if pwresetkey.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date() < x:
         flash("Your password reset link expired.  Please generate a new one here.", "danger")
         return redirect(url_for("pwresetrq_get"))
     return render_template('pwreset.html', id = key)
@@ -446,7 +463,8 @@ def pwreset_post(id):
         flash("ERROR", "danger")
         session.rollback()
         return redirect(url_for("entries"))
-    
+    user_reset.has_activated = True
+    session.commit()
     flash("Your new password is saved.", "success")
     #login_user(user)
     return redirect(url_for("entries"))

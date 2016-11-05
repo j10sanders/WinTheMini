@@ -12,7 +12,7 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 import datetime
-from sqlalchemy import Column, Integer, String, Text, DateTime, Table
+from sqlalchemy import Column, Integer, String, Text, DateTime, Table, Boolean
 from .database import Base, engine
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
@@ -74,6 +74,7 @@ class PWReset(Base):
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     datetime = Column(DateTime(timezone=True), default=datetime.datetime.now)
     user = relationship(User, lazy='joined')
+    has_activated = Column(Boolean, default=False)
 
     
     
