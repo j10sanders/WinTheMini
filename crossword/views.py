@@ -398,7 +398,7 @@ def pwresetrq_post():
         #check if user already has reset their password, so they will update the current key instead of generating a separate entry in the table.
         if session.query(PWReset).filter_by(user_id = user.id).first():
         #if pwalready:
-            pwalready = session.query(PWReset).filter_by(user_id = user.id).one()
+            pwalready = session.query(PWReset).filter_by(user_id = user.id).first()
             #if the key hasn't been used yet, just send the same key.
             if pwalready.has_activated == False:
                 pwalready.datetime = datetime.now()
