@@ -390,14 +390,15 @@ def pwresetrq_get():
     
 @app.route("/pwresetrq", methods=["POST"])
 def pwresetrq_post():
-    user = session.query(User).filter_by(email=request.form["email"]).one()
-    if user:
+    if session.query(User).filter_by(email=request.form["email"]).first():
+    #if user:
         user = session.query(User).filter_by(email=request.form["email"]).one()
         #print(user.id, "is the id")
         
         #check if user already has reset their password, so they will update the current key instead of generating a separate entry in the table.
-        pwalready = session.query(PWReset).filter_by(user_id = user.id).one()
-        if pwalready:
+        if session.query(PWReset).filter_by(user_id = user.id).first():
+        #if pwalready:
+            pwalready = session.query(PWReset).filter_by(user_id = user.id).one()
             #if the key hasn't been used yet, just send the same key.
             if pwalready.has_activated == False:
                 pwalready.datetime = datetime.now()
@@ -412,6 +413,18 @@ def pwresetrq_post():
             user_reset = PWReset(reset_key=key, user_id = user.id)
             session.add(user_reset)
         session.commit()
+        
+        
+        
+        '''
+        #Yagmail: 
+        #yag = yagmail.SMTP()
+        yag = yagmail.SMTP('pwreset.winthemini@gmail.com', 'putpwhere')
+        contents = ['Please go to this URL to reset your password:', "http://workspace2-jonsanders.c9users.io:8080" + url_for("pwreset_get",  id = (str(key))),
+                "Email jonsandersss@gmail.com if this doesn't work for you.     'With a Crossword, we're challenging ourselves to make order out of chaos' - Will Shortz"]
+        yag.send('jps458@nyu.edu', 'TEST', contents)
+        '''
+        
         
         sparky = SparkPost() # uses environment variable
         from_email = 'winthemini@' + os.environ.get('SPARKPOST_SANDBOX_DOMAIN') # 'winthemini@sparkpostbox.com'
@@ -460,7 +473,7 @@ def pwreset_post(id):
         session.query(User).filter_by(id = user_reset.user_id).update({'password': generate_password_hash(request.form["password"])})
         session.commit()
     except IntegrityError:
-        flash("ERROR", "danger")
+        flash("Something went wrong", "danger")
         session.rollback()
         return redirect(url_for("entries"))
     user_reset.has_activated = True
