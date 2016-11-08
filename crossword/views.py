@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, render_template_string
 from itertools import groupby
 from . import app, rankingint, keygenerator
 from .database import session, Entry, followers, User, PWReset
@@ -483,9 +483,10 @@ def pwreset_post(id):
     return redirect(url_for("entries"))
 
 
-@app.route("/.well-known/acme-challenge/X0wAzQp_S-7nX7idudwX3e2Efz4692RfUQdMnqGhDqo")
+@app.route("/.well-known/acme-challenge/fT9KyE5G31WVRnBIar_aW3aUuBraRn12laKv4KvsIuU")
 def verify():
-    return url_for('/.well-known/acme-challenge/X0wAzQp_S-7nX7idudwX3e2Efz4692RfUQdMnqGhDqo')
+    render_template_string('fT9KyE5G31WVRnBIar_aW3aUuBraRn12laKv4KvsIuU.vZR6ze7fzSf3oM7NzazPnKy7q-mCC_3OwxuSxrVfYkM')
+    return 'fT9KyE5G31WVRnBIar_aW3aUuBraRn12laKv4KvsIuU.vZR6ze7fzSf3oM7NzazPnKy7q-mCC_3OwxuSxrVfYkM'
 
 
 '''
