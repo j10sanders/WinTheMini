@@ -23,3 +23,7 @@ div.metadata {
     border-color: transparent;
     color: #fff !important;
 }
+
+.dropdown-backdrop{
+    position: static;
+}
