@@ -234,14 +234,14 @@ def get_entry(id):
     
     
 @app.route("/entry/add", methods=["GET"])
-#@login_required
+@login_required
 def add_entry_get():
     #print(current_user.name)
     return render_template("add_entry.html")
 
     
 @app.route("/entry/add", methods=["POST"])
-#@login_required
+@login_required
 def add_entry_post():
     try:
         title = int(request.form["title"])
@@ -483,6 +483,12 @@ def pwreset_post(id):
     return redirect(url_for("entries"))
 
 
+@app.route("/.well-known/acme-challenge/MfHx4YbXwuiz8AsiGiCZiv-qv9OBGBMT30Qt8Ld4h9E")
+def verify():
+    id = "MfHx4YbXwuiz8AsiGiCZiv-qv9OBGBMT30Qt8Ld4h9E.vZR6ze7fzSf3oM7NzazPnKy7q-mCC_3OwxuSxrVfYkM"
+    return render_template('/.well-known/acme-challenge/MfHx4YbXwuiz8AsiGiCZiv-qv9OBGBMT30Qt8Ld4h9E.html', id=id)
+
+
 '''
 #emergency method for getting rid of new entry that is troublesome
 @app.route("/deleteit")
@@ -494,3 +500,5 @@ def deleteit():
     session.delete(newestentry)
     session.commit()
     return redirect(url_for("entries"))'''
+    
+    
