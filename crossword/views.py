@@ -483,10 +483,9 @@ def pwreset_post(id):
     return redirect(url_for("entries"))
 
 
-@app.route("/.well-known/acme-challenge/0AiQlo20oMD2pwkkwd9KT2J8_L5GwKsI7CCQWOddpaA")
+@app.route("/.well-known/acme-challenge/X0wAzQp_S-7nX7idudwX3e2Efz4692RfUQdMnqGhDqo")
 def verify():
-    id = "MfHx4YbXwuiz8AsiGiCZiv-qv9OBGBMT30Qt8Ld4h9E.vZR6ze7fzSf3oM7NzazPnKy7q-mCC_3OwxuSxrVfYkM"
-    return render_template('/.well-known/acme-challenge/0AiQlo20oMD2pwkkwd9KT2J8_L5GwKsI7CCQWOddpaA.html', id=id)
+    return url_for('/.well-known/acme-challenge/X0wAzQp_S-7nX7idudwX3e2Efz4692RfUQdMnqGhDqo')
 
 
 '''
