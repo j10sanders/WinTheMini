@@ -57,12 +57,13 @@ def entries(selected_date = ("2017-10-7")):
     older = selected_date - timedelta(1)
     newer = selected_date + timedelta(1)
     
-    dateshowing = "today"
+        
     if selected_date < oldesttime:
         selected_date = oldesttime
     if selected_date > newesttime:
+        
         selected_date = newesttime
-        dateshowing = "nottoday"
+    
         
     
     #datedisplay is used for string version of selected_date
@@ -115,21 +116,35 @@ def entries(selected_date = ("2017-10-7")):
     
     #collect list of the current_user's followers, so it can be compared in the entries.html with the entry's author_id (to determine if entry is displaoyed to current_user or not)
     current_user_id = current_user.get_id()
+    #don't want to compare Nonetype to ints later
+    if current_user_id != None:
+        current_user_id = int(current_user_id)
+    else:
+        current_user_id = 0
     c_follows = session.query(followers).filter_by(follower_id=current_user_id).all()
     c_user_follows = [item[1] for item in c_follows]
 
-
+    entry_authors = []
     #determine the day_rank of the entries, so the users' stats are tracked:
     for entry in entrylist:
         entry = session.query(Entry).get(entry.id)
         entry.day_rank = day_rank = dayranklist[k]
+        entry_authors.append(entry.author_id)
         session.add(entry)
         k +=1
     session.commit()
     
+    
+    
     streak = 0
     ywinnername = "nobody"
     ywinnerid = "no_id"
+    
+    #can anyone view
+    today = False
+    dateshowing = "today"
+
+
     
     #determine if "newer" and/or "older" links should be shown
     if newestentry in entrylist:
@@ -143,9 +158,11 @@ def entries(selected_date = ("2017-10-7")):
         has_next = False
         
     if has_prev == False:
+        today = True
         sevendaysago = selected_date - timedelta(days=8)
         ywinner = session.query(Entry).filter(Entry.datetime >= sevendaysago, Entry.day_rank == (1,)).order_by(Entry.datetime.desc())
-        
+        if now_utc > selected_date:
+            dateshowing = "old"
         #check if there was a tie for first place.  If so, push the winner back to last day
         i = 0
         try:
@@ -170,7 +187,6 @@ def entries(selected_date = ("2017-10-7")):
             #streak = 0
         #print(i)
     
-    
     return render_template("entries.html",
         entries=entrylist,
         has_next=has_next,
@@ -183,7 +199,9 @@ def entries(selected_date = ("2017-10-7")):
         streak=streak, 
         ywinnername=ywinnername,
         ywinnerid=ywinnerid,
-        dateshowing=dateshowing
+        dateshowing=dateshowing,
+        entry_authors=entry_authors,
+        today=today
     )
      
 
