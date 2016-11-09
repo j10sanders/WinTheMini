@@ -42,6 +42,7 @@ def entries(selected_date = ("2017-10-7")):
 
     selected_date = EST.localize(selected_date, is_dst=None).date()
 
+
     if selected_date > now_utc:
         selected_date = now_utc
 
@@ -56,13 +57,15 @@ def entries(selected_date = ("2017-10-7")):
     older = selected_date - timedelta(1)
     newer = selected_date + timedelta(1)
     
+    dateshowing = "today"
     if selected_date < oldesttime:
         selected_date = oldesttime
     if selected_date > newesttime:
         selected_date = newesttime
+        dateshowing = "nottoday"
         
     
-    #datedisplay is used for string version of selecteddate
+    #datedisplay is used for string version of selected_date
     datedisplay = datetime.strftime(selected_date, "%b %-d, %Y")
     
     #create a list (entrylist) that has just the entries from a certain day.  This is one of the central pieces of the app.
@@ -127,6 +130,7 @@ def entries(selected_date = ("2017-10-7")):
     streak = 0
     ywinnername = "nobody"
     ywinnerid = "no_id"
+    
     #determine if "newer" and/or "older" links should be shown
     if newestentry in entrylist:
         has_next = True
@@ -152,7 +156,7 @@ def entries(selected_date = ("2017-10-7")):
         except IndexError:
             i = i
         
-        
+        #determine streak count for who won the last consecutive days
         streak = 1
         ywinnerid = ywinner[i].user.id
         ywinnername = ywinner[i].user.name
@@ -165,7 +169,8 @@ def entries(selected_date = ("2017-10-7")):
             #ywinnerid = "no_id"
             #streak = 0
         #print(i)
-
+    
+    
     return render_template("entries.html",
         entries=entrylist,
         has_next=has_next,
@@ -177,7 +182,8 @@ def entries(selected_date = ("2017-10-7")):
         c_user_follows=c_user_follows,
         streak=streak, 
         ywinnername=ywinnername,
-        ywinnerid = ywinnerid
+        ywinnerid=ywinnerid,
+        dateshowing=dateshowing
     )
      
 

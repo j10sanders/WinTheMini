@@ -4,57 +4,61 @@
 
 
 <h1>
-    <b>
-    {% if entries == [] %}
-    No entries today.  <a href="{{ url_for('entries', older = older) }}"> Jump back to last day with entries?</a>
-    {% else %}
-    {% for entry in entries[-1:] %}
-    {{ datedisplay }} 
-
-    </b>
-    </h1>
-    <h2>
-    {% if current_user_id == None or ywinnerid in c_user_follows %}
-    {% if streak != 0 %}
-        {{ywinnername}} 
-        {% if streak == 1 %}
-        won yesterday.
-        {% elif streak >= 7 %}
-        keeps winning.  Someone step up!
+    {% if dateshowing == "nottoday" %}
+    No entries yet today... here is:
+    </br></br>
+    {% endif %}
+        <b>
+        {% if entries == [] %}
+        No entries today.  <a href="{{ url_for('entries', older = older) }}"> Jump back to last day with entries?</a>
         {% else %}
-        won the last {{streak}} days.
+        {% for entry in entries[-1:] %}
+        {{ datedisplay }} 
+    
+        </b>
+        </h1>
+        <h2>
+        {% if current_user_id == None or ywinnerid in c_user_follows %}
+        {% if streak != 0 %}
+            {{ywinnername}} 
+            {% if streak == 1 %}
+            won yesterday.
+            {% elif streak >= 7 %}
+            keeps winning.  Someone step up!
+            {% else %}
+            won the last {{streak}} days.
+            {% endif %}
+            {% endif %}
         {% endif %}
+        {% endfor %}
         {% endif %}
+        
+        
+        </h2>
+        
+    
+    </br>
+    
+    {% for entry in entries %}
+    {% if current_user_id == None %}
+    {{ macros.render_entry(entry) }}
+    {% elif entry.author_id in c_user_follows %}
+    {{ macros.render_entry(entry) }}
     {% endif %}
     {% endfor %}
-    {% endif %}
     
     
-    </h2>
-    
-
-</br>
-
-{% for entry in entries %}
-{% if current_user_id == None %}
-{{ macros.render_entry(entry) }}
-{% elif entry.author_id in c_user_follows %}
-{{ macros.render_entry(entry) }}
-{% endif %}
-{% endfor %}
-
-
-<ul class="pager">
-    {% if has_next %}
-    <li class="previous" >
-    <a href="{{ url_for('entries', selected_date = older) }}"> Older</a>
-    </li>
-    {% endif %}
-    {% if has_prev %}
-    <li class="next">
-    <a href="{{ url_for('entries', selected_date = newer) }}"> Newer</a>
-    </li>
-    {% endif %}
-</ul>
-</br></br>
-{% endblock %}
+    <ul class="pager">
+        {% if has_next %}
+        <li class="previous" >
+        <a href="{{ url_for('entries', selected_date = older) }}"> Older</a>
+        </li>
+        {% endif %}
+        {% if has_prev %}
+        <li class="next">
+        <a href="{{ url_for('entries', selected_date = newer) }}"> Newer</a>
+        </li>
+        {% endif %}
+    </ul>
+    </br></br>
+    {% endblock %}
