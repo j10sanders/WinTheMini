@@ -63,7 +63,7 @@
     
     {% elif today == True and current_user_id not in entry_authors and dateshowing != "old" %}
     
-    <h2><b>NEW RULE! You can't see today's times until you post yours :)</b> </h2>
+    <h3>NEW RULE! You can't see today's times until you <b><a href="{{ url_for('add_entry_get') }}">post your time.</a></b> 🍻 </h3>
 
     <ul class="pager">
         {% if has_next %}
