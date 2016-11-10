@@ -6,7 +6,7 @@
 
 
     {% if today == True and dateshowing == "old" %}
-    No entries yet today... here is the last day:
+    Nobody has posted today... here is the last day with times posted:
     </h2>
     <h1>
     <b>
@@ -63,7 +63,7 @@
     
     {% elif today == True and current_user_id not in entry_authors and dateshowing != "old" %}
     
-    <h3>NEW RULE! You can't see today's times until you <b><a href="{{ url_for('add_entry_get') }}">post your time.</a></b> 🍻 </h3>
+    <h3>NEW RULE! You can't see today's times until you <b><a href="{{ url_for('add_entry_get') }}">post your time.</b>  🍻 </a></h3>
 
     <ul class="pager">
         {% if has_next %}
