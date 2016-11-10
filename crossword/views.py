@@ -33,6 +33,7 @@ def entries(selected_date = ("2017-10-7")):
     #EST = timezone('America/New_York')
     EST = pytz.timezone('US/Eastern')
     now_utc = datetime.utcnow().replace(tzinfo=pytz.utc).date()
+    now_est = datetime.now(EST).date()
     try:
         selected_date = datetime.strptime(selected_date, "%Y-%m-%d")
         
@@ -43,8 +44,7 @@ def entries(selected_date = ("2017-10-7")):
     selected_date = EST.localize(selected_date, is_dst=None).date()
 
 
-    if selected_date > now_utc:
-        selected_date = now_utc
+
 
     entries = session.query(Entry)
     
@@ -61,7 +61,6 @@ def entries(selected_date = ("2017-10-7")):
     if selected_date < oldesttime:
         selected_date = oldesttime
     if selected_date > newesttime:
-        
         selected_date = newesttime
     
         
@@ -161,7 +160,9 @@ def entries(selected_date = ("2017-10-7")):
         today = True
         sevendaysago = selected_date - timedelta(days=8)
         ywinner = session.query(Entry).filter(Entry.datetime >= sevendaysago, Entry.day_rank == (1,)).order_by(Entry.datetime.desc())
-        if now_utc > selected_date:
+        print(now_est, selected_date)
+        if now_est > selected_date:
+            print(selected_date)
             dateshowing = "old"
         #check if there was a tie for first place.  If so, push the winner back to last day
         i = 0
