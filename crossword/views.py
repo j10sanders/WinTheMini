@@ -92,19 +92,23 @@ def entries(selected_date = ("2017-10-7")):
                     
                     #define the next entries that are outside of this day.  These will be converted to "older" and "newer" which is helpful for the buttons "older and "newer" to skip days that have no entries.
                     olderentryid = min(entry.id for entry in entrylist) - 1
+                    oldernotdeleted = session.query(Entry).filter(Entry.id <= olderentryid).order_by(Entry.datetime.desc()).first()
                     newerentryid = max(entry.id for entry in entrylist) + 1
+                    newernotdeleted = session.query(Entry).filter(Entry.id >= newerentryid).order_by(Entry.datetime.asc()).first()
+                    #print(newernotdeleted.id)
             except (ValueError, TypeError):
                 flash("There are some non-integers on this page.  Jon needs to fix it so you can see who won :)", "danger")
 
-   
+    
     for entry in entries:
         try:
-            if entry.id == olderentryid:
+            if entry.id == oldernotdeleted.id:
                 older = entry.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date()
-            if entry.id == newerentryid:
+            if entry.id == newernotdeleted.id:
                 newer = entry.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date()
-        except UnboundLocalError:
+        except (UnboundLocalError, AttributeError):
             pass
+    
     
     #for statistics, this method is for keeping track of daily scores
     sortedscores = [entry.title for entry in entrylist]
@@ -160,9 +164,8 @@ def entries(selected_date = ("2017-10-7")):
         today = True
         sevendaysago = selected_date - timedelta(days=8)
         ywinner = session.query(Entry).filter(Entry.datetime >= sevendaysago, Entry.day_rank == (1,)).order_by(Entry.datetime.desc())
-        #print(now_est, selected_date)
         if now_est > selected_date:
-            #print(selected_date)
+            print(selected_date)
             dateshowing = "old"
         #check if there was a tie for first place.  If so, push the winner back to last day
         i = 0
@@ -180,7 +183,7 @@ def entries(selected_date = ("2017-10-7")):
         ywinnername = ywinner[i].user.name
         #for count, x in enumerate(ywinner):
             #print(x.user.name, x.datetime, count)
-        try: 
+        try:
             while ywinnername == ywinner[streak+i].user.name:
                 streak += 1
         except IndexError:
@@ -528,5 +531,3 @@ def deleteit():
     session.delete(newestentry)
     session.commit()
     return redirect(url_for("entries"))'''
-    
-    
