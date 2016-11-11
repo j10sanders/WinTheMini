@@ -165,7 +165,6 @@ def entries(selected_date = ("2017-10-7")):
         sevendaysago = selected_date - timedelta(days=8)
         ywinner = session.query(Entry).filter(Entry.datetime >= sevendaysago, Entry.day_rank == (1,)).order_by(Entry.datetime.desc())
         if now_est > selected_date:
-            print(selected_date)
             dateshowing = "old"
         #check if there was a tie for first place.  If so, push the winner back to last day
         i = 0
@@ -499,7 +498,7 @@ def pwreset_post(id):
         return redirect(url_for("pwreset_get", id = id))
     user_reset = session.query(PWReset).filter_by(reset_key=id).one()
     #session.query(User).filter_by(id=user_reset.user.id).one()
-    #print(user_reset.user_id, "PRINTING ID")
+    #gi(user_reset.user_id, "PRINTING ID")
     try:
         session.query(User).filter_by(id = user_reset.user_id).update({'password': generate_password_hash(request.form["password"])})
         session.commit()
