@@ -18,9 +18,7 @@
         {% endfor %}
         {% endif %}
         </h1>
-    
         </b>
-        
         <h2>
         {% if current_user_id == 0 or ywinnerid in c_user_follows %}
         {% if streak != 0 %}
@@ -35,16 +33,14 @@
             {% endif %}
         {% endif %}
         </h2>
-        
-    
-    </br>
-    {% for entry in entries %}
-    {% if current_user_id == 0 %}
-    {{ macros.render_entry(entry) }}
-    {% elif entry.author_id in c_user_follows %}
-    {{ macros.render_entry(entry) }}
-    {% endif %}
-    {% endfor %}
+        </br>
+        {% for entry in entries %}
+        {% if current_user_id == 0 %}
+        {{ macros.render_entry(entry) }}
+        {% elif entry.author_id in c_user_follows %}
+        {{ macros.render_entry(entry) }}
+        {% endif %}
+        {% endfor %}
     
     
     <ul class="pager">
@@ -63,7 +59,7 @@
     
     {% elif today == True and current_user_id not in entry_authors and dateshowing != "old" %}
     
-    <h3>NEW RULE! You can't see today's times until you <b><a href="{{ url_for('add_entry_get') }}">post your time.</b>  🍻 </a></h3>
+    <h3><i>With a Crossword, we're challenging ourselves to make order out of chaos</i> - Will Shortz</br></br> You can't see today's times until you <b><a href="{{ url_for('add_entry_get') }}">post your time. ☕️ ☕️ ☕️ </b></a></h3>
 
     <ul class="pager">
         {% if has_next %}
@@ -89,8 +85,6 @@
         {{ datedisplay }} 
         {% endfor %}
         {% endif %}
-        
-    
         </b>
         </h1>
         <h2>
@@ -107,8 +101,6 @@
             {% endif %}
         {% endif %}
         </h2>
-        
-    
     </br>
     {% for entry in entries %}
     {% if current_user_id == 0 %}

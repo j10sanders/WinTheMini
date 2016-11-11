@@ -160,9 +160,9 @@ def entries(selected_date = ("2017-10-7")):
         today = True
         sevendaysago = selected_date - timedelta(days=8)
         ywinner = session.query(Entry).filter(Entry.datetime >= sevendaysago, Entry.day_rank == (1,)).order_by(Entry.datetime.desc())
-        print(now_est, selected_date)
+        #print(now_est, selected_date)
         if now_est > selected_date:
-            print(selected_date)
+            #print(selected_date)
             dateshowing = "old"
         #check if there was a tie for first place.  If so, push the winner back to last day
         i = 0
@@ -180,8 +180,11 @@ def entries(selected_date = ("2017-10-7")):
         ywinnername = ywinner[i].user.name
         #for count, x in enumerate(ywinner):
             #print(x.user.name, x.datetime, count)
-        while ywinnername == ywinner[streak+i].user.name:
-            streak += 1
+        try: 
+            while ywinnername == ywinner[streak+i].user.name:
+                streak += 1
+        except IndexError:
+            streak = streak
         
             #ywinnername = "nobody"
             #ywinnerid = "no_id"
