@@ -57,7 +57,8 @@
     
     {% elif today == True and current_user_id not in entry_authors and dateshowing != "old" %}
     
-    <h3><i>With a Crossword, we're challenging ourselves to make order out of chaos</i> - Will Shortz</br></br> You can't see today's times until you <b><a href="{{ url_for('add_entry_get') }}">post your time. ☕️ ☕️ ☕️ </b></a></h3>
+<h3><i>One thing that I do find really sexy is a girl who's good at crossword puzzles. </i> - Chris Pine</br></h3>
+</br><h2>You can't see today's times until you <b><a href="{{ url_for('add_entry_get') }}">post your time. ☕️ ☕️ ☕️ </b></a></h2>
 
     <ul class="pager">
         {% if has_next %}
