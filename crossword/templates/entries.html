@@ -57,7 +57,7 @@
     
     {% elif today == True and current_user_id not in entry_authors and dateshowing != "old" %}
     
-<h3><i>One thing that I do find really sexy is a girl who's good at crossword puzzles. </i> - Chris Pine</br></h3>
+<h3><i>{{ quotes | random }}</i></h3>
 </br><h2>You can't see today's times until you <b><a href="{{ url_for('add_entry_get') }}">post your time. ☕️ ☕️ ☕️ </b></a></h2>
 
     <ul class="pager">

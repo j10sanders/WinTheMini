@@ -1,6 +1,6 @@
 from flask import render_template, render_template_string
 from itertools import groupby
-from . import app, rankingint, keygenerator
+from . import app, rankingint, keygenerator, quotes
 from .database import session, Entry, followers, User, PWReset
 from flask import flash
 from flask.ext.login import login_user, logout_user
@@ -193,6 +193,8 @@ def entries(selected_date = ("2017-10-7")):
             #streak = 0
         #print(i)
     
+    quote = quotes.quote_me()
+    
     return render_template("entries.html",
         entries=entrylist,
         has_next=has_next,
@@ -207,7 +209,8 @@ def entries(selected_date = ("2017-10-7")):
         ywinnerid=ywinnerid,
         dateshowing=dateshowing,
         entry_authors=entry_authors,
-        today=today
+        today=today,
+        quotes = quote
     )
      
 
