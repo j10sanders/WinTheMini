@@ -10,5 +10,7 @@ def quote_me():
     "I’m a pretty good winner. I’m a terrible loser. And I rub it in pretty good when I win. - Tom Brady",
     "If it doesn't matter who wins or loses, then why do they keep score? - Vince Lombardi",
     "To witness two lovers is a spectacle for the gods. - Johann Wolfgang von Goethe",
-    "The view of Earth is spectacular. - Sally Ride",]
+    "The view of Earth is spectacular. - Sally Ride",
+    "Grind Hard, Shine Hard. – Dwayne Johnson",
+    ]
     return quotes
