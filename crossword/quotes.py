@@ -1,5 +1,5 @@
 def quote_me():
-    '''quotes = ["Fighting with him was like trying to solve a crossword and realizing there's no right answer. - Taylor Swift", 
+    quotes = ["Fighting with him was like trying to solve a crossword and realizing there's no right answer. - Taylor Swift", 
     "I get up, go and get a coffee, and go do the crossword... and that's my idea of a perfect morning. - Laura Marling",
     "But I'm really enjoying my retirement. I get to sleep in every day. I do crossword puzzles and eat cake. - Derek Landy",
     "Wouldn't it be wonderful if I won a helicopter in a crossword puzzle competition? There is not much hope though I am afraid, as they never give such practical prizes. - Leonora Carrington",
@@ -12,6 +12,6 @@ def quote_me():
     "To witness two lovers is a spectacle for the gods. - Johann Wolfgang von Goethe",
     "The view of Earth is spectacular. - Sally Ride",
     "Grind Hard, Shine Hard. – Dwayne Johnson",
-    ]'''
-    quotes = ["Will someone please beat the Mailman already? - SonJanders"]
+    ]
+    #quotes = ["Will someone please beat the Mailman already? - SonJanders"]
     return quotes
