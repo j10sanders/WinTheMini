@@ -57,7 +57,7 @@
     
     {% elif today == True and current_user_id not in entry_authors and dateshowing != "old" %}
     
-<h3><i>{{ quotes | random }}</i></h3>
+<h2><i>{{ quotes | random }}</i></h2>
 </br><h2>You can't see today's times until you <b><a href="{{ url_for('add_entry_get') }}">post your time. ☕️ ☕️ ☕️ </b></a></h2>
 
     <ul class="pager">
