@@ -89,14 +89,17 @@ def entries(selected_date=("2017-10-7")):
                     # helpful for the buttons "older and "newer" to skip days
                     # that have no entries
                     olderentryid = min(entry.id for entry in entrylist) - 1
-                    oldernotdeleted = entries
-                    oldernotdeleted.filter(Entry.id <= olderentryid).order_by(Entry.datetime.desc()).first()
+                    oldernotdeleted = (entries.filter(Entry.id <= olderentryid)
+                    .order_by(Entry.datetime.desc()).first()
+                    )
                     newerentryid = max(entry.id for entry in entrylist) + 1
-                    newernotdeleted = entries
-                    newernotdeleted.filter(Entry.id >= newerentryid).order_by(Entry.datetime.asc()).first()
+                    newernotdeleted = (entries.filter(Entry.id >= newerentryid)
+                    .order_by(Entry.datetime.asc()).first()
+                    )
                     #print(newernotdeleted.id)
             except (ValueError, TypeError):
-                flash("There are some non-integers on this page.  Jon needs to fix it so you can see who won :)", "danger")
+                flash("There are some non-integers on this page." +
+                " Jon needs to fix it so you can see who won :)", "danger")
 
     
     for entry in entries:
@@ -169,7 +172,9 @@ def entries(selected_date=("2017-10-7")):
         # back to last day
         i = 0
         try:
-            while selected_date == ywinner[i].datetime.replace(tzinfo=pytz.utc).astimezone(EST).date():
+            while selected_date == (ywinner[i].datetime
+            .replace(tzinfo=pytz.utc).astimezone(EST).date()
+            ):
                 i += 1
         except IndexError:
             i = i
@@ -392,7 +397,9 @@ def user_get(id):
         graph_of_rankings.x_labels = entrydaylist
         graph_of_rankings.add('Day Rank', ranking)
         current_user_id = current_user.get_id()
-        c_follows = session.query(followers).filter_by(follower_id=current_user_id).all()
+        c_follows = (session.query(followers)
+        .filter_by(follower_id=current_user_id).all()
+        )
         c_user_follows = [item[1] for item in c_follows]
         
         return render_template("userinfo.html", user=user, ranking=ranking,
