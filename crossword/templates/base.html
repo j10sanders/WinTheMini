@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        <title>Crossword</title>
+        <title>Add To Home</title>
 
         <!-- CSS -->
         <!-- Bootstrap -->
@@ -15,10 +15,14 @@
         <link rel="shortcut icon" href="//www.iconj.com/ico/v/j/vjw01je1oi.ico" type="image/x-icon" />
         <link rel="apple-touch-icon" href="//www.iconj.com/ico/v/j/vjw01je1oi.ico">
         <link href='https://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'>
-
-
-        <!-- Combodate -->
-        <script src="js/combodate.js"></script> 
+        
+        <!-- Add to home screen -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/addtohomescreen.css') }}">
+        <script  src="{{ url_for('static', filename='j-s/src/addtohomescreen.js') }}"></script>
+        <script>
+        addToHomescreen();
+        </script>
+        
         <!-- jQuery -->
         <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
         <!-- Bootstrap -->
