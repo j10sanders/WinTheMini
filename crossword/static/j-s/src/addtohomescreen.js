@@ -177,7 +177,7 @@ ath.defaults = {
 	startDelay: 1,				// display the message after that many seconds from page load
 	lifespan: 15,				// life of the message in seconds
 	displayPace: 0,			// minutes before the message is shown again (0: display every time, default 24 hours)
-	maxDisplayCount: 0,			// absolute maximum number of times the message will be shown to the user (0: no limit)
+	maxDisplayCount: 1,			// absolute maximum number of times the message will be shown to the user (0: no limit)
 	icon: true,					// add touch icon to the message
 	message: '',				// the message can be customized
 	validLocation: [],			// list of pages where the message will be shown (array of regexes)

@@ -5,23 +5,21 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        <title>Add To Home</title>
+        <title>Crossword
+        </title>
 
         <!-- CSS -->
         <!-- Bootstrap -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <!-- Crossword -->
         <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-        <link rel="shortcut icon" href="//www.iconj.com/ico/v/j/vjw01je1oi.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href="{{ url_for('static', filename='imgs/crossword-icon.png') }}" type="image/x-icon" />
         <link rel="apple-touch-icon" href="//www.iconj.com/ico/v/j/vjw01je1oi.ico">
         <link href='https://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'>
         
         <!-- Add to home screen -->
         <link rel="stylesheet" href="{{ url_for('static', filename='css/addtohomescreen.css') }}">
         <script  src="{{ url_for('static', filename='j-s/src/addtohomescreen.js') }}"></script>
-        <script>
-        addToHomescreen();
-        </script>
         
         <!-- jQuery -->
         <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
@@ -143,6 +141,9 @@ body { padding-top: 3em; }
     <!--<footer class="content-footer">
         <p> Check this out on <a href="https://github.com/j10sanders/crossword">Github</a></p>
     </footer>--->
+    <script>
+        addToHomescreen();
+        </script>
     </body>
     
     
