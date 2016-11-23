@@ -540,9 +540,8 @@ def pwreset_post(id):
     #session.query(User).filter_by(id=user_reset.user.id).one()
     #gi(user_reset.user_id, "PRINTING ID")
     try:
-        pw = session.query(User).filter_by(id=user_reset.user_id)
-        pw.update({'password':
-                   generate_password_hash(request.form["password"])})
+        pw = (session.query(User).filter_by(id=user_reset.user_id)
+        .update({'password': generate_password_hash(request.form["password"])}))
         session.add(pw)
         session.commit()
     except IntegrityError:
