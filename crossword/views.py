@@ -440,6 +440,13 @@ def follow_post(id):
         session.rollback()
         return redirect(url_for("entries"))
 
+
+        
+@app.route("/stats", methods=["GET"])
+def stats_get():
+    users = session.query(User).all()
+    return render_template("stats.html", users=users)
+    
     
 @app.route("/pwresetrq", methods=["GET"])
 def pwresetrq_get():
