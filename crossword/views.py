@@ -440,44 +440,39 @@ def follow_post(id):
         session.rollback()
         return redirect(url_for("entries"))
 
-
-@app.route("/stats", methods=["GET"])
-def stats_get():
-    users = session.query(User).all()
-    return render_template("stats.html", users=users)
-
-
+    
 @app.route("/pwresetrq", methods=["GET"])
 def pwresetrq_get():
     return render_template('pwresetrq.html')
-
-
+    
 @app.route("/pwresetrq", methods=["POST"])
 def pwresetrq_post():
     if session.query(User).filter_by(email=request.form["email"]).first():
     #if user:
         user = session.query(User).filter_by(email=request.form["email"]).one()
         #print(user.id, "is the id")
-        # check if user already has reset their password, so they will update 
-        # the current key instead of generating a separate entry in the table.
-        if session.query(PWReset).filter_by(user_id=user.id).first():
+        
+        #check if user already has reset their password, so they will update the current key instead of generating a separate entry in the table.
+        if session.query(PWReset).filter_by(user_id = user.id).first():
         #if pwalready:
-            pwalready = session.query(PWReset).filter_by(user_id=user.id).first()
+            pwalready = session.query(PWReset).filter_by(user_id = user.id).first()
             #if the key hasn't been used yet, just send the same key.
-            if pwalready.has_activated is False:
+            if pwalready.has_activated == False:
                 pwalready.datetime = datetime.now()
                 key = pwalready.reset_key
-            else:
+            else:    
                 key = keygenerator.make_key()
                 pwalready.reset_key = key
                 pwalready.datetime = datetime.now()
                 pwalready.has_activated = False
-        else:
+        else:  
             key = keygenerator.make_key()
-            user_reset = PWReset(reset_key=key, user_id=user.id)
+            user_reset = PWReset(reset_key=key, user_id = user.id)
             session.add(user_reset)
         session.commit()
-
+        
+        
+        
         '''
         #Yagmail: 
         #yag = yagmail.SMTP()
@@ -486,61 +481,53 @@ def pwresetrq_post():
                 "Email jonsandersss@gmail.com if this doesn't work for you.     'With a Crossword, we're challenging ourselves to make order out of chaos' - Will Shortz"]
         yag.send('jps458@nyu.edu', 'TEST', contents)
         '''
-
+        
+        
         sparky = SparkPost() # uses environment variable
-        # 'winthemini@sparkpostbox.com'
-        from_email = 'winthemini@' + os.environ.get('SPARKPOST_SANDBOX_DOMAIN')
+        from_email = 'winthemini@' + os.environ.get('SPARKPOST_SANDBOX_DOMAIN') # 'winthemini@sparkpostbox.com'
+        
         response = sparky.transmission.send(
             recipients=[request.form["email"]],
-            text="'With a Crossword, we're challenging ourselves to make" +
-            " order out of chaos' - Will Shortz  \n\n\nPlease go to this" +
-            " URL to reset your password: https://winthemini.herokuapp.com"
-            + url_for("pwreset_get",  id=(str(key))) +
-            "\n Email jonsandersss@gmail.com if this doesn't work for you.",
+            text="'With a Crossword, we're challenging ourselves to make order out of chaos' - Will Shortz  \n\n\nPlease go to this URL to reset your password: https://winthemini.herokuapp.com" + url_for("pwreset_get",  id = (str(key))) + "\n Email jonsandersss@gmail.com if this doesn't work for you.",
             from_email=from_email,
             subject='Reset your password')
-        flash(user.name + ", check your email for a link to reset your " +
-              "password.  It expires in a day!", "success")
+    
+        flash(user.name + ", check your email for a link to reset your password.  It expires in a day!", "success")
         return redirect(url_for("entries"))
     else:
         flash("Your email was never registered.", "danger")
         return redirect(url_for("pwresetrq_get"))
-
-
+        
+    
 @app.route("/pwreset/<id>", methods=["GET"])
 def pwreset_get(id):
     key = id
     pwresetkey = session.query(PWReset).filter_by(reset_key=id).one()
     #print(key_datetime.datetime)
     EST = pytz.timezone('US/Eastern')
-    x = datetime.utcnow().replace(tzinfo=pytz.utc).date() - timedelta(days=2)
+    x = datetime.utcnow().replace(tzinfo=pytz.utc).date()- timedelta(days=2)
     #print(x)
-    if pwresetkey.has_activated is True:
-        flash("You already reset your password with the URL you are using." +
-              " If you need to reset your password again, please make a new " +
-              "request here.", "danger")
+    if pwresetkey.has_activated == True:
+        flash("You already reset your password with the URL you are using.  If you need to reset your password again, please make a new request here.", "danger")
         return redirect(url_for("pwresetrq_get"))
     if pwresetkey.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date() < x:
-        flash("Your password reset link expired.  Please generate a new one" +
-              " here.", "danger")
+        flash("Your password reset link expired.  Please generate a new one here.", "danger")
         return redirect(url_for("pwresetrq_get"))
-    return render_template('pwreset.html', id=key)
-
+    return render_template('pwreset.html', id = key)
 
 @app.route("/pwreset/<id>", methods=["POST"])
 def pwreset_post(id):
     if request.form["password"] != request.form["password2"]:
-        flash("Your password and password verification didn't match.",
-              "danger")
-        return redirect(url_for("pwreset_get", id=id))
+        flash("Your password and password verification didn't match.", "danger")
+        return redirect(url_for("pwreset_get", id = id))
     if len(request.form["password"]) < 8:
         flash("Your password needs to be at least 8 characters", "danger")
-        return redirect(url_for("pwreset_get", id=id))
+        return redirect(url_for("pwreset_get", id = id))
     user_reset = session.query(PWReset).filter_by(reset_key=id).one()
     #session.query(User).filter_by(id=user_reset.user.id).one()
     #gi(user_reset.user_id, "PRINTING ID")
     try:
-        session.query(User).filter_by(id=user_reset.user_id).update({'password': generate_password_hash(request.form["password"])})
+        session.query(User).filter_by(id = user_reset.user_id).update({'password': generate_password_hash(request.form["password"])})
         session.commit()
     except IntegrityError:
         flash("Something went wrong", "danger")
