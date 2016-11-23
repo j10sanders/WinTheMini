@@ -462,8 +462,7 @@ def pwresetrq_post():
         # the current key instead of generating a separate entry in the table.
         if session.query(PWReset).filter_by(user_id=user.id).first():
         #if pwalready:
-            pwalready = session.query(PWReset)
-            pwalready.filter_by(user_id=user.id).first()
+            pwalready = session.query(PWReset).filter_by(user_id=user.id).first()
             #if the key hasn't been used yet, just send the same key.
             if pwalready.has_activated is False:
                 pwalready.datetime = datetime.now()
