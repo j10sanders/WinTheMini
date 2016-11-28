@@ -51,9 +51,13 @@ class TestViews(unittest.TestCase):
         
     def tearDown(self):
         """ Test teardown """
-        session.close()
         # Remove the tables and their data from the database
+        self.process.terminate()
+        session.close()
+        engine.dispose()
         Base.metadata.drop_all(engine)
+        self.browser.quit()
+
         
 if __name__ == "__main__":
     unittest.main()
