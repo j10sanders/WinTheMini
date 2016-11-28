@@ -348,22 +348,17 @@ def user_get(id):
     # Gets specific info for a user based on their ID
     try:
         user = session.query(User).filter_by(id=id).one()
-        day_rank = session.query(Entry.day_rank).join(User)
-        day_rank.filter(Entry.author_id == id)
-        day_rank.order_by(Entry.datetime.asc()).all()
+        day_rank = session.query(Entry.day_rank).join(User).filter(Entry.author_id == id).order_by(Entry.datetime.asc()).all()
         ranking = rankingint.toint(day_rank)
         average = mean(ranking)
         average = round(average, 1)
-        times = session.query(Entry.title).join(User)
-        times.filter(Entry.author_id == id)
-        times.order_by(Entry.datetime.asc()).all()
+        times = session.query(Entry.title).join(User).filter(Entry.author_id == id).order_by(Entry.datetime.asc()).all()
         rankingtimes = rankingint.toint(times)
         avetime = mean(rankingtimes)
         avetime = round(avetime)
         besttime = min(rankingtimes)
         worsttime = max(rankingtimes)
-        entryday = session.query(Entry).join(User)
-        entryday.filter(Entry.author_id == id)
+        entryday = session.query(Entry).join(User).filter(Entry.author_id == id)
         entryday.order_by(Entry.datetime.asc()).all()
         entrydaylist = []
 
