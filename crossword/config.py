@@ -4,7 +4,7 @@ class TravisConfig(object):
     DEBUG = False
     SECRET_KEY = "Not secret" 
     
-
+'''
 class DevelopmentConfig(object):
     SQLALCHEMY_DATABASE_URI =  os.environ["DATABASE_URL"]
     DEBUG = False
@@ -12,7 +12,7 @@ class DevelopmentConfig(object):
   
 
 
-'''
+
 class TestingConfig(object):
     SQLALCHEMY_DATABASE_URI = "postgresql://ubuntu:thinkful@localhost:5432/crossword-test"
     DEBUG = False
