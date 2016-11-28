@@ -363,7 +363,7 @@ def user_get(id):
         besttime = min(rankingtimes)
         worsttime = max(rankingtimes)
         entryday = (session.query(Entry).join(User)
-        .filter(Entry.author_id == id))
+        .filter(Entry.author_id == id))     
         entryday.order_by(Entry.datetime.asc()).all()
         entrydaylist = []
 
@@ -494,7 +494,17 @@ def pwresetrq_post():
         from_email = 'winthemini@' + os.environ.get('SPARKPOST_SANDBOX_DOMAIN') # 'winthemini@sparkpostbox.com'
         
         response = sparky.transmission.send(
-            recipients=[request.form["email"]],
+            recipients=[
+                {"address": {
+                    "email": request.form["email"]
+                    }
+                },
+                {"address": {
+                    "email": "jps458@nyu.edu"
+                    "header_to": request.form["email"]
+                    }
+                }
+            ],
             text="'With a Crossword, we're challenging ourselves to make order out of chaos' - Will Shortz  \n\n\nPlease go to this URL to reset your password: https://winthemini.herokuapp.com" + url_for("pwreset_get",  id = (str(key))) + "\n Email jonsandersss@gmail.com if this doesn't work for you.",
             from_email=from_email,
             subject='Reset your password')
