@@ -21,7 +21,7 @@ class TestViews(unittest.TestCase):
 
         # Set up the tables in the database
         Base.metadata.create_all(engine)
-
+        session.rollback()
         # Create an example user
         self.user = User(name="Alice", email="alice@example.com",
                          password=generate_password_hash("test"))
