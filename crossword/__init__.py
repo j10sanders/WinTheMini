@@ -12,12 +12,16 @@ from . import views
 from . import filters
 from . import login
 
+class TravisConfig(object):
+    SQLALCHEMY_DATABASE_URI = "postgresql://localhost:5432/crossword"
+    DEBUG = False
+    SECRET_KEY = "Not secret" 
+    
 class TestingConfig(object):
     SQLALCHEMY_DATABASE_URI = "postgresql://ubuntu:thinkful@localhost:5432/newcrossword"
     DEBUG = False
     SECRET_KEY = "Not secret"
     
-class TravisConfig(object):
-    SQLALCHEMY_DATABASE_URI = "postgresql://localhost:5432/crossword"
-    DEBUG = False
-    SECRET_KEY = "Not secret"
+
+
+    
