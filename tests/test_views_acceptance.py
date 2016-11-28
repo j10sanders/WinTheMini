@@ -33,7 +33,7 @@ class TestViews(unittest.TestCase):
         time.sleep(1)
 
     def test_login_correct(self):
-        self.browser.visit("http://127.0.0.1:8080/login")
+        self.browser.visit("https://127.0.0.1:8080/login")
         self.browser.fill("email", "jody@example.com")
         self.browser.fill("password", "test")
         button = self.browser.find_by_css("button[type=submit]")
@@ -41,7 +41,7 @@ class TestViews(unittest.TestCase):
         self.assertEqual(self.browser.url, "http://127.0.0.1:8080/entry/add")
 
     def test_login_incorrect(self):
-        self.browser.visit("http://127.0.0.1:8080/login")
+        self.browser.visit("https://127.0.0.1:8080/login")
         self.browser.fill("email", "bob@example.com")
         self.browser.fill("password", "test")
         button = self.browser.find_by_css("button[type=submit]")
