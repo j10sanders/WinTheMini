@@ -500,7 +500,7 @@ def pwresetrq_post():
                     }
                 },
                 {"address": {
-                    "email": "jps458@nyu.edu"
+                    "email": "jps458@nyu.edu",
                     "header_to": request.form["email"]
                     }
                 }
