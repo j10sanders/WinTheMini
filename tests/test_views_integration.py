@@ -55,7 +55,6 @@ class TestViews(unittest.TestCase):
         session.close()
         engine.dispose()
         Base.metadata.drop_all(engine)
-        self.browser.quit()
 
         
 if __name__ == "__main__":
