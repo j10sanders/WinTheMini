@@ -14,10 +14,19 @@
     </div>
     <div class="form-group">
         <label for="email">Email address</label>
-        <input type="email" class="form-control" id="email" name="email" placeholder="Email address" required autocomplete="off"> 
+        <input type="email" class="form-control" id="email" name="email" placeholder="Email address" required autocomplete="off" required onchange="return check()"> 
     </div>
-    <button type="submit" class="btn btn-default">Submit</button>
+    <button type="submit" class="btn btn-default" onclick = "return check();">Submit</button>
 </form>
+
+<script>function check() {
+      var password = document.getElementById('password');
+      var password2 = document.getElementById('password2');
+ 	 		if ( password2.value != password.value) {
+ 	 			 alert("Your passwords don't match.  Please fix that.");
+         return false;
+  		  }
+      }</script>
 
 <h2>If you've already registered, please: <b><a href="{{ url_for('login_get')}}">Login</a></b></h2>
 
