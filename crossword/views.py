@@ -1,14 +1,10 @@
-from flask import render_template, render_template_string
+from flask import render_template, render_template_string, flash, request, redirect, url_for
 from itertools import groupby
 from . import app, rankingint, keygenerator, quotes
 from .database import session, Entry, followers, User, PWReset
-from flask import flash
-from flask.ext.login import login_user, logout_user
+from flask.ext.login import login_user, logout_user, login_required, current_user
 from getpass import getpass
 from werkzeug.security import check_password_hash, generate_password_hash
-from .database import User
-from flask import request, redirect, url_for
-from flask.ext.login import login_required, current_user
 from datetime import datetime, timedelta
 from pytz import timezone
 import pytz
@@ -522,12 +518,12 @@ def pwreset_get(id):
     pwresetkey = session.query(PWReset).filter_by(reset_key=id).one()
     #print(key_datetime.datetime)
     EST = pytz.timezone('US/Eastern')
-    x = datetime.utcnow().replace(tzinfo=pytz.utc).date()- timedelta(days=2)
+    generated_by = datetime.utcnow().replace(tzinfo=pytz.utc)- timedelta(hours=24)
     #print(x)
     if pwresetkey.has_activated == True:
         flash("You already reset your password with the URL you are using.  If you need to reset your password again, please make a new request here.", "danger")
         return redirect(url_for("pwresetrq_get"))
-    if pwresetkey.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date() < x:
+    if pwresetkey.datetime.replace(tzinfo=pytz.utc) < generated_by:
         flash("Your password reset link expired.  Please generate a new one here.", "danger")
         return redirect(url_for("pwresetrq_get"))
     return render_template('pwreset.html', id = key)
