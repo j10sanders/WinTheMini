@@ -451,15 +451,12 @@ def pwresetrq_get():
 @app.route("/pwresetrq", methods=["POST"])
 def pwresetrq_post():
     if session.query(User).filter_by(email=request.form["email"]).first():
-    #if user:
         user = session.query(User).filter_by(email=request.form["email"]).one()
-        #print(user.id, "is the id")
-        
-        #check if user already has reset their password, so they will update the current key instead of generating a separate entry in the table.
+        # check if user already has reset their password, so they will update
+        # the current key instead of generating a separate entry in the table.
         if session.query(PWReset).filter_by(user_id = user.id).first():
-        #if pwalready:
             pwalready = session.query(PWReset).filter_by(user_id = user.id).first()
-            #if the key hasn't been used yet, just send the same key.
+	# if the key hasn't been used yet, just send the same key.
             if pwalready.has_activated == False:
                 pwalready.datetime = datetime.now()
                 key = pwalready.reset_key
@@ -470,7 +467,7 @@ def pwresetrq_post():
                 pwalready.has_activated = False
         else:  
             key = keygenerator.make_key()
-            user_reset = PWReset(reset_key=key, user_id = user.id)
+            user_reset = PWReset(reset_key=key, user_id=user.id)
             session.add(user_reset)
         session.commit()
         
@@ -480,14 +477,17 @@ def pwresetrq_post():
         #Yagmail: 
         #yag = yagmail.SMTP()
         yag = yagmail.SMTP('pwreset.winthemini@gmail.com', 'putpwhere')
-        contents = ['Please go to this URL to reset your password:', "http://workspace2-jonsanders.c9users.io:8080" + url_for("pwreset_get",  id = (str(key))),
-                "Email jonsandersss@gmail.com if this doesn't work for you.     'With a Crossword, we're challenging ourselves to make order out of chaos' - Will Shortz"]
+        contents = ['Please go to this URL to reset your password:',
+        "http://workspace2-jonsanders.c9users.io:8080" + url_for("pwreset_get",  id = (str(key))),
+        "Email jonsandersss@gmail.com if this doesn't work for you.     
+        'With a Crossword, we're challenging ourselves to make order out of chaos' - Will Shortz"]
         yag.send('jps458@nyu.edu', 'TEST', contents)
         '''
         
         
         sparky = SparkPost() # uses environment variable
-        from_email = 'winthemini@' + os.environ.get('SPARKPOST_SANDBOX_DOMAIN') # 'winthemini@sparkpostbox.com'
+        # 'winthemini@sparkpostbox.com'
+        from_email = 'winthemini@' + os.environ.get('SPARKPOST_SANDBOX_DOMAIN')
         
         response = sparky.transmission.send(
             recipients=[
@@ -516,17 +516,17 @@ def pwresetrq_post():
 def pwreset_get(id):
     key = id
     pwresetkey = session.query(PWReset).filter_by(reset_key=id).one()
-    #print(key_datetime.datetime)
-    EST = pytz.timezone('US/Eastern')
-    generated_by = datetime.utcnow().replace(tzinfo=pytz.utc)- timedelta(hours=24)
-    #print(x)
-    if pwresetkey.has_activated == True:
-        flash("You already reset your password with the URL you are using.  If you need to reset your password again, please make a new request here.", "danger")
+    generated_by = datetime.utcnow().replace(tzinfo=pytz.utc) - timedelta(hours=24)
+    if pwresetkey.has_activated is True:
+        flash("You already reset your password with the URL you are using." +
+              "If you need to reset your password again, please make a" +
+              " new request here.", "danger")
         return redirect(url_for("pwresetrq_get"))
     if pwresetkey.datetime.replace(tzinfo=pytz.utc) < generated_by:
-        flash("Your password reset link expired.  Please generate a new one here.", "danger")
+        flash("Your password reset link expired.  Please generate a new one" +
+              " here.", "danger")
         return redirect(url_for("pwresetrq_get"))
-    return render_template('pwreset.html', id = key)
+    return render_template('pwreset.html', id=key)
 
 @app.route("/pwreset/<id>", methods=["POST"])
 def pwreset_post(id):
