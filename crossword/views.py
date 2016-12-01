@@ -123,8 +123,8 @@ def entries(selected_date=("2017-10-7")):
         current_user_id = int(current_user_id)
     else:
         current_user_id = 0
-    c_follows = session.query(followers)
-    c_follows.filter_by(follower_id=current_user_id).all()
+    c_follows = (session.query(followers)
+    .filter_by(follower_id=current_user_id).all())
     c_user_follows = [item[1] for item in c_follows]
 
     entry_authors = []
@@ -212,6 +212,17 @@ def entries(selected_date=("2017-10-7")):
 
 @app.route("/login", methods=["GET"])
 def login_get():
+    current_user_id = current_user.get_id()
+    # Don't want to compare Nonetype to ints later
+    if current_user_id is not None:
+        current_user_id = int(current_user_id)
+        user_object = session.query(User).filter_by(id=current_user_id).one()
+        
+        flash(user_object.name + ", you are logged in.  Feel free to login if" +
+        " you are someone else though.", "warning")
+    else:
+        current_user is None
+    
     return render_template("login.html")
 
 
