@@ -174,12 +174,11 @@ def entries(selected_date=("2017-10-7")):
                 i += 1
         except IndexError:
             i = i
+        print(ywinner.count())
         # Determine streak count for who won the last consecutive days
-        streak = 1
-        ywinnerid = ywinner[i].user.id
-        ywinnername = ywinner[i].user.name
-        # For count, x in enumerate(ywinner):
-        # Print(x.user.name, x.datetime, count)
+        if ywinner.count() > i:
+            ywinnerid = ywinner[i].user.id
+            ywinnername = ywinner[i].user.name
         try:
             while ywinnername == ywinner[streak+i].user.name:
                 streak += 1
@@ -188,7 +187,6 @@ def entries(selected_date=("2017-10-7")):
             # ywinnername = "nobody"
             # ywinnerid = "no_id"
             # streak = 0
-        # print(i)
     quote = quotes.quote_me()
 
     return render_template("entries.html",
