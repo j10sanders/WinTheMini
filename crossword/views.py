@@ -174,7 +174,6 @@ def entries(selected_date=("2017-10-7")):
                 i += 1
         except IndexError:
             i = i
-        print(ywinner.count())
         # Determine streak count for who won the last consecutive days
         if ywinner.count() > i:
             ywinnerid = ywinner[i].user.id
@@ -355,21 +354,21 @@ def user_get(id):
         user = session.query(User).filter_by(id=id).one()
         day_rank = (session.query(Entry.day_rank).join(User)
         .filter(Entry.author_id == id)
-        .order_by(Entry.datetime.asc()).all())
+        .order_by(Entry.datetime.desc()).limit(30).all()[::-1])
         ranking = rankingint.toint(day_rank)
         average = mean(ranking)
         average = round(average, 1)
         times = (session.query(Entry.title).join(User)
         .filter(Entry.author_id == id).
-        order_by(Entry.datetime.asc()).all())
+        order_by(Entry.datetime.desc()).limit(30).all()[::-1])
         rankingtimes = rankingint.toint(times)
         avetime = mean(rankingtimes)
         avetime = round(avetime)
         besttime = min(rankingtimes)
         worsttime = max(rankingtimes)
         entryday = (session.query(Entry).join(User)
-        .filter(Entry.author_id == id))     
-        entryday.order_by(Entry.datetime.asc()).all()
+        .filter(Entry.author_id == id)     
+        .order_by(Entry.datetime.desc()).limit(30).all()[::-1])
         entrydaylist = []
 
         for entry in entryday:
@@ -379,7 +378,7 @@ def user_get(id):
             entrytime = entrytime.strftime("%b %-d")
             entrydaylist.append(entrytime)
 
-        title = "Seconds to complete"
+        title = "Seconds to complete (last 30 entries)"
         graph_of_times = pygal.Line(width=1200,
                                     height=600, title=title, style=BlueStyle,
                                     fill=True, interpolate='hermite',
@@ -390,7 +389,7 @@ def user_get(id):
                                     disable_xml_declaration=True)
         graph_of_times.x_labels = entrydaylist
         graph_of_times.add('Time', rankingtimes)
-        title = "Day Rankings"
+        title = "Day Rankings (last 30 entries)"
         graph_of_rankings = pygal.Bar(width=1200,
                                       height=600, title=title, style=BlueStyle,
                                       fill=True, interpolate='hermite',
