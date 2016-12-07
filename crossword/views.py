@@ -1,20 +1,22 @@
-from flask import render_template, render_template_string, flash, request, redirect, url_for
+from flask import render_template, render_template_string, flash, request
+from flask import redirect, url_for
 from itertools import groupby
 from . import app, rankingint, keygenerator, quotes
 from .database import session, Entry, followers, User, PWReset
-from flask.ext.login import login_user, logout_user, login_required, current_user
+from flask.ext.login import login_user, logout_user, login_required
+from flask.ext.login import current_user
 from getpass import getpass
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime, timedelta
 from pytz import timezone
 import pytz
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm.exc import NoResultFound, StaleDataError, UnmappedInstanceError
+from sqlalchemy.orm.exc import NoResultFound, StaleDataError
+from sqlalchemy.orm.exc import UnmappedInstanceError
 from ranking import Ranking
 from statistics import mean, StatisticsError
 import pygal
 import json
-from urllib.request import urlopen
 from pygal.style import BlueStyle
 import unittest
 import yagmail
@@ -86,13 +88,10 @@ def entries(selected_date=("2017-10-7")):
                     # that have no entries
                     olderentryid = min(entry.id for entry in entrylist) - 1
                     oldernotdeleted = (entries.filter(Entry.id <= olderentryid)
-                    .order_by(Entry.datetime.desc()).first()
-                    )
+                    .order_by(Entry.datetime.desc()).first())
                     newerentryid = max(entry.id for entry in entrylist) + 1
                     newernotdeleted = (entries.filter(Entry.id >= newerentryid)
-                    .order_by(Entry.datetime.asc()).first()
-                    )
-                    #print(newernotdeleted.id)
+                    .order_by(Entry.datetime.asc()).first())
             except (ValueError, TypeError):
                 flash("There are some non-integers on this page." +
                 " Jon needs to fix it so you can see who won :)", "danger")
@@ -463,7 +462,8 @@ def pwresetrq_post():
         # check if user already has reset their password, so they will update
         # the current key instead of generating a separate entry in the table.
         if session.query(PWReset).filter_by(user_id = user.id).first():
-            pwalready = session.query(PWReset).filter_by(user_id = user.id).first()
+            pwalready = (session.query(PWReset)
+            .filter_by(user_id = user.id).first())
 	# if the key hasn't been used yet, just send the same key.
             if pwalready.has_activated == False:
                 pwalready.datetime = datetime.now()
@@ -486,9 +486,11 @@ def pwresetrq_post():
         #yag = yagmail.SMTP()
         yag = yagmail.SMTP('pwreset.winthemini@gmail.com', 'putpwhere')
         contents = ['Please go to this URL to reset your password:',
-        "http://workspace2-jonsanders.c9users.io:8080" + url_for("pwreset_get",  id = (str(key))),
+        "http://workspace2-jonsanders.c9users.io:8080" + url_for("pwreset_get", 
+        id = (str(key))),
         "Email jonsandersss@gmail.com if this doesn't work for you.     
-        'With a Crossword, we're challenging ourselves to make order out of chaos' - Will Shortz"]
+        'With a Crossword, we're challenging ourselves to make order out of 
+        chaos' - Will Shortz"]
         yag.send('jps458@nyu.edu', 'TEST', contents)
         '''
         
@@ -509,11 +511,16 @@ def pwresetrq_post():
                     }
                 }
             ],
-            text="'With a Crossword, we're challenging ourselves to make order out of chaos' - Will Shortz  \n\n\nPlease go to this URL to reset your password: https://winthemini.herokuapp.com" + url_for("pwreset_get",  id = (str(key))) + "\n Email jonsandersss@gmail.com if this doesn't work for you.",
+            text="'With a Crossword, we're challenging ourselves to make " +
+            "order out of chaos' - Will Shortz  \n\n\nPlease go to this URL " +
+            "to reset your password: https://winthemini.herokuapp.com" + 
+            url_for("pwreset_get",  id = (str(key))) + 
+            "\n Email jonsandersss@gmail.com if this doesn't work for you.",
             from_email=from_email,
             subject='Reset your password')
     
-        flash(user.name + ", check your email for a link to reset your password.  It expires in a day!", "success")
+        flash(user.name + ", check your email for a link to reset your " +
+        "password.  It expires in a day!", "success")
         return redirect(url_for("entries"))
     else:
         flash("Your email was never registered.", "danger")
@@ -524,13 +531,13 @@ def pwresetrq_post():
 def pwreset_get(id):
     key = id
     pwresetkey = session.query(PWReset).filter_by(reset_key=id).one()
-    generated_by = datetime.utcnow().replace(tzinfo=pytz.utc) - timedelta(hours=24)
+    made_by = datetime.utcnow().replace(tzinfo=pytz.utc)-timedelta(hours=24)
     if pwresetkey.has_activated is True:
         flash("You already reset your password with the URL you are using." +
               "If you need to reset your password again, please make a" +
               " new request here.", "danger")
         return redirect(url_for("pwresetrq_get"))
-    if pwresetkey.datetime.replace(tzinfo=pytz.utc) < generated_by:
+    if pwresetkey.datetime.replace(tzinfo=pytz.utc) < made_by:
         flash("Your password reset link expired.  Please generate a new one" +
               " here.", "danger")
         return redirect(url_for("pwresetrq_get"))
