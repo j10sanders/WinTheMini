@@ -19,7 +19,7 @@
         </h1>
         </b>
         <h2>
-        {% if current_user_id == 0 or ywinnerid in c_user_follows %}
+        {% if current_user_id == 0 or ywinnerid in c_user_follows or current_user_%}
         {% if streak != 0 %}
             {{ywinnername}} 
             {% if streak == 1 %}
@@ -57,8 +57,8 @@
     
     {% elif today == True and current_user_id not in entry_authors and dateshowing != "old" %}
     
-<h2><i>{{ quotes | random }}</i></h2>
-</br><h2>You can't see today's times until you <b><a href="{{ url_for('add_entry_get') }}">post your time. ☕️✍🏽☕️ </b></a></h2>
+<h2><i>I'm not a subscriber...</i></h2>
+</br><h2>You might be seeing that you need to be a subscriber now.  Are the days of Win the Mini over?  Not yet...<b><a href="{{ url_for('add_entry_get') }}">If you are a subscriber, post your time</b></a></h2>
 
     <ul class="pager">
         <li class="previous" >
