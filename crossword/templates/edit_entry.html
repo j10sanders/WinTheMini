@@ -7,11 +7,7 @@
 
 <form role="form" method="POST">
     <div class="form-group">
-        <label for="title">Title</label>
-        <input type="text" class="form-control" id="title" name="title" value="{{entry.title}}" placeholder="Entry title" required>
-    </div>
-    <div class="form-group">
-        <label for="content">Content</label>
+        <label for="content">Content (delete and repost your entry if you posted the wrong time)</label>
         <textarea class="form-control" id="content" name="content" placeholder="Entry content" rows="5" required>{{entry.content|striptags}}</textarea>
     </div>
     <button type="submit" class="btn btn-primary btn-md">Submit</button>

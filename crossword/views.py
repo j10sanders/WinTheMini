@@ -326,7 +326,7 @@ def edit_entry_post(id):
         return redirect(url_for("entries"))
     else:
         entry = session.query(Entry).get(id)
-        entry.content = request.form["content"].encode('utf-8')
+        entry.content = request.form["content"]
         session.commit()
         return redirect(url_for("entries"))
 
