@@ -22,7 +22,7 @@ import unittest
 import yagmail
 from sparkpost import SparkPost
 import os
-from urllib.request import urlopen
+
 
 
 @app.route("/")
