@@ -19,7 +19,6 @@
         </h1>
         </b>
         <h2>
-        {% if tie > 0 %}
         Ties don't count... no winner yesterday.
         {% else %}
         {% if current_user_id == 0 or ywinnerid in c_user_follows or current_user_%}
@@ -33,7 +32,6 @@
             won the last {{streak}} days.
             {% endif %}
             {% endif %}
-        {% endif %}
         {% endif %}
         </h2>
         </br>

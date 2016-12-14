@@ -144,9 +144,7 @@ def entries(selected_date=("2017-10-7")):
     # Can anyone view?
     today = False
     dateshowing = "today"
-    
-    # i for ties
-    i = 0
+
     # Determine if "newer" and/or "older" links should be shown
     if newest in entrylist:
         has_next = True
@@ -168,6 +166,7 @@ def entries(selected_date=("2017-10-7")):
             dateshowing = "old"
         # Check if there was a tie for first place.  If so, push the winner
         # back to last day
+        i = 0
         try:
             while selected_date == (ywinner[i].datetime
             .replace(tzinfo=pytz.utc).astimezone(EST).date()
@@ -205,7 +204,6 @@ def entries(selected_date=("2017-10-7")):
                            entry_authors=entry_authors,
                            today=today,
                            quotes=quote,
-                           tie = i
                            )
 
 
