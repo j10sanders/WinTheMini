@@ -5,6 +5,10 @@ class TravisConfig(object):
     SECRET_KEY = "Not secret" 
     
 
+class DevelopmentConfig(object):
+    SQLALCHEMY_DATABASE_URI =  os.environ["DATABASE_URL"]
+    DEBUG = False
+    SECRET_KEY = os.environ.get("CROSSWORD_SECRET_KEY", os.urandom(12))
 '''
 
 class DevelopmentConfig(object):

@@ -164,7 +164,7 @@ def entries(selected_date=("2017-10-7")):
                                  (1,)).order_by(Entry.datetime.desc())
         if now_est > selected_date:
             dateshowing = "old"
-        # Check if there was a tie for first place.  If so, push the winner
+        # Check if there is a tie for first place today.  If so, push the winner
         # back to last day
         i = 0
         try:
@@ -186,8 +186,15 @@ def entries(selected_date=("2017-10-7")):
             # ywinnername = "nobody"
             # ywinnerid = "no_id"
             # streak = 0
+        
+        # Check if yesterday was a tie
+        tiers = []
+        y = selected_date - timedelta(days=1)
+        for x in ywinner:
+            if x.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date() == y:
+                tiers.append(x.user.name)
     quote = quotes.quote_me()
-
+    
     return render_template("entries.html",
                            entries=entrylist,
                            has_next=has_next,
@@ -204,6 +211,7 @@ def entries(selected_date=("2017-10-7")):
                            entry_authors=entry_authors,
                            today=today,
                            quotes=quote,
+                           tiers=tiers,
                            )
 
 
