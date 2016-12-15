@@ -144,7 +144,8 @@ def entries(selected_date=("2017-10-7")):
     # Can anyone view?
     today = False
     dateshowing = "today"
-
+    
+    tiers = []
     # Determine if "newer" and/or "older" links should be shown
     if newest in entrylist:
         has_next = True
@@ -188,7 +189,7 @@ def entries(selected_date=("2017-10-7")):
             # streak = 0
         
         # Check if yesterday was a tie
-        tiers = []
+
         y = selected_date - timedelta(days=1)
         for x in ywinner:
             if x.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date() == y:
