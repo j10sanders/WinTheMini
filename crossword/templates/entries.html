@@ -20,8 +20,8 @@
         </b>
         <h2>
         {% if current_user_id == 0 or ywinnerid in c_user_follows or current_user_%}
-        {% if tiers |length > 1 %}
-        Yesterday had a tie for first place... So nobody gets their name up here.
+        {% if tiers > 1 %}
+        Yesterday had a tie for first place... So nobody gets their name up here. 😱 
         {% else %}
         {% if streak != 0 %}
             {{ywinnername}} 
@@ -85,6 +85,9 @@
         </h1>
         <h2>
         {% if current_user_id == 0 or ywinnerid in c_user_follows %}
+        {% if tiers > 1 %}
+        Yesterday had a tie for first place... So nobody gets their name up here. 😱 
+        {% else %}
         {% if streak != 0 %}
             {{ywinnername}} 
             {% if streak == 1 %}
@@ -95,6 +98,7 @@
             won the last {{streak}} days.
             {% endif %}
             {% endif %}
+        {% endif %}
         {% endif %}
         </h2>
     </br>

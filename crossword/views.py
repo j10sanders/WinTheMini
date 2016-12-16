@@ -194,6 +194,7 @@ def entries(selected_date=("2017-10-7")):
         for x in ywinner:
             if x.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date() == y:
                 tiers.append(x.user.name)
+        tiers = len(tiers)
     quote = quotes.quote_me()
     
     return render_template("entries.html",
