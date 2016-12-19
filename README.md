@@ -7,6 +7,8 @@ Since no social elements are built in, this application allows friends to compar
 In the future, the data will be useful for determining what times of the day you perform best, if your rank depends on the average puzzle completion time, etc... 
 For now, feel free to join, invite your friends, or contribute to the project!
 
+This project uses a Postgres db, SQLAlchemy ORM, Flask, Bootstrap, and makes extensive use of Jinja.
+
 ## Try it out!
 You can find the heroku-deployed version here: https://winthemini.herokuapp.com/
 
