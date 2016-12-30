@@ -32,7 +32,6 @@ class TestCase(unittest.TestCase):
         session.add(u2)
         session.add(u3)
         session.add(u4)
-        utcnow = datetime.utcnow()
         # setup the followers
         u1.follow(u1)
         u1.follow(u2) 
@@ -51,9 +50,9 @@ class TestCase(unittest.TestCase):
         #assert u1.follow(u2) is None
         assert u1.is_following(u2)
         assert u1.followers.count() == 1
-        assert u1.followers.first().name == 'ptest1'
-        assert u2.followers.count() == 2
-        assert u2.followers.first().name == 'ptest1'
+        self.assertEqual(u1.followers.first().name, 'ptest1')
+        self.assertEqual(u2.followers.count(), 2)
+        self.assertEqual(u2.followers.first().name, 'ptest1')
         u = u1.unfollow(u2)
         assert u is not None
         session.add(u)
@@ -65,9 +64,11 @@ class TestCase(unittest.TestCase):
         
     def tearDown(self):
         """ Test teardown """
-        session.close()
         # Remove the tables and their data from the database
+        session.close()
+        engine.dispose()
         Base.metadata.drop_all(engine)
+
         
 if __name__ == "__main__":
     unittest.main()
