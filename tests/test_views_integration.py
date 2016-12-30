@@ -38,7 +38,7 @@ class TestViews(unittest.TestCase):
         response = self.client.post("/entry/add", data={
             "title": "Test Entry",
             "content": "Test content"
-        })
+        }, follow_redirects=True)
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(urlparse(response.location).path, "/")
