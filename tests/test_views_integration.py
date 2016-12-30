@@ -43,6 +43,8 @@ class TestViews(unittest.TestCase):
         #self.assertEqual(urlparse(response.location).path, "/")
         entries = session.query(Entry).all()
         self.assertEqual(len(entries), 1)
+        for i in entries:
+            print(i.content)
 
         entry = entries[0]
         self.assertEqual(entry.title, 40)
