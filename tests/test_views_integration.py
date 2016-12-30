@@ -16,8 +16,9 @@ class TestViews(unittest.TestCase):
         """ Test setup """
         self.client = app.test_client()
 
+
         # Set up the tables in the database
-        #Base.metadata.create_all(engine)
+        Base.metadata.create_all(engine)
 
         # Create an example user
         self.user = User(name="Alice", email="alice@example.com",
@@ -35,7 +36,7 @@ class TestViews(unittest.TestCase):
         self.simulate_login()
 
         response = self.client.post("/entry/add", data={
-            "title": "40",
+            "title": "Test Entry",
             "content": "Test content"
         })
 
@@ -45,7 +46,7 @@ class TestViews(unittest.TestCase):
         self.assertEqual(len(entries), 1)
 
         entry = entries[0]
-        self.assertEqual(entry.title, 40)
+        self.assertEqual(entry.title, "Test Entry")
         self.assertEqual(entry.content, "Test content")
         self.assertEqual(entry.author, self.user)
         
