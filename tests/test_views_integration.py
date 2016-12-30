@@ -5,8 +5,7 @@ from urllib.parse import urlparse
 from werkzeug.security import generate_password_hash
 
 # Configure app to use the testing database
-os.environ["CONFIG_PATH"] = "crossword.config.TravisConfig"
-#os.environ["CONFIG_PATH"] = "crossword.config.TestingConfig"
+os.environ["CONFIG_PATH"] = "crossword.config.TestingConfig"
 
 from crossword import app
 from crossword.database import Base, engine, session, User, Entry
@@ -43,8 +42,6 @@ class TestViews(unittest.TestCase):
         self.assertEqual(urlparse(response.location).path, "/")
         entries = session.query(Entry).all()
         self.assertEqual(len(entries), 1)
-        for i in entries:
-            print(i.content)
 
         entry = entries[0]
         self.assertEqual(entry.title, 40)
@@ -53,11 +50,9 @@ class TestViews(unittest.TestCase):
         
     def tearDown(self):
         """ Test teardown """
-        # Remove the tables and their data from the database
         session.close()
-        engine.dispose()
+        # Remove the tables and their data from the database
         Base.metadata.drop_all(engine)
-
         
 if __name__ == "__main__":
     unittest.main()
