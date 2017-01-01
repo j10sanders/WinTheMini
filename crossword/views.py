@@ -7,6 +7,7 @@ from flask.ext.login import login_user, logout_user, login_required
 from flask.ext.login import current_user
 from getpass import getpass
 from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.exceptions import Forbidden
 from datetime import datetime, timedelta
 from pytz import timezone
 import pytz
@@ -327,8 +328,14 @@ def add_entry_post():
 @app.route("/entry/<id>/edit", methods=["GET"])
 @login_required
 def edit_entry_get(id):
-    entry = session.query(Entry)
-    return render_template("edit_entry.html", entry=entry.get(id))
+    entry = session.query(Entry).get(id)
+    current_user_id = current_user.get_id()
+    if current_user_id is None:
+        raise Forbidden('Only entry author can delete it.')
+    else:
+        if int(entry.author_id) != int(current_user.get_id()):
+            raise Forbidden('Only the entry author can delete it.')
+    return render_template("edit_entry.html", entry=entry)
 
 
 @app.route("/entry/<id>/edit", methods=["POST"])
@@ -343,9 +350,17 @@ def edit_entry_post(id):
 
 
 @app.route("/entry/<id>/delete", methods=["GET"])
+@login_required
 def delete_entry_get(id):
-    entry = session.query(Entry)
-    return render_template("delete_entry.html", entry=entry.get(id))
+    entry = session.query(Entry).get(id)
+    current_user_id = current_user.get_id()
+    if current_user_id is None:
+        raise Forbidden('Only entry author can delete it.')
+    else:
+        #print(current_user.get_id())
+        if int(entry.author_id) != int(current_user.get_id()):
+            raise Forbidden('Only the entry author can delete it.')
+    return render_template("delete_entry.html", entry=entry)
 
 
 @app.route("/entry/<id>/delete", methods=["POST"])
