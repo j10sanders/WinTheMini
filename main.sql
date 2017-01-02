@@ -90,7 +90,8 @@ CREATE SEQUENCE users_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
+    
+SELECT setval('users_id_seq', (SELECT MAX(id) FROM users_id)+1)
 
 ALTER TABLE public.users_id_seq OWNER TO ubuntu;
 
@@ -119,13 +120,6 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 -- Data for Name: entries; Type: TABLE DATA; Schema: public; Owner: ubuntu
 --
 
-COPY entries (id, title, content, datetime, day_rank, author_id) FROM stdin;
-2	50	test 1	2016-06-15 23:42:40.396112+00	1	1
-1	144	meh	2016-06-15 23:41:48.111222+00	3	\N
-3	68	1:08	2016-06-16 01:35:58.659701+00	2	1
-\.
-
-
 --
 -- Name: entries_id_seq; Type: SEQUENCE SET; Schema: public; Owner: ubuntu
 --
@@ -136,11 +130,6 @@ SELECT pg_catalog.setval('entries_id_seq', 3, true);
 --
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: ubuntu
 --
-
-COPY users (id, name, email, password) FROM stdin;
-1	jonsandersss	jonsandersss@gmail.com	pbkdf2:sha1:1000$UsB69Ie5$93ca8cfb1b8de1b1f799d346a6af3b344604e620
-\.
-
 
 --
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: ubuntu
@@ -194,4 +183,3 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 --
 -- PostgreSQL database dump complete
 --
-
