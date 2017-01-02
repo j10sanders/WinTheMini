@@ -13,8 +13,6 @@ os.environ["CONFIG_PATH"] = "crossword.config.TravisConfig"
 
 from crossword import app
 from crossword.database import Base, engine, session, User
-''' Need to come back to when have time.  Currently build is failing because of these checks:
-https://travis-ci.org/j10sanders/crossword/builds/179576393
 
 
 class TestViews(unittest.TestCase):
@@ -59,6 +57,6 @@ class TestViews(unittest.TestCase):
         engine.dispose()
         Base.metadata.drop_all(engine)
         self.browser.quit()
-'''
+
 if __name__ == "__main__":
     unittest.main()
