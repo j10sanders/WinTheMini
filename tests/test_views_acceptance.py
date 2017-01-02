@@ -26,6 +26,7 @@ class TestViews(unittest.TestCase):
         self.user = User(name="Jody", email="jody@example.com",
                          password=generate_password_hash("test"))
         session.add(self.user)
+        session.rollback()
         session.commit()
 
         self.process = multiprocessing.Process(target=app.run,
