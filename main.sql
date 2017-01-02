@@ -91,7 +91,6 @@ CREATE SEQUENCE users_id_seq
     NO MAXVALUE
     CACHE 1;
     
-SELECT setval('users_id_seq', (SELECT MAX(id) FROM users_id)+1)
 
 ALTER TABLE public.users_id_seq OWNER TO ubuntu;
 
@@ -147,8 +146,7 @@ COPY users (id, name, email, password) FROM stdin;
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: ubuntu
 --
 
-SELECT pg_catalog.setval('users_id_seq', 1, true);
-
+SELECT pg_catalog.setval('users_id_seq', (SELECT MAX(id) FROM users_id)+1);
 
 --
 -- Name: entries_pkey; Type: CONSTRAINT; Schema: public; Owner: ubuntu; Tablespace: 
