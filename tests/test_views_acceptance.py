@@ -3,7 +3,6 @@ import unittest
 import multiprocessing
 import time
 from urllib.parse import urlparse
-
 from werkzeug.security import generate_password_hash
 from splinter import Browser
 
@@ -22,11 +21,11 @@ class TestViews(unittest.TestCase):
 
         # Set up the tables in the database
         Base.metadata.create_all(engine)
+
         # Create an example user
         self.user = User(name="Jody", email="jody@example.com",
                          password=generate_password_hash("test"))
         session.add(self.user)
-        session.rollback()
         session.commit()
 
         self.process = multiprocessing.Process(target=app.run,
@@ -35,15 +34,15 @@ class TestViews(unittest.TestCase):
         time.sleep(1)
 
     def test_login_correct(self):
-        self.browser.visit("https://127.0.0.1:8080/login")
+        self.browser.visit("http://127.0.0.1:8080/login")
         self.browser.fill("email", "jody@example.com")
         self.browser.fill("password", "test")
         button = self.browser.find_by_css("button[type=submit]")
         button.click()
-        self.assertEqual(self.browser.url, "http://127.0.0.1:8080/entry/add")
+        self.assertEqual(self.browser.url, "http://127.0.0.1:8080/")
 
     def test_login_incorrect(self):
-        self.browser.visit("https://127.0.0.1:8080/login")
+        self.browser.visit("http://127.0.0.1:8080/login")
         self.browser.fill("email", "bob@example.com")
         self.browser.fill("password", "test")
         button = self.browser.find_by_css("button[type=submit]")
