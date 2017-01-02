@@ -90,7 +90,8 @@ CREATE SEQUENCE users_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
+    
+SELECT setval('users_id_seq', (SELECT MAX(id) FROM users_id)+1)
 
 ALTER TABLE public.users_id_seq OWNER TO ubuntu;
 
