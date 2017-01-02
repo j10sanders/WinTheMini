@@ -21,21 +21,24 @@ class TestViews(unittest.TestCase):
         self.browser.driver.set_window_size(1024, 768)
 
         # Setup DB
-        db.create_all()
+        Base.metadata.create_all(engine)
         # Create User
         self.user = User(name='Alice', email='alice@example.com',
                          password=generate_password_hash('test'))
-        db.session.add(self.user)
-        db.session.commit()
+        session.add(self.user)
+        session.commit()
 
         self.process = multiprocessing.Process(target=app.run)
         self.process.start()
         time.sleep(1)
 
     def tearDown(self):
+        """ Test teardown """
+        # Remove the tables and their data from the database
         self.process.terminate()
-        db.session.close()
-        db.drop_all()
+        session.close()
+        engine.dispose()
+        Base.metadata.drop_all(engine)
         self.browser.quit()
 
     def test_login_correct(self):
