@@ -39,7 +39,10 @@ class TestAddEntry(FlaskViewTestCase):
     def setUp(self):
         self.fixtures = {
             'alice': User(name='Alice', email='alice@example.com',
-                          password=generate_password_hash('alice'))}
+                          password=generate_password_hash('alice')),
+            'Jonathan': User(name='Jonathan', email='jon@gmail.com',
+                        password=generate_password_hash('jonathan'))
+        }
         super(TestAddEntry, self).setUp()
 
     def test_unauthenticated_add_entry(self):
@@ -68,8 +71,32 @@ class TestAddEntry(FlaskViewTestCase):
         self.assertEqual(entry.content, 'Test Content')
         self.assertEqual(entry.author, self.fixtures['alice'])
         self.assertEqual(entry.id, 1)
+    
+    def test_add_second_place(self):
+        self.simulate_login(self.fixtures['Jonathan'])
+        response = self.client.post('/entry/add', data={
+            'title': '50',
+            'content': 'Test Content'
+        })
+        
+        self.simulate_login(self.fixtures['alice'])
+        response = self.client.post('/entry/add', data={
+            'title': '40',
+            'content': 'Test Content'
+        })
+        
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(urlparse(response.location).path, '/')
 
+        entries = session.query(Entry).all()
+        self.assertEqual(len(entries), 2)
 
+        entry = entries[0]
+        self.assertEqual(entry.title, 50)
+        self.assertEqual(entry.content, 'Test Content')
+        self.assertEqual(entry.author, self.fixtures['Jonathan'])
+        self.assertEqual(entry.day_rank, None) #need to visit page
+        
 class TestEditEntry(FlaskViewTestCase):
     updated_entry_data = {
         'title': 'New Test Title',
@@ -153,7 +180,7 @@ class TestDeleteEntry(FlaskViewTestCase):
 
         entries = session.query(Entry).all()
         self.assertEqual(len(entries), 0)
-
+        
 
 if __name__ == '__main__':
     unittest.main()
