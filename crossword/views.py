@@ -592,7 +592,7 @@ def pwreset_post(id):
     #login_user(user)
     return redirect(url_for("entries"))
 
-@app.route("/.well-known/acme-challenge/NirlhjAlyJHzECHCq1zv80XEfZVirjTpQ0Lb3aX0_kg")
+@app.route("/.well-known/acme-challenge/yfuO18NI8MtphmelEhrii4UcgSPWH1_HIHE00FC1UIM")
 def verify():
-    render_template_string('NirlhjAlyJHzECHCq1zv80XEfZVirjTpQ0Lb3aX0_kg.vZR6ze7fzSf3oM7NzazPnKy7q-mCC_3OwxuSxrVfYkM')
-    return 'NirlhjAlyJHzECHCq1zv80XEfZVirjTpQ0Lb3aX0_kg.vZR6ze7fzSf3oM7NzazPnKy7q-mCC_3OwxuSxrVfYkM'
+    render_template_string('yfuO18NI8MtphmelEhrii4UcgSPWH1_HIHE00FC1UIM.vZR6ze7fzSf3oM7NzazPnKy7q-mCC_3OwxuSxrVfYkM')
+    return 'yfuO18NI8MtphmelEhrii4UcgSPWH1_HIHE00FC1UIM.vZR6ze7fzSf3oM7NzazPnKy7q-mCC_3OwxuSxrVfYkM'
