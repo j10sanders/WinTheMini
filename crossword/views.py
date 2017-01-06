@@ -591,3 +591,8 @@ def pwreset_post(id):
     flash("Your new password is saved.", "success")
     #login_user(user)
     return redirect(url_for("entries"))
+
+@app.route("/.well-known/acme-challenge/1zlqMMVVl1E1uA1gQdjkRikS1hDf9gQnO_-5Qw3e6xk")
+def verify():
+    render_template_string('1zlqMMVVl1E1uA1gQdjkRikS1hDf9gQnO_-5Qw3e6xk.vZR6ze7fzSf3oM7NzazPnKy7q-mCC_3OwxuSxrVfYkM')
+    return '1zlqMMVVl1E1uA1gQdjkRikS1hDf9gQnO_-5Qw3e6xk.vZR6ze7fzSf3oM7NzazPnKy7q-mCC_3OwxuSxrVfYkM'
