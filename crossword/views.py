@@ -609,7 +609,7 @@ def pwreset_post(id):
 def verify():
     render_template_string('fT9KyE5G31WVRnBIar_aW3aUuBraRn12laKv4KvsIuU.vZR6ze7fzSf3oM7NzazPnKy7q-mCC_3OwxuSxrVfYkM')
     return 'fT9KyE5G31WVRnBIar_aW3aUuBraRn12laKv4KvsIuU.vZR6ze7fzSf3oM7NzazPnKy7q-mCC_3OwxuSxrVfYkM'
-'''
+
 
 @app.route("/user/<id>/edit", methods=["GET"])
 @login_required
@@ -627,3 +627,4 @@ def edit_user_post(id):
         user.name = request.form["content"]
         session.commit()
         return redirect(url_for("entries"))
+'''
