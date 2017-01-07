@@ -126,7 +126,6 @@ def entries(selected_date=("2017-10-7")):
             dayranklist.append(int(day_rank[0]+1))
         k = 0
         
-        
         # Determine the day_rank of the entries, so the users' stats are tracked:
         for entry in entrylist:
             entry = session.query(Entry).get(entry.id)
@@ -611,3 +610,20 @@ def verify():
     render_template_string('fT9KyE5G31WVRnBIar_aW3aUuBraRn12laKv4KvsIuU.vZR6ze7fzSf3oM7NzazPnKy7q-mCC_3OwxuSxrVfYkM')
     return 'fT9KyE5G31WVRnBIar_aW3aUuBraRn12laKv4KvsIuU.vZR6ze7fzSf3oM7NzazPnKy7q-mCC_3OwxuSxrVfYkM'
 '''
+
+@app.route("/user/<id>/edit", methods=["GET"])
+@login_required
+def edit_user_get(id):
+    user = session.query(User).get(id)
+    return render_template("edit_user.html", user=user)
+
+
+@app.route("/user/<id>/edit", methods=["POST"])
+def edit_user_post(id):
+    if "cancel" in request.form:
+        return redirect(url_for("entries"))
+    else:
+        user = session.query(User).get(id)
+        user.name = request.form["content"]
+        session.commit()
+        return redirect(url_for("entries"))
