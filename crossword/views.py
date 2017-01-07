@@ -37,10 +37,15 @@ def entries(selected_date=("2017-10-7")):
     except ValueError:
         selected_date = selected_date[:selected_date.rindex(" ")]
         selected_date = datetime.strptime(selected_date, "%Y-%m-%d")
-
     selected_date = EST.localize(selected_date, is_dst=None).date()
-    entries = session.query(Entry)
-
+    
+    # instead of entries = session.query(Entry), make a smaller query
+    daysago = (datetime.now() - timedelta(days=30)).date()
+    selectedago = (selected_date - timedelta(days=30))
+    if selectedago < daysago:
+        daysago = selectedago
+    entries = session.query(Entry).filter(Entry.datetime >= daysago)
+    
     # Determine which entries are oldest and newest,
     # so later can determine if "Older" or "Newer" buttons should be displayed.
     oldest = entries.order_by(Entry.datetime.asc()).first()
@@ -102,19 +107,35 @@ def entries(selected_date=("2017-10-7")):
     for entry in entries:
         try:
             if entry.id == oldernotdeleted.id:
-                older = entry.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date()
+                older = (entry.datetime.replace(tzinfo=pytz.utc)
+                .astimezone(EST).date())
             if entry.id == newernotdeleted.id:
-                newer = entry.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date()
+                newer = (entry.datetime.replace(tzinfo=pytz.utc)
+                .astimezone(EST).date())
         except (UnboundLocalError, AttributeError):
             pass
+    
+    entry_authors = []
+    # For statistics, this method is for keeping track of daily scores.
+    # Don't do this every time the page is visited, just if the day is today
 
-    # For statistics, this method is for keeping track of daily scores
-    sortedscores = [entry.title for entry in entrylist]
-    dayranklist = []
-    for day_rank in Ranking(sortedscores, reverse=True):
-        dayranklist.append(int(day_rank[0]+1))
-    k = 0
-
+    if now_est - selected_date <= timedelta(days=0):
+        sortedscores = [entry.title for entry in entrylist]
+        dayranklist = []
+        for day_rank in Ranking(sortedscores, reverse=True):
+            dayranklist.append(int(day_rank[0]+1))
+        k = 0
+        
+        
+        # Determine the day_rank of the entries, so the users' stats are tracked:
+        for entry in entrylist:
+            entry = session.query(Entry).get(entry.id)
+            entry.day_rank = day_rank = dayranklist[k]
+            entry_authors.append(entry.author_id)
+            session.add(entry)
+            k += 1
+        session.commit()
+    
     # Collect list of the current_user's followers, so it can be compared in
     # the entries.html with the entry's author_id (to determine if
     # entry is displayed to current_user or not)
@@ -127,16 +148,6 @@ def entries(selected_date=("2017-10-7")):
     c_follows = (session.query(followers)
     .filter_by(follower_id=current_user_id).all())
     c_user_follows = [item[1] for item in c_follows]
-
-    entry_authors = []
-    # Determine the day_rank of the entries, so the users' stats are tracked:
-    for entry in entrylist:
-        entry = session.query(Entry).get(entry.id)
-        entry.day_rank = day_rank = dayranklist[k]
-        entry_authors.append(entry.author_id)
-        session.add(entry)
-        k += 1
-    session.commit()
 
     streak = 0
     ywinnername = "nobody"
@@ -197,7 +208,9 @@ def entries(selected_date=("2017-10-7")):
                 tiers.append(x.user.name)
         tiers = len(tiers)
     quote = quotes.quote_me()
-    
+    if tiers == []:
+        tiers = 0
+
     return render_template("entries.html",
                            entries=entrylist,
                            has_next=has_next,
@@ -407,9 +420,9 @@ def user_get(id):
                                     height=600, title=title, style=BlueStyle,
                                     fill=True, interpolate='hermite',
                                     interpolation_parameters={'type':
-                                                              'kochanek_bartels',
-                                                              'b': -1, 'c': 1,
-                                                              't': 1},
+                                                            'kochanek_bartels',
+                                                            'b': -1, 'c': 1,
+                                                            't': 1},
                                     disable_xml_declaration=True)
         graph_of_times.x_labels = entrydaylist
         graph_of_times.add('Time', rankingtimes)
@@ -418,9 +431,9 @@ def user_get(id):
                                       height=600, title=title, style=BlueStyle,
                                       fill=True, interpolate='hermite',
                                       interpolation_parameters={'type':
-                                                                'kochanek_bartels',
-                                                                'b': -1,
-                                                                'c': 1, 't': 1},
+                                                            'kochanek_bartels',
+                                                            'b': -1,
+                                                            'c': 1, 't': 1},
                                       disable_xml_declaration=True)
         graph_of_rankings.x_labels = entrydaylist
         graph_of_rankings.add('Day Rank', ranking)
@@ -592,7 +605,9 @@ def pwreset_post(id):
     #login_user(user)
     return redirect(url_for("entries"))
 
+'''
 @app.route("/.well-known/acme-challenge/fT9KyE5G31WVRnBIar_aW3aUuBraRn12laKv4KvsIuU")
 def verify():
     render_template_string('fT9KyE5G31WVRnBIar_aW3aUuBraRn12laKv4KvsIuU.vZR6ze7fzSf3oM7NzazPnKy7q-mCC_3OwxuSxrVfYkM')
     return 'fT9KyE5G31WVRnBIar_aW3aUuBraRn12laKv4KvsIuU.vZR6ze7fzSf3oM7NzazPnKy7q-mCC_3OwxuSxrVfYkM'
+'''
