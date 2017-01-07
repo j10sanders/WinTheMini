@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>
+    Edit Name
+</h1>
+
+<form role="form" method="POST">
+    <div class="form-group">
+        <label for="content">Name</label>
+        <textarea class="form-control" id="content" name="content" placeholder="Entry content" rows="5" required>{{user.name}}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary btn-md">Submit</button>
+    <button type="submit" class="btn btn-primary btn-md"  name="cancel">Cancel</button>
+
+</form>
+{% endblock %}
