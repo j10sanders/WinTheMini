@@ -15,8 +15,6 @@
         </div>
         </form>
         
-  {{user.email}}
-        
   {% if user %}
     <h2>
       Average daily rank= {{ average }}
@@ -25,7 +23,8 @@
       </br></br>
       Best time = {{ besttime }} seconds
       </br></br>
-      Worst time = {{ worsttime }} seconds</h2>
+      Worst time = {{ worsttime }} seconds
+      {{user.email}}</h2>
       
       {{ graph_of_rankings.render()|safe }}
       {{ graph_of_times.render()|safe }}
