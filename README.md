@@ -1,4 +1,4 @@
-## Travis CI status: [![Build Status](https://travis-ci.org/j10sanders/WinTheMini.svg?branch=master)](https://travis-ci.org/j10sanders/WinTheMini)  || This project is licensed under the terms of the MIT license.
+## Travis CI status: [![Build Status](https://travis-ci.org/j10sanders/WinTheMini.svg?branch=master)](https://travis-ci.org/j10sanders/WinTheMini)
 
 # Win the Mini: A Social Network for the NYT Daily Mini Crossword Puzzle
 
@@ -14,6 +14,7 @@ This project uses a Postgres db, SQLAlchemy ORM, Flask, Bootstrap, and Jinja2.
 ## Try it out!
 You can find the heroku-deployed version here: https://winthemini.herokuapp.com/
 
-I encourage you to open it on a mobile device.
+I encourage you to **open it on a mobile device**.
 
+This project is licensed under the terms of the MIT license.
 
