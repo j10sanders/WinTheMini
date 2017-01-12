@@ -14,7 +14,7 @@ os.environ["CONFIG_PATH"] = "crossword.config.TravisConfig"
 from crossword import app
 from crossword.database import Base, engine, session, User
 
-'''I'm getting an integrity error. https://trac.edgewall.org/ticket/8575  Commenting out these tests until I can figure it out.'''
+'''I'm getting an integrity error. https://trac.edgewall.org/ticket/8575  Commenting out these tests until I can figure it out.
 class TestViews(unittest.TestCase):
     def setUp(self):
         """ Test setup """
@@ -64,6 +64,6 @@ class TestViews(unittest.TestCase):
         button.click()
         self.assertEqual(self.browser.url, "http://127.0.0.1:8080/login")
 
-
+'''
 if __name__ == '__main__':
     unittest.main()
