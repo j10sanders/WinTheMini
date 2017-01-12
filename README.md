@@ -1,4 +1,4 @@
-## Travis CI status: [![Build Status](https://travis-ci.org/j10sanders/crossword.svg?branch=master)](https://travis-ci.org/j10sanders/WinTheMini)
+## Travis CI status: [![Build Status](https://travis-ci.org/j10sanders/WinTheMini.svg?branch=master)](https://travis-ci.org/j10sanders/WinTheMini)
 
 # Win the Mini: A Social Network for the NYT Daily Mini Crossword Puzzle
 
