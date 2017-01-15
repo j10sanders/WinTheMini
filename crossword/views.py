@@ -28,7 +28,7 @@ import os
 
 @app.route("/")
 @app.route("/date/<selected_date>")
-def entries(selected_date=("2017-10-7")):
+def entries(selected_date=("2017-12-7")):
     # EST = timezone('America/New_York')
     EST = pytz.timezone('US/Eastern')
     now_est = datetime.now(EST).date()
@@ -38,6 +38,7 @@ def entries(selected_date=("2017-10-7")):
         selected_date = selected_date[:selected_date.rindex(" ")]
         selected_date = datetime.strptime(selected_date, "%Y-%m-%d")
     selected_date = EST.localize(selected_date, is_dst=None).date()
+    
     
     # instead of entries = session.query(Entry), make a smaller query
     daysago = (datetime.now() - timedelta(days=30)).date()
@@ -62,7 +63,7 @@ def entries(selected_date=("2017-10-7")):
         selected_date = oldesttime
     if selected_date > newesttime:
         selected_date = newesttime
-
+        
     # Datedisplay is used for string version of selected_date
     datedisplay = datetime.strftime(selected_date, "%b %-d, %Y")
 
@@ -167,7 +168,6 @@ def entries(selected_date=("2017-10-7")):
     else:
         has_prev = True
         has_next = False
-
     if has_prev is False:
         today = True
         sevendaysago = selected_date - timedelta(days=8)
@@ -176,6 +176,7 @@ def entries(selected_date=("2017-10-7")):
                                  (1,)).order_by(Entry.datetime.desc())
         if now_est > selected_date:
             dateshowing = "old"
+
         # Check if there is a tie for first place today.  If so, push the winner
         # back to last day
         i = 0
@@ -209,7 +210,7 @@ def entries(selected_date=("2017-10-7")):
     quote = quotes.quote_me()
     if tiers == []:
         tiers = 0
-
+    #flash("Entries after 6pm on weekends and 10pm on weekdays are now recorded for the next day :)", "success")
     return render_template("entries.html",
                            entries=entrylist,
                            has_next=has_next,
@@ -308,6 +309,12 @@ def add_entry_get():
 @app.route("/entry/add", methods=["POST"])
 @login_required
 def add_entry_post():
+    # entry time should be for next day after 6pm on weekends, 10pm weekdays
+    EST = pytz.timezone('US/Eastern')
+    from datetime import datetime, timedelta
+    dt = datetime.now()
+    if (dt.now(EST).isoweekday() >=6 and dt.now(EST).hour >=18) or dt.now(EST).hour >=20:
+        dt = dt.now() + timedelta(days=1)
     try:
         title = int(request.form["title"])
     except ValueError:
@@ -330,7 +337,8 @@ def add_entry_post():
     entry = Entry(
         title=title,
         content=request.form["content"],
-        author=current_user
+        author=current_user,
+        datetime=dt
     )
     session.add(entry)
     session.commit()

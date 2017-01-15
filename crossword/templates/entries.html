@@ -61,7 +61,8 @@
     
     {% elif today == True and current_user_id not in entry_authors and dateshowing != "old" %}
     
-<h2><i>{{ quotes | random }}</i></h2>
+<!--<h2><i>{{ quotes | random }}</i></h2>--->
+<h2><b>Good news!  Entries after <u><a href="http://www.nytimes.com/content/help/games/crosswords/crosswords.html#available">6pm on weekends and 10pm on weekdays </a></u>are now recorded for the next day.</b></h2>
 </br><h2>You can't see today's times until you <b><a href="{{ url_for('add_entry_get') }}">post your time. ☕️✍🏽☕️ </b></a></h2>
 
     <ul class="pager">
