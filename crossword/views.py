@@ -210,7 +210,6 @@ def entries(selected_date=("2017-12-7")):
     quote = quotes.quote_me()
     if tiers == []:
         tiers = 0
-    #flash("Entries after 6pm on weekends and 10pm on weekdays are now recorded for the next day :)", "success")
     return render_template("entries.html",
                            entries=entrylist,
                            has_next=has_next,
