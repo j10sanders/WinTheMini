@@ -211,15 +211,6 @@ def entries(selected_date=("2017-12-7")):
     quote = quotes.quote_me()
     if tiers == []:
         tiers = 0
-    
-    current_user_id = current_user.get_id()
-    if current_user_id is not None:
-        current_user_id = int(current_user_id)
-        user_object = session.query(User).filter_by(id=current_user_id).one()
-        if user_object.name == "wtm":
-            flash("Hi " + user_object.name + "! You used a fake email address to" +
-            " register.  Can you email jonsandersss@gmail.com to let me know who you" +
-            " are or how you found Win the Mini?  Thanks!", "warning")
         
     return render_template("entries.html",
                            entries=entrylist,
