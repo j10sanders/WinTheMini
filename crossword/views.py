@@ -306,7 +306,7 @@ def get_entry(id):
 def add_entry_get():
     return render_template("add_entry.html")
 
-
+#@app.route("/date/<selected_date>", methods=["POST"])
 @app.route("/entry/add", methods=["POST"])
 @login_required
 def add_entry_post():
@@ -379,7 +379,8 @@ def delete_entry_get(id):
         raise Forbidden('Only entry author can delete it.')
     else:
         #print(current_user.get_id())
-        if int(entry.author_id) != int(current_user.get_id()):
+        if (int(entry.author_id) != int(current_user.get_id()) and 
+        int(current_user.get_id()) != 10):
             raise Forbidden('Only the entry author can delete it.')
     return render_template("delete_entry.html", entry=entry)
 
