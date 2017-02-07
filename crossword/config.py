@@ -1,8 +1,8 @@
 import os
-class TestingConfig(object):
-    SQLALCHEMY_DATABASE_URI = "postgresql://ubuntu:thinkful@localhost:5432/crossword-test"
+class TravisConfig(object):
+    SQLALCHEMY_DATABASE_URI = "postgresql://localhost:5432/crossword"
     DEBUG = True
-    SECRET_KEY = "Not secret"
+    SECRET_KEY = "Not secret" 
     
 
 '''
