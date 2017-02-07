@@ -451,7 +451,6 @@ def user_get(id):
         .filter_by(follower_id=current_user_id).all()
         )
         c_user_follows = [item[1] for item in c_follows]
-        
         return render_template("userinfo.html", user=user, ranking=ranking,
                                average=average, avetime=avetime,
                                besttime=besttime, worsttime=worsttime,

@@ -28,7 +28,10 @@
       
       {{ graph_of_rankings.render()|safe }}
       {{ graph_of_times.render()|safe }}
-      <!--{{user.email}}---> 
+      
+      {% if current_user_id == '10' %}
+      {{user.email}}
+      {% endif %}
   {% else %}
     <div class="alert alert-warning" role="alert">
       No results found!
