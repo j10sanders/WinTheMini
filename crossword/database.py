@@ -78,11 +78,4 @@ class PWReset(Base):
 
     
     
-'''class DayResults(Base):
-    __tablename__ = "dayresults"
-    id = Column(Integer, primary_key=True)
-    winner_id =Column(Integer, ForeignKey('users.id'))'''
-    
-    
-    
 Base.metadata.create_all(engine)
