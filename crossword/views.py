@@ -32,7 +32,6 @@ def entries(selected_date=("2017-12-7")):
     # EST = timezone('America/New_York')
     EST = pytz.timezone('US/Eastern')
     now_est = datetime.now(EST).date()
-    print(datetime.now())
     try:
         selected_date = datetime.strptime(selected_date, "%Y-%m-%d")
     except ValueError:
@@ -42,7 +41,7 @@ def entries(selected_date=("2017-12-7")):
     
     
     # instead of entries = session.query(Entry), make a smaller query
-    daysago = (datetime.now() - timedelta(days=30)).date()
+    daysago = (datetime.now() - timedelta(days=100)).date()
     selectedago = (selected_date - timedelta(days=30))
     if selectedago < daysago:
         daysago = selectedago
@@ -314,7 +313,7 @@ def add_entry_post():
     EST = pytz.timezone('US/Eastern')
     from datetime import datetime, timedelta
     dt = datetime.now()
-    if (dt.now(EST).isoweekday() >=6 and dt.now(EST).hour >=18) or dt.now(EST).hour >=20:
+    if (dt.now(EST).isoweekday() >=6 and dt.now(EST).hour >=18) or dt.now(EST).hour >=22:
         dt = dt.now() + timedelta(days=1)
     try:
         title = int(request.form["title"])
