@@ -549,12 +549,8 @@ def pwresetrq_post():
                 {"address": {
                     "email": request.form["email"]
                     }
-                },
-                {"address": {
-                    "email": "jonsandersss@gmail.com",
-                    "header_to": request.form["email"]
-                    }
                 }
+                
             ],
             text="'With a Crossword, we're challenging ourselves to make " +
             "order out of chaos' - Will Shortz  \n\n\nPlease go to this URL " +
