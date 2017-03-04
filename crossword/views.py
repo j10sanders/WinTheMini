@@ -498,8 +498,6 @@ def stats_get():
     
 @app.route("/pwresetrq", methods=["GET"])
 def pwresetrq_get():
-    flash("Pw reset emails are currently broken.  Sorry, I'm working on it!", 
-    "warning")
     return render_template('pwresetrq.html')
     
 @app.route("/pwresetrq", methods=["POST"])
