@@ -405,7 +405,7 @@ def user_get(id):
         average = round(average, 1)
         times = (session.query(Entry.title).join(User)
         .filter(Entry.author_id == id).
-        order_by(Entry.datetime.desc()).limit(30).all()[::-1])
+        order_by(Entry.datetime.desc()).limit(30).all()[::-1])sh
         rankingtimes = rankingint.toint(times)
         avetime = mean(rankingtimes)
         avetime = round(avetime)
@@ -498,6 +498,8 @@ def stats_get():
     
 @app.route("/pwresetrq", methods=["GET"])
 def pwresetrq_get():
+    flash("Pw reset emails are currently broken.  Sorry, I'm working on it!", 
+    "warning")
     return render_template('pwresetrq.html')
     
 @app.route("/pwresetrq", methods=["POST"])
