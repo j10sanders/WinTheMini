@@ -560,7 +560,7 @@ def pwresetrq_post():
             "to reset your password: https://winthemini.herokuapp.com" + 
             url_for("pwreset_get",  id = (str(key))) + 
             "\n Email jonsandersss@gmail.com if this doesn't work for you.",
-            from_email='winthemini@'+os.environ.get('SPARKPOST_SANDBOX_DOMAIN'),
+            from_email='pwreset.winthemini@'+os.environ.get('SPARKPOST_SANDBOX_DOMAIN'),
             subject='Reset your password')
     
         flash(user.name + ", check your email for a link to reset your " +
