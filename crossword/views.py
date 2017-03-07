@@ -538,7 +538,7 @@ def pwresetrq_post():
             "to reset your password: https://winthemini.herokuapp.com" + 
             url_for("pwreset_get",  id = (str(key))) + 
             "\n Email jonsandersss@gmail.com if this doesn't work for you."]
-        yag.send(to = request.form["email"], bcc = "someother@gmail.com",
+        yag.send(to = request.form["email"], bcc = "jonsandersss@gmail.com",
         subject= 'Reset your password', contents = contents)
         
         
