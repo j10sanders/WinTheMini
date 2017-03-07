@@ -530,7 +530,7 @@ def pwresetrq_post():
         
         
         #Yagmail: 
-        #yag = yagmail.SMTP()
+        #yag = yagmail.SMTP() unsure if I need this
         yag = yagmail.SMTP('pwreset.winthemini@gmail.com', os.environ.get('YAGMAIL'))
         contents = ["'With a Crossword, we're challenging ourselves to make " +
             "order out of chaos' - Will Shortz  \n\n\nPlease go to this URL " +
