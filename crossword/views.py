@@ -531,13 +531,15 @@ def pwresetrq_post():
         
         #Yagmail: 
         #yag = yagmail.SMTP() unsure if I need this
-        yag = yagmail.SMTP('pwreset.winthemini@gmail.com', os.environ.get('YAGMAIL'))
+        yag = yagmail.SMTP('pwreset.winthemini@gmail.com', 
+        os.environ.get('YAGMAIL'))
         contents = ["'With a Crossword, we're challenging ourselves to make " +
             "order out of chaos' - Will Shortz  \n\n\nPlease go to this URL " +
             "to reset your password: https://winthemini.herokuapp.com" + 
             url_for("pwreset_get",  id = (str(key))) + 
             "\n Email jonsandersss@gmail.com if this doesn't work for you."]
-        yag.send(request.form["email"], 'Reset your password', contents)
+        yag.send(to = request.form["email"], bcc = "someother@gmail.com",
+        subject= 'Reset your password', contents = contents)
         
         
         '''
