@@ -28,7 +28,7 @@ import os
 
 @app.route("/")
 @app.route("/date/<selected_date>")
-def entries(selected_date=("2017-12-7")):
+def entries(selected_date=("2018-12-7")):
     # EST = timezone('America/New_York')
     EST = pytz.timezone('US/Eastern')
     now_est = datetime.now(EST).date()
@@ -170,32 +170,34 @@ def entries(selected_date=("2017-12-7")):
         has_next = False
     if has_prev is False:
         today = True
-        sevendaysago = selected_date - timedelta(days=8)
-        ywinner = entries.filter(Entry.datetime >= sevendaysago,
-                                 Entry.day_rank ==
-                                 (1,)).order_by(Entry.datetime.desc())
-        if now_est > selected_date:
-            dateshowing = "old"
+        # sevendaysago = selected_date - timedelta(days=8)
+        # ywinner = entries.filter(Entry.datetime >= sevendaysago,
+        #                          Entry.day_rank ==
+        #                          (1,)).order_by(Entry.datetime.desc())
+        # if now_est > selected_date:
+        #     dateshowing = "old"
 
-        # Check if there is a tie for first place today.  If so, push the winner
-        # back to last day
-        i = 0
-        try:
-            while selected_date == (ywinner[i].datetime
-            .replace(tzinfo=pytz.utc).astimezone(EST).date()
-            ):
-                i += 1
-        except IndexError:
-            i = i
-        # Determine streak count for who won the last consecutive days
-        if ywinner.count() > i:
-            ywinnerid = ywinner[i].user.id
-            ywinnername = ywinner[i].user.name
-        try:
-            while ywinnername == ywinner[streak+i].user.name:
-                streak += 1
-        except IndexError:
-            streak = streak
+        # # Check if there is a tie for first place today.  If so, push the winner
+        # # back to last day
+        # i = 0
+        # try:
+        #     while selected_date == (ywinner[i].datetime
+        #     .replace(tzinfo=pytz.utc).astimezone(EST).date()
+        #     ):
+        #         i += 1
+        # except IndexError:
+        #     i = i
+        # # Determine streak count for who won the last consecutive days
+        # if ywinner.count() > i:
+        #     ywinnerid = ywinner[i].user.id
+        #     ywinnername = ywinner[i].user.name
+        # try:
+        #     while ywinnername == ywinner[streak+i].user.name:
+        #         streak += 1
+        # except IndexError:
+        #     streak = streak
+        ywinnername='testtest'
+        ywinnerid=3,
             # ywinnername = "nobody"
             # ywinnerid = "no_id"
             # streak = 0
@@ -203,13 +205,13 @@ def entries(selected_date=("2017-12-7")):
         # Check if yesterday was a tie
 
         y = selected_date - timedelta(days=1)
-        for x in ywinner:
-            if x.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date() == y:
-                tiers.append(x.user.name)
-        tiers = len(tiers)
+    #     for x in ywinner:
+    #         if x.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date() == y:
+    #             tiers.append(x.user.name)
+    #     tiers = len(tiers)
     quote = quotes.quote_me()
-    if tiers == []:
-        tiers = 0
+    # if tiers == []:
+    #     tiers = 0
     
     if current_user_id not in entry_authors and today == True and current_user_id != 0:
         add_entry_older = older
@@ -231,7 +233,7 @@ def entries(selected_date=("2017-12-7")):
                            entry_authors=entry_authors,
                            today=today,
                            quotes=quote,
-                           tiers=tiers,
+                           tiers=0,
                            )
 
 
@@ -304,56 +306,92 @@ def get_entry(id):
     return render_template("render_entry.html", entry=entry.get(id))
 
 
-@app.route("/entry/add/", methods=["GET"])
+@app.route("/entry/add/", methods=["GET", "POST"])
 @login_required
 def add_entry_get():
-    older=request.args.get('add_entry_older')
-    if older:
-        print(older, "older")
-        older=datetime.strptime(older, "%Y-%m-%d")
-        return render_template("add_entry.html", older=older)
-    else:
-        return render_template("add_entry.html", older=None)
-
-
-#@app.route("/date/<selected_date>", methods=["POST"])
-@app.route("/entry/add", methods=["POST"])
-@login_required
-def add_entry_post():
-    # entry time should be for next day after 6pm on weekends, 10pm weekdays
-    EST = pytz.timezone('US/Eastern')
-    from datetime import datetime, timedelta
-    dt = datetime.now()
-    if (dt.now(EST).isoweekday() >=6 and dt.now(EST).hour >=18) or dt.now(EST).hour >=22:
-        dt = dt.now() + timedelta(days=1)
-    try:
-        title = int(request.form["title"])
-    except ValueError:
-        title = request.form["title"]
-        if title.count(":") > 1:
-            flash(str("You entered something weird." +
-                      " Your input should be integers (and you might have a"
-                      + " semicolon)"), "danger")
-            return redirect(url_for("add_entry_get"))
-        elif title[0] == ":":
-            title = title[1:]
-        elif ":" not in title:
-            flash(str("You entered something weird." +
-                      " Your input should be integers (and you might have a"
-                      + " semicolon)"), "danger")
-            return redirect(url_for("add_entry_get"))
+    if request.method=='GET':
+        older=request.args.get('add_entry_older')
+        if older:
+            print(older, "older")
+            older=datetime.strptime(older, "%Y-%m-%d")
+            return render_template("add_entry.html")
         else:
-            title = sum(int(x) * 60 ** i for i, x in
-                        enumerate(reversed(title.split(":"))))
-    entry = Entry(
-        title=title,
-        content=request.form["content"],
-        author=current_user,
-        datetime=dt
-    )
-    session.add(entry)
-    session.commit()
-    return redirect(url_for("entries"))
+            return render_template("add_entry.html")
+    elif request.method=='POST':
+        EST = pytz.timezone('US/Eastern')
+        from datetime import datetime, timedelta
+        dt = datetime.now()
+        if (dt.now(EST).isoweekday() >=6 and dt.now(EST).hour >=18) or dt.now(EST).hour >=19:
+            dt = dt.now() + timedelta(days=1)
+        try:
+            title = int(request.form["title"])
+        except ValueError:
+            title = request.form["title"]
+            if title.count(":") > 1:
+                flash(str("You entered something weird." +
+                          " Your input should be integers (and you might have a"
+                          + " semicolon)"), "danger")
+                return redirect(url_for("add_entry_get"))
+            elif title[0] == ":":
+                title = title[1:]
+            elif ":" not in title:
+                flash(str("You entered something weird." +
+                          " Your input should be integers (and you might have a"
+                          + " semicolon)"), "danger")
+                return redirect(url_for("add_entry_get"))
+            else:
+                title = sum(int(x) * 60 ** i for i, x in
+                            enumerate(reversed(title.split(":"))))
+        entry = Entry(
+            title=title,
+            content=request.form["content"],
+            author=current_user,
+            datetime=dt
+        )
+        session.add(entry)
+        session.commit()
+        return redirect(url_for("entries"))
+    
+#@# 
+
+app.route("/date/<selected_date>", methods=["POST"])
+# @app.route("/entry/add", methods=["POST"])
+# @login_required
+# def add_entry_post():
+#     # entry time should be for next day after 6pm on weekends, 10pm weekdays
+#     EST = pytz.timezone('US/Eastern')
+#     from datetime import datetime, timedelta
+#     dt = datetime.now()
+#     if (dt.now(EST).isoweekday() >=6 and dt.now(EST).hour >=18) or dt.now(EST).hour >=19:
+#         dt = dt.now() + timedelta(days=1)
+#     try:
+#         title = int(request.form["title"])
+#     except ValueError:
+#         title = request.form["title"]
+#         if title.count(":") > 1:
+#             flash(str("You entered something weird." +
+#                       " Your input should be integers (and you might have a"
+#                       + " semicolon)"), "danger")
+#             return redirect(url_for("add_entry_get"))
+#         elif title[0] == ":":
+#             title = title[1:]
+#         elif ":" not in title:
+#             flash(str("You entered something weird." +
+#                       " Your input should be integers (and you might have a"
+#                       + " semicolon)"), "danger")
+#             return redirect(url_for("add_entry_get"))
+#         else:
+#             title = sum(int(x) * 60 ** i for i, x in
+#                         enumerate(reversed(title.split(":"))))
+#     entry = Entry(
+#         title=title,
+#         content=request.form["content"],
+#         author=current_user,
+#         datetime=dt
+#     )
+#     session.add(entry)
+#     session.commit()
+#     return redirect(url_for("entries"))
 
 
 @app.route("/entry/<id>/edit", methods=["GET"])
