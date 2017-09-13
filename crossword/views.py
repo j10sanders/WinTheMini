@@ -210,6 +210,10 @@ def entries(selected_date=("2017-12-7")):
     quote = quotes.quote_me()
     if tiers == []:
         tiers = 0
+    
+    if current_user_id not in entry_authors and today == True and current_user_id != 0:
+        add_entry_older = older
+        return redirect(url_for("add_entry_get", add_entry_older=str(add_entry_older)))
         
     return render_template("entries.html",
                            entries=entrylist,
@@ -300,10 +304,17 @@ def get_entry(id):
     return render_template("render_entry.html", entry=entry.get(id))
 
 
-@app.route("/entry/add", methods=["GET"])
+@app.route("/entry/add/", methods=["GET"])
 @login_required
 def add_entry_get():
-    return render_template("add_entry.html")
+    older=request.args.get('add_entry_older')
+    if older:
+        print(older, "older")
+        older=datetime.strptime(older, "%Y-%m-%d")
+        return render_template("add_entry.html", older=older)
+    else:
+        return render_template("add_entry.html", older=None)
+
 
 #@app.route("/date/<selected_date>", methods=["POST"])
 @app.route("/entry/add", methods=["POST"])

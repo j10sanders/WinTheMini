@@ -1,20 +1,35 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>
-    Add Your Time for Today's Puzzle
-</h1>
-
-<form role="form" method="POST">
-    <div class="form-group">
-        <label for="title">Time</label>
-        <input type="text" class="form-control" id="title" name="title" placeholder="1:08, 68, :68 or 0:68 works" required>
+<div class="container">
+            <div class="row">
+	<div class="col-md-6 col-md-offset-3">
+        <form role="form" method="POST">
+        <p class="input-group">
+            <br><br>
+            <h3 class="text-center">
+                Post your time for today's mini:
+            </h3>
+            <br>
+            <input type="text" class="form-control input-lg" id="title" name="title" placeholder="1:08, 68, :68 or 0:68 works" required>
+            <div class="form-group">
+                <br>
+        <textarea class="form-control" id="content" name="content" placeholder="Comments/emoji" rows="3"></textarea>
+        <p class="help-block"><small>Entries after <u><a href="http://www.nytimes.com/content/help/games/crosswords/crosswords.html#available">6pm on weekends and 10pm on weekdays </a></u>are recorded for the next day.</small></p>
     </div>
     
-    <div class="form-group">
-        <label for="content">Comments</label>
-        <textarea class="form-control" id="content" name="content" placeholder="Comments" rows="5"></textarea>
+            <p class="text-center"><button type="submit" class="btn btn-primary btn-lg">Submit</button></p>
+        </p>
+        </form>
     </div>
-    <button type="submit" class="btn btn-primary btn-md">Submit</button>
-</form>
+</div>
+
+{% if older %}
+    <ul class="pager">
+        <li class="previous" >
+        <a href="{{ url_for('entries', selected_date = older) }}"> See yesterday's</a>
+        </li>
+    </ul>
+{% endif %}
+
 {% endblock %}
