@@ -28,8 +28,6 @@ pygal==2.4.0
 pytz==2012c
 ranking==0.3.1
 requests==2.18.4
-scipy==0.13.3
-simplegeneric==0.8.1
 six==1.5.2
 sparkpost==1.3.5
 urllib3==1.22
