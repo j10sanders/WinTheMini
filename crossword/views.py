@@ -315,7 +315,7 @@ def add_entry_get():
             older=datetime.strptime(older, "%Y-%m-%d")
             return render_template("add_entry.html", older=older)
         else:
-            return render_template("add_entry.html", older=none)
+            return render_template("add_entry.html", older=None)
     elif request.method=='POST':
         EST = pytz.timezone('US/Eastern')
         from datetime import datetime, timedelta
