@@ -176,7 +176,6 @@ def entries(selected_date=("2017-12-7")):
                                  (1,)).order_by(Entry.datetime.desc())
         if now_est > selected_date:
             dateshowing = "old"
-            print(now_est, "old")
 
         # Check if there is a tie for first place today.  If so, push the winner
         # back to last day
@@ -220,8 +219,7 @@ def entries(selected_date=("2017-12-7")):
         # add_entry_older = older
         # return redirect(url_for("add_entry_get", add_entry_older=str(add_entry_older)))
         return redirect(url_for("add_entry_get", add_entry_older = str(older), 
-                            ywinnerid=ywinnerid, c_user_follows=c_user_follows,
-                            streak=streak, current_user_id=current_user_id,
+                            streak=streak,
                             tiers=tiers, ywinnername=ywinnername))
 
 
@@ -320,17 +318,17 @@ def get_entry(id):
 def add_entry_get(add_entry_older=None):
     if request.method=='GET':
         older=request.args.get('add_entry_older')
-        ywinnerid=request.args.get('ywinnerid') 
-        c_user_follows=request.args.get('c_user_follows')
+        #ywinnerid=request.args.get('ywinnerid') 
+        #c_user_follows=request.args.get('c_user_follows')
         streak=request.args.get('streak')
-        current_user_id=request.args.get('current_user_id')
+        #current_user_id=request.args.get('current_user_id')
         tiers=request.args.get('tiers')
         ywinnername=request.args.get('ywinnername')
         if older:
             #older=datetime.strptime(older, "%Y-%m-%d")
             return render_template("add_entry.html", older=older,
-            ywinnerid=ywinnerid, c_user_follows=c_user_follows,
-            streak=int(streak), current_user_id=current_user_id,
+            #ywinnerid=ywinnerid,
+            streak=int(streak),
             tiers=int(tiers), ywinnername=ywinnername)
         else:
             return render_template("add_entry.html", older=None)
