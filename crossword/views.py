@@ -176,6 +176,7 @@ def entries(selected_date=("2017-12-7")):
                                  (1,)).order_by(Entry.datetime.desc())
         if now_est > selected_date:
             dateshowing = "old"
+            print(now_est, "old")
 
         # Check if there is a tie for first place today.  If so, push the winner
         # back to last day
@@ -196,9 +197,7 @@ def entries(selected_date=("2017-12-7")):
                 streak += 1
         except IndexError:
             streak = streak
-            # ywinnername = "nobody"
-            # ywinnerid = "no_id"
-            # streak = 0
+        # streak = 1
         
         # Check if yesterday was a tie
 
@@ -210,11 +209,20 @@ def entries(selected_date=("2017-12-7")):
     quote = quotes.quote_me()
     if tiers == []:
         tiers = 0
+    dt = datetime.now()
+    if (dt.now(EST).isoweekday() >=6 and dt.now(EST).hour >=18) or dt.now(EST).hour >=19:
+        newday = True
+    else:
+        newday = False
+            
+    if (current_user_id not in entry_authors and today == True and current_user_id != 0) or newday == True and len(entry_authors == 0):
     
-    if current_user_id not in entry_authors and today == True and current_user_id != 0:
         # add_entry_older = older
         # return redirect(url_for("add_entry_get", add_entry_older=str(add_entry_older)))
-        return redirect(url_for("add_entry_get"))
+        return redirect(url_for("add_entry_get", add_entry_older = str(older), 
+                            ywinnerid=ywinnerid, c_user_follows=c_user_follows,
+                            streak=streak, current_user_id=current_user_id,
+                            tiers=tiers, ywinnername=ywinnername))
 
 
 
@@ -309,12 +317,21 @@ def get_entry(id):
 
 @app.route("/entry/add/", methods=["GET", "POST"])
 @login_required
-def add_entry_get():
+def add_entry_get(add_entry_older=None):
     if request.method=='GET':
         older=request.args.get('add_entry_older')
+        ywinnerid=request.args.get('ywinnerid') 
+        c_user_follows=request.args.get('c_user_follows')
+        streak=request.args.get('streak')
+        current_user_id=request.args.get('current_user_id')
+        tiers=request.args.get('tiers')
+        ywinnername=request.args.get('ywinnername')
         if older:
-            older=datetime.strptime(older, "%Y-%m-%d")
-            return render_template("add_entry.html", older=older)
+            #older=datetime.strptime(older, "%Y-%m-%d")
+            return render_template("add_entry.html", older=older,
+            ywinnerid=ywinnerid, c_user_follows=c_user_follows,
+            streak=int(streak), current_user_id=current_user_id,
+            tiers=int(tiers), ywinnername=ywinnername)
         else:
             return render_template("add_entry.html", older=None)
     elif request.method=='POST':

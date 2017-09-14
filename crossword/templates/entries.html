@@ -63,9 +63,26 @@
     
 
 <!--<h2><i>{{ quotes | random }}</i></h2>--->
-<h2><b>Good news!  Entries after <u><a href="http://www.nytimes.com/content/help/games/crosswords/crosswords.html#available">6pm on weekends and 10pm on weekdays </a></u>are now recorded for the next day.</b></h2>
-<br>
-<h2 style="display: inline">You can't see today's times until you </h2> <h4 style="display: inline"><b><a href="{{ url_for('add_entry_get') }}">post your time. ☕️☕️✍🏽 </a></b></h4>
+<h2>
+        {% if current_user_id == 0 or ywinnerid in c_user_follows or current_user_%}
+        {% if tiers > 1 %}
+        Yesterday had a tie for first place... So nobody gets their name up here. 😱 
+        {% else %}
+        {% if streak != 0 %}
+            {{ywinnername}} 
+            {% if streak == 1 %}
+            won yesterday.
+            {% elif streak >= 7 %}
+            keeps winning.  Someone step up!
+            {% else %}
+            won the last {{streak}} days.
+            {% endif %}
+            {% endif %}
+        {% endif %}
+        {% endif %}
+        </h2>
+        </br>
+<h2 style="display: inline"><b>To see how other people did today, you need to login and post your score.</b></h2> 
 
     <ul class="pager">
         <li class="previous" >
