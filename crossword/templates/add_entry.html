@@ -35,7 +35,6 @@
         <textarea class="form-control" id="content" name="content" placeholder="Comments/emoji" rows="3"></textarea>
         <p class="help-block"><small>Entries after <u><a href="http://www.nytimes.com/content/help/games/crosswords/crosswords.html#available">6pm on weekends and 10pm on weekdays </a></u>are recorded for the next day.</small></p>
     </div>
-    
             <p class="text-center"><button type="submit" class="btn btn-primary btn-lg">Submit</button></p>
         </p>
         </form>
@@ -43,6 +42,7 @@
 </div>
 
 {% if older %}
+<br><br>
     <ul class="pager">
         <li class="previous" >
         <a href="{{ url_for('entries', selected_date = older) }}"> See yesterday's</a>
