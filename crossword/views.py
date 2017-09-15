@@ -213,14 +213,17 @@ def entries(selected_date=("2017-12-7")):
         newday = True
     else:
         newday = False
-            
-    if (current_user_id not in entry_authors and today == True and current_user_id != 0) or newday == True and len(entry_authors == 0):
-    
+    print(entry_authors)
+    print(len(entry_authors))
+    if (current_user_id not in entry_authors and today == True and current_user_id != 0):
+        if newday == True and len(entry_authors) == 0:
         # add_entry_older = older
         # return redirect(url_for("add_entry_get", add_entry_older=str(add_entry_older)))
-        return redirect(url_for("add_entry_get", add_entry_older = str(older), 
+            return redirect(url_for("add_entry_get", add_entry_older = str(older), 
                             streak=streak,
                             tiers=tiers, ywinnername=ywinnername))
+        else:
+            pass
 
 
 
