@@ -5,7 +5,7 @@ from flask_sslify import SSLify
 
 app = Flask(__name__)
 sslify = SSLify(app)
-config_path = os.environ.get("CONFIG_PATH", "crossword.config.DevelopmentConfig")
+config_path = os.environ.get("CONFIG_PATH", "crossword.config.TravisConfig")
 
 app.config.from_object(config_path)
 
