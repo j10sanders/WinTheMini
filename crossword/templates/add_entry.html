@@ -4,7 +4,7 @@
 <h2>
         {% if tiers is defined %}
         {% if tiers > 1 %}
-        Yesterday had a tie for first place... So nobody gets their name up here. 😱 
+        Yesterday had a tie for first place... So nobody gets their name up here. 🦀
         {% else %}
         {% if streak != 0 %}
             {{ywinnername}} 
@@ -46,7 +46,7 @@
 <br><br>
     <ul class="pager">
         <li class="previous" >
-        <a href="{{ url_for('entries', selected_date = older) }}"> See yesterday's</a>
+        <a href="{{ url_for('entries', selected_date = older, no_redirect=True) }}"> See yesterday's</a>
         </li>
     </ul>
 {% endif %}

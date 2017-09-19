@@ -4,8 +4,8 @@
 
 
 <h2>
-    {% if today == True and dateshowing == "old" %}
-    Nobody has posted today... here is the last day with times posted:
+    {% if today == True and dateshowing == "old" and no_redirect != True %}
+     
     </h2>
     <h1>
     <b>
@@ -19,6 +19,7 @@
         </h1>
         </b>
         <h2>
+        {% if dateshowing != "old" %}
         {% if current_user_id == 0 or ywinnerid in c_user_follows or current_user_%}
         {% if tiers is defined %}
         {% if tiers > 1 %}
@@ -34,6 +35,7 @@
             won the last {{streak}} days.
             {% endif %}
             {% endif %}
+        {% endif %}
         {% endif %}
         {% endif %}
         {% endif %}
@@ -66,6 +68,7 @@
 
 <!--<h2><i>{{ quotes | random }}</i></h2>--->
 <h2>
+        {% if dateshowing != "old" %}
         {% if current_user_id == 0 or ywinnerid in c_user_follows or current_user_%}
         {% if tiers is defined %}
         {% if tiers > 1 %}
@@ -81,6 +84,7 @@
             won the last {{streak}} days.
             {% endif %}
             {% endif %}
+        {% endif %}
         {% endif %}
         {% endif %}
         {% endif %}
@@ -108,6 +112,7 @@
         </b>
         </h1>
         <h2>
+        {% if dateshowing != "old" %}
         {% if current_user_id == 0 or ywinnerid in c_user_follows %}
         {% if tiers is defined %}
         {% if tiers > 1 %}
@@ -123,6 +128,7 @@
             won the last {{streak}} days.
             {% endif %}
             {% endif %}
+        {% endif %}
         {% endif %}
         {% endif %}
         {% endif %}

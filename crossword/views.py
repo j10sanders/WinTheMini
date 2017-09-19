@@ -29,6 +29,8 @@ import os
 @app.route("/")
 @app.route("/date/<selected_date>")
 def entries(selected_date=("2017-12-7")):
+    no_redirect=request.args.get('no_redirect')
+    no_redirect = (no_redirect == "True")
     # EST = timezone('America/New_York')
     EST = pytz.timezone('US/Eastern')
     now_est = datetime.now(EST).date()
@@ -115,7 +117,7 @@ def entries(selected_date=("2017-12-7")):
                 .astimezone(EST).date())
         except (UnboundLocalError, AttributeError):
             pass
-    
+        
     entry_authors = []
     # For statistics, this method is for keeping track of daily scores.
     # Don't do this every time the page is visited, just if the day is today
@@ -158,6 +160,11 @@ def entries(selected_date=("2017-12-7")):
     dateshowing = "today"
     
     tiers = []
+    dt = datetime.now()
+    if (dt.now(EST).isoweekday() >=6 and dt.now(EST).hour >=10) or dt.now(EST).hour >=19:
+        newday = True
+    else:
+        newday = False
     # Determine if "newer" and/or "older" links should be shown
     if newest in entrylist:
         has_next = True
@@ -174,7 +181,7 @@ def entries(selected_date=("2017-12-7")):
         ywinner = entries.filter(Entry.datetime >= sevendaysago,
                                  Entry.day_rank ==
                                  (1,)).order_by(Entry.datetime.desc())
-        if now_est > selected_date:
+        if now_est > selected_date or newday is True:
             dateshowing = "old"
 
         # Check if there is a tie for first place today.  If so, push the winner
@@ -189,18 +196,22 @@ def entries(selected_date=("2017-12-7")):
             i = i
         # Determine streak count for who won the last consecutive days
         if ywinner.count() > i:
-            ywinnerid = ywinner[i].user.id
-            ywinnername = ywinner[i].user.name
+            if dateshowing == "old":
+                ywinnerid = ywinner[0].user.id
+                ywinnername = ywinner[0].user.name
+            else:
+                ywinnerid = ywinner[i].user.id
+                ywinnername = ywinner[i].user.name
         try:
             while ywinnername == ywinner[streak+i].user.name:
                 streak += 1
         except IndexError:
             streak = streak
-        # streak = 1
         
-        # Check if yesterday was a tie
-
-        y = selected_date - timedelta(days=1)
+        if dateshowing != "old":
+            y = selected_date - timedelta(days=1)
+        else:
+            y = selected_date
         for x in ywinner:
             if x.datetime.replace(tzinfo=pytz.utc).astimezone(EST).date() == y:
                 tiers.append(x.user.name)
@@ -208,21 +219,35 @@ def entries(selected_date=("2017-12-7")):
     quote = quotes.quote_me()
     if tiers == []:
         tiers = 0
-    dt = datetime.now()
-    if (dt.now(EST).isoweekday() >=6 and dt.now(EST).hour >=18) or dt.now(EST).hour >=19:
-        newday = True
-    else:
-        newday = False
-    if (current_user_id not in entry_authors and current_user_id != 0 and today is True) or (newday == True and len(entry_authors) == 0):
-        # add_entry_older = older
-        # return redirect(url_for("add_entry_get", add_entry_older=str(add_entry_older)))
-        return redirect(url_for("add_entry_get", add_entry_older = str(older), 
-                        streak=streak,
-                        tiers=tiers, ywinnername=ywinnername))
-    else:
-        pass
-
-
+    
+    if no_redirect is True:
+        return render_template("entries.html",
+                       entries=entrylist,
+                       has_next=has_next,
+                       has_prev=has_prev,
+                       datedisplay=datedisplay,
+                       older=older,
+                       newer=newer,
+                       current_user_id=current_user_id,
+                       c_user_follows=c_user_follows,
+                       streak=streak,
+                       ywinnername=ywinnername,
+                       ywinnerid=ywinnerid,
+                       dateshowing=dateshowing,
+                       entry_authors=entry_authors,
+                       today=today,
+                       quotes=quote,
+                       tiers=tiers,
+                       no_redirect=no_redirect,
+                       )
+        
+    if current_user_id != 0:
+        if (current_user_id not in entry_authors and today is True):
+            if dateshowing == "old":
+                older = selected_date - timedelta(days=1)
+            return redirect(url_for("add_entry_get", add_entry_older = str(older), 
+                            streak=streak,
+                            tiers=tiers, ywinnername=ywinnername))
 
     return render_template("entries.html",
                            entries=entrylist,
@@ -336,7 +361,7 @@ def add_entry_get(add_entry_older=None):
         EST = pytz.timezone('US/Eastern')
         from datetime import datetime, timedelta
         dt = datetime.now()
-        if (dt.now(EST).isoweekday() >=6 and dt.now(EST).hour >=18) or dt.now(EST).hour >=19:
+        if (dt.now(EST).isoweekday() >=6 and dt.now(EST).hour >=18) or dt.now(EST).hour >=22:
             dt = dt.now() + timedelta(days=1)
         try:
             title = int(request.form["title"])
